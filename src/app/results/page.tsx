@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Confetti from "@/components/Confetti";
@@ -28,8 +28,11 @@ export default function ResultsPage() {
   const [result, setResult] = useState<ScoreResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
+  const hasSaved = useRef(false);
 
   useEffect(() => {
+    if (hasSaved.current) return;
+
     const pseudo = sessionStorage.getItem("pseudo");
     const scoreStr = sessionStorage.getItem("score");
 
@@ -37,6 +40,8 @@ export default function ResultsPage() {
       router.push("/");
       return;
     }
+
+    hasSaved.current = true;
 
     const score = parseInt(scoreStr, 10);
     const answersRaw = sessionStorage.getItem("answers");
