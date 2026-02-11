@@ -20,6 +20,15 @@ const games = [
     border: "border-red-200 hover:border-red-400",
   },
   {
+    slug: "/rorschach",
+    emoji: "🫠",
+    title: "Test de Rorschach",
+    description: "10 taches d'encre, 3 choix, zéro chance d'être diagnostiqué(e) sain(e) d'esprit. Chaque réponse sera retenue contre vous.",
+    tags: ["Psychologie", "Solo", "Classement"],
+    color: "from-[#1a1a2e] to-[#6b21a8]",
+    border: "border-purple/20 hover:border-purple/50",
+  },
+  {
     slug: "#",
     emoji: "🎨",
     title: "Devine le Dessin",

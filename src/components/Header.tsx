@@ -9,13 +9,16 @@ export default function Header() {
   const { player } = usePlayer();
   const isQuizFou = pathname.startsWith("/quiz-fou");
   const isDSM6 = pathname.startsWith("/dsm6");
-  const isGame = isQuizFou || isDSM6;
+  const isRorschach = pathname.startsWith("/rorschach");
+  const isGame = isQuizFou || isDSM6 || isRorschach;
 
   const subtitle = isQuizFou
     ? "Le Quizz le plus fou !"
     : isDSM6
       ? "DSM-6 — Version Beta"
-      : "Les jeux les plus fous !";
+      : isRorschach
+        ? "Test de Rorschach"
+        : "Les jeux les plus fous !";
 
   return (
     <header className="gradient-bg text-white py-4 px-6 shadow-lg">
@@ -39,6 +42,14 @@ export default function Header() {
           {isDSM6 && (
             <Link
               href="/dsm6/classement"
+              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+            >
+              Classement
+            </Link>
+          )}
+          {isRorschach && (
+            <Link
+              href="/rorschach/classement"
               className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
             >
               Classement
