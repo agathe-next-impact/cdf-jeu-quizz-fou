@@ -17,72 +17,66 @@ export interface PlayerScore {
   answers: PlayerAnswer[];
 }
 
-const DATA_DIR = path.join(process.cwd(), "data");
+// On Vercel the project directory is read-only.
+// Use /tmp (the only writable directory) when running on Vercel,
+// otherwise use the local data/ folder (development / self-hosted).
+const DATA_DIR = process.env.VERCEL
+  ? path.join("/tmp", "data")
+  : path.join(process.cwd(), "data");
 const SCORES_FILE = path.join(DATA_DIR, "scores.json");
-const LOCK_FILE = path.join(DATA_DIR, "scores.lock");
+
+// In-memory fallback if the filesystem is completely unavailable.
+let memoryScores: PlayerScore[] = [];
+let useMemory = false;
 
 function ensureDataDir(): void {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
-
-function acquireLock(retries = 10, delay = 50): void {
-  ensureDataDir();
-  for (let i = 0; i < retries; i++) {
-    try {
-      fs.writeFileSync(LOCK_FILE, String(process.pid), { flag: "wx" });
-      return;
-    } catch {
-      // Lock file exists, wait and retry
-      const start = Date.now();
-      while (Date.now() - start < delay) {
-        /* busy wait */
-      }
-    }
-  }
-  // Force acquire after all retries (stale lock protection)
-  fs.writeFileSync(LOCK_FILE, String(process.pid));
-}
-
-function releaseLock(): void {
   try {
-    fs.unlinkSync(LOCK_FILE);
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
   } catch {
-    /* ignore */
+    useMemory = true;
   }
 }
 
 function readScores(): PlayerScore[] {
+  if (useMemory) return memoryScores;
   ensureDataDir();
-  if (!fs.existsSync(SCORES_FILE)) {
-    return [];
+  try {
+    if (!fs.existsSync(SCORES_FILE)) return [];
+    const raw = fs.readFileSync(SCORES_FILE, "utf-8");
+    if (!raw.trim()) return [];
+    return JSON.parse(raw);
+  } catch {
+    return memoryScores;
   }
-  const raw = fs.readFileSync(SCORES_FILE, "utf-8");
-  if (!raw.trim()) return [];
-  return JSON.parse(raw);
 }
 
 function writeScores(scores: PlayerScore[]): void {
+  // Always keep the in-memory copy up to date
+  memoryScores = scores;
+
+  if (useMemory) return;
+
   ensureDataDir();
-  const tmpFile = SCORES_FILE + ".tmp";
-  fs.writeFileSync(tmpFile, JSON.stringify(scores, null, 2), "utf-8");
-  fs.renameSync(tmpFile, SCORES_FILE);
+  try {
+    const tmpFile = SCORES_FILE + ".tmp";
+    fs.writeFileSync(tmpFile, JSON.stringify(scores, null, 2), "utf-8");
+    fs.renameSync(tmpFile, SCORES_FILE);
+  } catch {
+    // Filesystem write failed — keep running with in-memory store
+    useMemory = true;
+  }
 }
 
 export function addScore(entry: PlayerScore): void {
-  acquireLock();
-  try {
-    const scores = readScores();
-    scores.push(entry);
-    scores.sort((a, b) => b.score - a.score);
-    if (scores.length > 100) {
-      scores.length = 100;
-    }
-    writeScores(scores);
-  } finally {
-    releaseLock();
+  const scores = readScores();
+  scores.push(entry);
+  scores.sort((a, b) => b.score - a.score);
+  if (scores.length > 100) {
+    scores.length = 100;
   }
+  writeScores(scores);
 }
 
 export function getScores(): PlayerScore[] {
