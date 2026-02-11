@@ -19,7 +19,7 @@ export default function QuizPage() {
   useEffect(() => {
     const stored = sessionStorage.getItem("pseudo");
     if (!stored) {
-      router.push("/");
+      router.push("/quiz-fou");
       return;
     }
     setPseudo(stored);
@@ -57,7 +57,7 @@ export default function QuizPage() {
           const finalScore = score + points;
           sessionStorage.setItem("score", String(finalScore));
           sessionStorage.setItem("answers", JSON.stringify(updatedAnswers));
-          router.push("/results");
+          router.push("/quiz-fou/results");
         }
       }, 1200);
     },

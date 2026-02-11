@@ -64,7 +64,7 @@ export default function ClassementPage() {
             <p className="text-purple/50 mb-6">
               Sois le premier fou à apparaître ici
             </p>
-            <Link href="/" className="btn-primary inline-block">
+            <Link href="/quiz-fou" className="btn-primary inline-block">
               Jouer maintenant
             </Link>
           </div>
@@ -111,7 +111,7 @@ export default function ClassementPage() {
 
         {/* Back button */}
         <div className="text-center mt-10">
-          <Link href="/" className="btn-secondary inline-block">
+          <Link href="/quiz-fou" className="btn-secondary inline-block">
             Retour au jeu
           </Link>
         </div>

@@ -3,9 +3,9 @@ import "./globals.css";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "Qui est le plus fou ? | Comme des Fous",
+  title: "Comme des Fous | Les jeux les plus fous du web",
   description:
-    "Le quizz le plus fou du web ! Réponds aux questions, accumule des points et découvre à quel point tu es fou/folle. Classement en temps réel !",
+    "Quizz, défis, jeux multijoueur... Joue comme un fou, grimpe dans les classements et montre qui est le plus dingue !",
 };
 
 export default function RootLayout({

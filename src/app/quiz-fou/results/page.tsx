@@ -37,7 +37,7 @@ export default function ResultsPage() {
     const scoreStr = sessionStorage.getItem("score");
 
     if (!pseudo || !scoreStr) {
-      router.push("/");
+      router.push("/quiz-fou");
       return;
     }
 
@@ -156,13 +156,13 @@ export default function ResultsPage() {
           <button
             onClick={() => {
               sessionStorage.removeItem("score");
-              router.push("/quiz");
+              router.push("/quiz-fou/quiz");
             }}
             className="btn-primary"
           >
             Rejouer
           </button>
-          <Link href="/classement" className="btn-secondary text-center">
+          <Link href="/quiz-fou/classement" className="btn-secondary text-center">
             Voir le classement
           </Link>
         </div>
