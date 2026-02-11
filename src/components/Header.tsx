@@ -6,6 +6,14 @@ import { usePathname } from "next/navigation";
 export default function Header() {
   const pathname = usePathname();
   const isQuizFou = pathname.startsWith("/quiz-fou");
+  const isDSM6 = pathname.startsWith("/dsm6");
+  const isGame = isQuizFou || isDSM6;
+
+  const subtitle = isQuizFou
+    ? "Le Quizz le plus fou !"
+    : isDSM6
+      ? "DSM-6 — Version Beta"
+      : "Les jeux les plus fous !";
 
   return (
     <header className="gradient-bg text-white py-4 px-6 shadow-lg">
@@ -14,34 +22,48 @@ export default function Header() {
           <span className="text-3xl">🤪</span>
           <div>
             <h1 className="text-xl font-bold leading-tight">Comme des Fous</h1>
-            <p className="text-xs text-purple-200 tracking-wide">
-              {isQuizFou ? "Le Quizz le plus fou !" : "Les jeux les plus fous !"}
-            </p>
+            <p className="text-xs text-purple-200 tracking-wide">{subtitle}</p>
           </div>
         </Link>
         <nav className="flex gap-3">
-          {isQuizFou ? (
-            <>
-              <Link
-                href="/quiz-fou/classement"
-                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
-              >
-                Classement
-              </Link>
-              <Link
-                href="/"
-                className="text-sm font-semibold bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all"
-              >
-                Tous les jeux
-              </Link>
-            </>
-          ) : (
+          {isQuizFou && (
             <Link
-              href="/quiz-fou"
+              href="/quiz-fou/classement"
               className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
             >
-              Quizz Fou
+              Classement
             </Link>
+          )}
+          {isDSM6 && (
+            <Link
+              href="/dsm6/classement"
+              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+            >
+              Classement
+            </Link>
+          )}
+          {isGame ? (
+            <Link
+              href="/"
+              className="text-sm font-semibold bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all"
+            >
+              Tous les jeux
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/quiz-fou"
+                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              >
+                Quizz Fou
+              </Link>
+              <Link
+                href="/dsm6"
+                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              >
+                DSM-6
+              </Link>
+            </>
           )}
         </nav>
       </div>

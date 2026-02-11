@@ -16,7 +16,7 @@ export type PlayerScore = WPPlayerScore;
  */
 export async function addScore(entry: PlayerScore): Promise<void> {
   if (isWordPressConfigured()) {
-    await wpAddScore(entry);
+    await wpAddScore("quiz-scores", entry);
     return;
   }
   // Fallback: in-memory
@@ -30,7 +30,7 @@ export async function addScore(entry: PlayerScore): Promise<void> {
  */
 export async function getScores(): Promise<PlayerScore[]> {
   if (isWordPressConfigured()) {
-    return wpGetScores();
+    return wpGetScores("quiz-scores");
   }
   return [...memoryScores];
 }

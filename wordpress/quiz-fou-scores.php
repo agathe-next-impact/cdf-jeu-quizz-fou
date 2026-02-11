@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Quiz Fou - Scores
- * Description: Custom Post Type et champs ACF pour stocker les scores du Quizz Fou.
- * Version: 1.0.0
+ * Plugin Name: Comme des Fous - Scores
+ * Description: Custom Post Types et champs ACF pour stocker les scores des jeux (Quizz Fou + DSM-6).
+ * Version: 2.0.0
  * Requires PHP: 7.4
  *
  * Instructions :
@@ -22,117 +22,148 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/* ------------------------------------------------------------------ */
-/*  1. Custom Post Type : quiz_score                                  */
-/* ------------------------------------------------------------------ */
+/* ================================================================== */
+/*  Score fields shared by all game CPTs                               */
+/* ================================================================== */
+function cdf_score_fields() {
+	return [
+		[
+			'key'   => 'field_player_pseudo',
+			'label' => 'Pseudo',
+			'name'  => 'player_pseudo',
+			'type'  => 'text',
+		],
+		[
+			'key'   => 'field_player_score',
+			'label' => 'Score',
+			'name'  => 'player_score',
+			'type'  => 'number',
+		],
+		[
+			'key'   => 'field_player_title',
+			'label' => 'Titre',
+			'name'  => 'player_title',
+			'type'  => 'text',
+		],
+		[
+			'key'   => 'field_score_date',
+			'label' => 'Date',
+			'name'  => 'score_date',
+			'type'  => 'text',
+		],
+		[
+			'key'          => 'field_player_answers',
+			'label'        => 'Réponses (JSON)',
+			'name'         => 'player_answers',
+			'type'         => 'textarea',
+			'instructions' => 'JSON encodé des réponses du joueur.',
+		],
+	];
+}
+
+/* ================================================================== */
+/*  1. Custom Post Types                                               */
+/* ================================================================== */
 add_action( 'init', function () {
+	// Quizz Fou scores
 	register_post_type( 'quiz_score', [
 		'labels'       => [
-			'name'          => 'Scores Quiz',
-			'singular_name' => 'Score Quiz',
+			'name'          => 'Scores Quiz Fou',
+			'singular_name' => 'Score Quiz Fou',
 		],
 		'public'       => false,
 		'show_ui'      => true,
 		'show_in_menu' => true,
-		'show_in_rest' => true,           // expose via REST API
-		'rest_base'    => 'quiz-scores',  // /wp-json/wp/v2/quiz-scores
+		'show_in_rest' => true,
+		'rest_base'    => 'quiz-scores',
 		'menu_icon'    => 'dashicons-chart-bar',
-		'supports'     => [ 'title' ],    // title = pseudo du joueur
+		'supports'     => [ 'title' ],
+	] );
+
+	// DSM-6 scores
+	register_post_type( 'dsm6_score', [
+		'labels'       => [
+			'name'          => 'Scores DSM-6',
+			'singular_name' => 'Score DSM-6',
+		],
+		'public'       => false,
+		'show_ui'      => true,
+		'show_in_menu' => true,
+		'show_in_rest' => true,
+		'rest_base'    => 'dsm6-scores',
+		'menu_icon'    => 'dashicons-heart',
+		'supports'     => [ 'title' ],
 	] );
 } );
 
-/* ------------------------------------------------------------------ */
-/*  2. Champs ACF (enregistrement PHP — pas besoin de JSON)           */
-/*     Fonctionne avec ACF Free ≥ 5.0                                */
-/* ------------------------------------------------------------------ */
+/* ================================================================== */
+/*  2. Champs ACF (PHP, fonctionne avec ACF Free ≥ 5.0)               */
+/* ================================================================== */
 add_action( 'acf/init', function () {
 	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
 		return;
 	}
 
+	$fields = cdf_score_fields();
+
+	// Quiz Fou
 	acf_add_local_field_group( [
-		'key'      => 'group_quiz_score',
-		'title'    => 'Données du Score',
-		'fields'   => [
-			[
-				'key'   => 'field_player_pseudo',
-				'label' => 'Pseudo',
-				'name'  => 'player_pseudo',
-				'type'  => 'text',
-			],
-			[
-				'key'   => 'field_player_score',
-				'label' => 'Score',
-				'name'  => 'player_score',
-				'type'  => 'number',
-			],
-			[
-				'key'   => 'field_player_title',
-				'label' => 'Titre',
-				'name'  => 'player_title',
-				'type'  => 'text',
-			],
-			[
-				'key'   => 'field_score_date',
-				'label' => 'Date',
-				'name'  => 'score_date',
-				'type'  => 'text',
-			],
-			[
-				'key'          => 'field_player_answers',
-				'label'        => 'Réponses (JSON)',
-				'name'         => 'player_answers',
-				'type'         => 'textarea',
-				'instructions' => 'JSON encodé des réponses du joueur.',
-			],
-		],
-		'location' => [
-			[
-				[
-					'param'    => 'post_type',
-					'operator' => '==',
-					'value'    => 'quiz_score',
-				],
-			],
-		],
+		'key'          => 'group_quiz_score',
+		'title'        => 'Données du Score — Quiz Fou',
+		'fields'       => $fields,
+		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'quiz_score' ] ] ],
+		'show_in_rest' => true,
+	] );
+
+	// DSM-6 (réutilise les mêmes champs avec des clés uniques)
+	$dsm6_fields = array_map( function ( $f ) {
+		$f['key'] = str_replace( 'field_', 'field_dsm6_', $f['key'] );
+		return $f;
+	}, $fields );
+
+	acf_add_local_field_group( [
+		'key'          => 'group_dsm6_score',
+		'title'        => 'Données du Score — DSM-6',
+		'fields'       => $dsm6_fields,
+		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'dsm6_score' ] ] ],
 		'show_in_rest' => true,
 	] );
 } );
 
-/* ------------------------------------------------------------------ */
-/*  3. Exposer les champs ACF dans la REST API                        */
-/* ------------------------------------------------------------------ */
+/* ================================================================== */
+/*  3. Exposer les champs ACF dans la REST API                         */
+/* ================================================================== */
 add_action( 'rest_api_init', function () {
-	// Ajouter les champs ACF à la réponse REST du CPT quiz_score
-	register_rest_field( 'quiz_score', 'acf', [
-		'get_callback' => function ( $post ) {
-			return get_fields( $post['id'] ) ?: [];
-		},
-		'schema'       => null,
-	] );
+	foreach ( [ 'quiz_score', 'dsm6_score' ] as $cpt ) {
+		register_rest_field( $cpt, 'acf', [
+			'get_callback' => function ( $post ) {
+				return get_fields( $post['id'] ) ?: [];
+			},
+			'schema'       => null,
+		] );
+	}
 } );
 
-/* ------------------------------------------------------------------ */
-/*  4. Permettre la création de quiz_score sans être admin             */
-/*     On vérifie simplement que la requête est authentifiée.          */
-/* ------------------------------------------------------------------ */
-add_filter( 'rest_pre_insert_quiz_score', function ( $prepared, $request ) {
-	return $prepared;
-}, 10, 2 );
-
-/* Autoriser les utilisateurs authentifiés à créer des scores */
-add_filter( 'map_meta_cap', function ( $caps, $cap, $user_id, $args ) {
-	if ( in_array( $cap, [ 'edit_quiz_scores', 'publish_quiz_scores', 'edit_published_quiz_scores' ], true ) ) {
+/* ================================================================== */
+/*  4. Permissions : autoriser la création via API authentifiée         */
+/* ================================================================== */
+add_filter( 'map_meta_cap', function ( $caps, $cap ) {
+	$allowed = [
+		'edit_quiz_scores', 'publish_quiz_scores', 'edit_published_quiz_scores',
+		'edit_dsm6_scores', 'publish_dsm6_scores', 'edit_published_dsm6_scores',
+	];
+	if ( in_array( $cap, $allowed, true ) ) {
 		return [ 'read' ];
 	}
 	return $caps;
 }, 10, 4 );
 
-/* ------------------------------------------------------------------ */
-/*  5. Auto-remplir le titre du post avec le pseudo                   */
-/* ------------------------------------------------------------------ */
+/* ================================================================== */
+/*  5. Auto-remplir le titre du post avec le pseudo                    */
+/* ================================================================== */
 add_action( 'acf/save_post', function ( $post_id ) {
-	if ( get_post_type( $post_id ) !== 'quiz_score' ) {
+	$type = get_post_type( $post_id );
+	if ( ! in_array( $type, [ 'quiz_score', 'dsm6_score' ], true ) ) {
 		return;
 	}
 	$pseudo = get_field( 'player_pseudo', $post_id );

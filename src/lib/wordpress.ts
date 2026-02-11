@@ -11,8 +11,6 @@ const WP_URL = process.env.WORDPRESS_URL?.replace(/\/+$/, "") ?? "";
 const WP_USER = process.env.WORDPRESS_USER ?? "";
 const WP_APP_PASSWORD = process.env.WORDPRESS_APP_PASSWORD ?? "";
 
-const REST_BASE = `${WP_URL}/wp-json/wp/v2/quiz-scores`;
-
 function authHeader(): string {
   return (
     "Basic " +
@@ -21,7 +19,7 @@ function authHeader(): string {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Types matching the WP REST response for our CPT                   */
+/*  Types                                                              */
 /* ------------------------------------------------------------------ */
 interface WPScorePost {
   id: number;
@@ -30,13 +28,10 @@ interface WPScorePost {
     player_score: number;
     player_title: string;
     score_date: string;
-    player_answers: string; // JSON string
+    player_answers: string;
   };
 }
 
-/* ------------------------------------------------------------------ */
-/*  Public helpers                                                     */
-/* ------------------------------------------------------------------ */
 export interface WPPlayerAnswer {
   questionId: number;
   question: string;
@@ -53,13 +48,18 @@ export interface WPPlayerScore {
   answers: WPPlayerAnswer[];
 }
 
+/* ------------------------------------------------------------------ */
+/*  Generic helpers — support multiple CPTs (rest bases)               */
+/* ------------------------------------------------------------------ */
+
 /**
- * Fetch the top scores from WordPress (sorted by score desc).
- * The WP REST API sorts by date by default; we re-sort client-side
- * to guarantee order by score.
+ * Fetch scores from a given WP REST base (e.g. "quiz-scores", "dsm6-scores").
  */
-export async function wpGetScores(limit = 100): Promise<WPPlayerScore[]> {
-  const url = `${REST_BASE}?per_page=${limit}&orderby=date&order=desc&_fields=id,acf`;
+export async function wpGetScores(
+  restBase: string,
+  limit = 100
+): Promise<WPPlayerScore[]> {
+  const url = `${WP_URL}/wp-json/wp/v2/${restBase}?per_page=${limit}&orderby=date&order=desc&_fields=id,acf`;
 
   const res = await fetch(url, {
     headers: { Accept: "application/json" },
@@ -67,7 +67,7 @@ export async function wpGetScores(limit = 100): Promise<WPPlayerScore[]> {
   });
 
   if (!res.ok) {
-    console.error("WP GET scores failed:", res.status, await res.text());
+    console.error(`WP GET ${restBase} failed:`, res.status, await res.text());
     return [];
   }
 
@@ -85,10 +85,13 @@ export async function wpGetScores(limit = 100): Promise<WPPlayerScore[]> {
 }
 
 /**
- * Create a new score entry in WordPress.
+ * Create a new score entry in a given WP REST base.
  */
-export async function wpAddScore(entry: WPPlayerScore): Promise<void> {
-  const res = await fetch(REST_BASE, {
+export async function wpAddScore(
+  restBase: string,
+  entry: WPPlayerScore
+): Promise<void> {
+  const res = await fetch(`${WP_URL}/wp-json/wp/v2/${restBase}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -109,13 +112,13 @@ export async function wpAddScore(entry: WPPlayerScore): Promise<void> {
 
   if (!res.ok) {
     const text = await res.text();
-    console.error("WP POST score failed:", res.status, text);
+    console.error(`WP POST ${restBase} failed:`, res.status, text);
     throw new Error(`WordPress API error ${res.status}`);
   }
 }
 
 /**
- * Check if the WordPress connection is configured and reachable.
+ * Check if the WordPress connection is configured.
  */
 export function isWordPressConfigured(): boolean {
   return !!(WP_URL && WP_USER && WP_APP_PASSWORD);
