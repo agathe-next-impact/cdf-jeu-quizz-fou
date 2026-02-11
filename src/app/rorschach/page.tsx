@@ -20,11 +20,11 @@ export default function RorschachHome() {
     e.preventDefault();
     const trimmed = pseudo.trim();
     if (trimmed.length < 2) {
-      setError("Votre nom de sujet doit faire au moins 2 caract\u00e8res.");
+      setError("Votre nom de sujet doit faire au moins 2 caractères.");
       return;
     }
     if (trimmed.length > 20) {
-      setError("Nom trop long (20 caract\u00e8res max).");
+      setError("Nom trop long (20 caractères max).");
       return;
     }
     sessionStorage.setItem("rorschach-pseudo", trimmed);
@@ -54,7 +54,7 @@ export default function RorschachHome() {
         {/* Title */}
         <div className="mb-8">
           <div className="inline-block bg-purple/10 text-purple text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
-            \u00c9valuation Psychologique Officieuse&trade;
+            Évaluation Psychologique Officieuse&trade;
           </div>
           <h1
             className="text-4xl md:text-5xl font-black mb-3 leading-tight"
@@ -68,8 +68,8 @@ export default function RorschachHome() {
             Test de Rorschach
           </h1>
           <p className="text-base text-purple-dark/70 font-medium leading-relaxed">
-            10 taches d&apos;encre. 3 choix. Z\u00e9ro chance d&apos;\u00eatre
-            diagnostiqu\u00e9(e) sain(e) d&apos;esprit.
+            10 taches d&apos;encre. 3 choix. Zéro chance d&apos;être
+            diagnostiqué(e) sain(e) d&apos;esprit.
           </p>
         </div>
 
@@ -77,10 +77,10 @@ export default function RorschachHome() {
         <div className="card max-w-md mx-auto border-2 border-purple/10">
           <div className="text-4xl mb-4">🫠</div>
           <h2 className="text-xl font-bold mb-2 text-purple-dark">
-            S\u00e9ance gratuite
+            Séance gratuite
           </h2>
           <p className="text-sm text-gray-500 mb-6">
-            Dites-nous ce que vous voyez. On vous dira ce que \u00e7a dit de
+            Dites-nous ce que vous voyez. On vous dira ce que ça dit de
             vous.
           </p>
 
@@ -102,7 +102,7 @@ export default function RorschachHome() {
               )}
             </div>
             <button type="submit" className="btn-primary w-full">
-              D\u00e9buter la s\u00e9ance
+              Débuter la séance
             </button>
           </form>
         </div>
@@ -130,8 +130,8 @@ export default function RorschachHome() {
         </div>
 
         <p className="mt-8 text-xs text-purple/30 italic">
-          Avertissement : toute r\u00e9ponse sera utilis\u00e9e contre votre
-          sant\u00e9 mentale. Il n&apos;y a pas de bonne r\u00e9ponse.
+          Avertissement : toute réponse sera utilisée contre votre
+          santé mentale. Il n&apos;y a pas de bonne réponse.
         </p>
       </div>
     </div>

@@ -10,7 +10,7 @@ interface PlayerScore {
   date: string;
 }
 
-const MEDAL_EMOJIS = ["\ud83e\udd47", "\ud83e\udd48", "\ud83e\udd49"];
+const MEDAL_EMOJIS = ["🥇", "🥈", "🥉"];
 
 function getRowBg(index: number): string {
   if (index === 0) return "bg-purple/10 border-purple/30";
@@ -54,7 +54,7 @@ export default function RorschachClassementPage() {
             Classement Rorschach
           </h1>
           <p className="text-purple-dark/60 font-medium">
-            Les psych\u00e9s les plus remarquables
+            Les psychés les plus remarquables
           </p>
         </div>
 
@@ -68,7 +68,7 @@ export default function RorschachClassementPage() {
           <div className="card text-center py-12 animate-slide-up">
             <div className="text-5xl mb-4">🖋️</div>
             <h2 className="text-xl font-bold text-purple-dark mb-2">
-              Aucun sujet analys\u00e9
+              Aucun sujet analysé
             </h2>
             <p className="text-purple/50 mb-6">
               Soyez le premier cas du registre

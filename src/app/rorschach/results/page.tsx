@@ -91,7 +91,7 @@ export default function RorschachResultsPage() {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
         <div className="text-xl text-purple animate-pulse">
-          R\u00e9daction du rapport psychologique...
+          Rédaction du rapport psychologique...
         </div>
       </div>
     );
@@ -177,7 +177,7 @@ export default function RorschachResultsPage() {
             }}
             className="btn-primary"
           >
-            Nouvelle s\u00e9ance
+            Nouvelle séance
           </button>
           <Link
             href="/rorschach/classement"

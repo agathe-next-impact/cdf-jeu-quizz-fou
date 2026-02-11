@@ -132,7 +132,7 @@ export default function RorschachQuizPage() {
 
       const newAnswer = {
         questionId: q.id,
-        question: `Tache n\u00b0${q.id}`,
+        question: `Tache n°${q.id}`,
         answerIndex,
         answerText: answer.text,
         points: answer.points,
@@ -165,7 +165,7 @@ export default function RorschachQuizPage() {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
         <div className="text-xl text-purple animate-pulse">
-          Pr\u00e9paration de la s\u00e9ance...
+          Préparation de la séance...
         </div>
       </div>
     );
@@ -250,10 +250,10 @@ export default function RorschachQuizPage() {
                 {showFeedback && isSelected && (
                   <span className="text-sm font-bold animate-bounce-in">
                     {answeredPoints >= 25
-                      ? "\ud83e\udde0"
+                      ? "🧠"
                       : answeredPoints >= 15
-                        ? "\ud83d\udcdd"
-                        : "\ud83d\udd0d"}{" "}
+                        ? "📝"
+                        : "🔍"}{" "}
                     +{answeredPoints}
                   </span>
                 )}
