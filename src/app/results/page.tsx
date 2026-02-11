@@ -45,39 +45,54 @@ export default function ResultsPage() {
 
     const score = parseInt(scoreStr, 10);
     const answersRaw = sessionStorage.getItem("answers");
-    let answers = [];
+    let answers: unknown[] = [];
     try {
       answers = answersRaw ? JSON.parse(answersRaw) : [];
     } catch { /* ignore */ }
 
-    fetch("/api/scores", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pseudo, score, answers }),
-    })
-      .then((res) => res.json())
-      .then((data: ScoreResult) => {
-        setResult(data);
-        setLoading(false);
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 4000);
-      })
-      .catch(() => {
-        const maxScore = questions.length * 30;
-        const percentage = (score / maxScore) * 100;
-        let title = "Trop Sage !";
-        if (percentage >= 90) title = "Complètement Fou / Folle !";
-        else if (percentage >= 75) title = "Sacrément Barré(e) !";
-        else if (percentage >= 60) title = "Bien Allumé(e) !";
-        else if (percentage >= 45) title = "Un Peu Fêlé(e)";
-        else if (percentage >= 30) title = "Légèrement Toqué(e)";
-        else if (percentage >= 15) title = "Presque Sage";
+    async function saveScore() {
+      // Try with answers first, retry without if it fails
+      for (const payload of [
+        { pseudo, score, answers },
+        { pseudo, score, answers: [] },
+      ]) {
+        try {
+          const res = await fetch("/api/scores", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (res.ok) {
+            const data: ScoreResult = await res.json();
+            setResult(data);
+            setLoading(false);
+            setShowConfetti(true);
+            setTimeout(() => setShowConfetti(false), 4000);
+            return;
+          }
+        } catch {
+          /* retry with next payload */
+        }
+      }
 
-        setResult({ pseudo, score, title, date: new Date().toISOString() });
-        setLoading(false);
-        setShowConfetti(true);
-        setTimeout(() => setShowConfetti(false), 4000);
-      });
+      // All retries failed — show result locally
+      const maxScore = questions.length * 30;
+      const percentage = (score / maxScore) * 100;
+      let title = "Trop Sage !";
+      if (percentage >= 90) title = "Complètement Fou / Folle !";
+      else if (percentage >= 75) title = "Sacrément Barré(e) !";
+      else if (percentage >= 60) title = "Bien Allumé(e) !";
+      else if (percentage >= 45) title = "Un Peu Fêlé(e)";
+      else if (percentage >= 30) title = "Légèrement Toqué(e)";
+      else if (percentage >= 15) title = "Presque Sage";
+
+      setResult({ pseudo: pseudo!, score, title, date: new Date().toISOString() });
+      setLoading(false);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 4000);
+    }
+
+    saveScore();
   }, [router]);
 
   if (loading || !result) {

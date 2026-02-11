@@ -3,15 +3,30 @@ import { addScore, getScores, getTitle } from "@/data/scores";
 import type { PlayerAnswer } from "@/data/scores";
 import { questions } from "@/data/questions";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
-  const scores = getScores();
-  // Strip answers from the public leaderboard response
-  const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
-  return NextResponse.json(publicScores);
+  try {
+    const scores = getScores();
+    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    return NextResponse.json(publicScores);
+  } catch (err) {
+    console.error("GET /api/scores error:", err);
+    return NextResponse.json([], { status: 200 });
+  }
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  let body: Record<string, unknown>;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json(
+      { error: "JSON invalide" },
+      { status: 400 }
+    );
+  }
+
   const { pseudo, score, answers } = body;
 
   if (!pseudo || typeof pseudo !== "string" || pseudo.trim().length === 0) {
@@ -25,7 +40,6 @@ export async function POST(request: NextRequest) {
   const maxScore = questions.length * 30;
   const title = getTitle(score, maxScore);
 
-  // Validate and sanitize answers
   let playerAnswers: PlayerAnswer[] = [];
   if (Array.isArray(answers)) {
     playerAnswers = answers
@@ -54,9 +68,16 @@ export async function POST(request: NextRequest) {
     answers: playerAnswers,
   };
 
-  addScore(entry);
+  try {
+    addScore(entry);
+  } catch (err) {
+    console.error("POST /api/scores write error:", err);
+    return NextResponse.json(
+      { error: "Erreur sauvegarde" },
+      { status: 500 }
+    );
+  }
 
-  // Return without answers for the client
   const { answers: _answers, ...publicEntry } = entry;
   return NextResponse.json(publicEntry, { status: 201 });
 }
