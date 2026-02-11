@@ -1,25 +1,57 @@
+import fs from "node:fs";
+import path from "node:path";
+
+export interface PlayerAnswer {
+  questionId: number;
+  question: string;
+  answerIndex: number;
+  answerText: string;
+  points: number;
+}
+
 export interface PlayerScore {
   pseudo: string;
   score: number;
   title: string;
   date: string;
+  answers: PlayerAnswer[];
 }
 
-// In-memory store for scores (resets on server restart)
-// For production, replace with a database
-const scores: PlayerScore[] = [];
+const DATA_DIR = path.join(process.cwd(), "data");
+const SCORES_FILE = path.join(DATA_DIR, "scores.json");
 
-export function addScore(entry: PlayerScore): void {
-  scores.push(entry);
-  scores.sort((a, b) => b.score - a.score);
-  // Keep only top 100
-  if (scores.length > 100) {
-    scores.length = 100;
+function ensureDataDir(): void {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
   }
 }
 
+function readScores(): PlayerScore[] {
+  ensureDataDir();
+  if (!fs.existsSync(SCORES_FILE)) {
+    return [];
+  }
+  const raw = fs.readFileSync(SCORES_FILE, "utf-8");
+  return JSON.parse(raw);
+}
+
+function writeScores(scores: PlayerScore[]): void {
+  ensureDataDir();
+  fs.writeFileSync(SCORES_FILE, JSON.stringify(scores, null, 2), "utf-8");
+}
+
+export function addScore(entry: PlayerScore): void {
+  const scores = readScores();
+  scores.push(entry);
+  scores.sort((a, b) => b.score - a.score);
+  if (scores.length > 100) {
+    scores.length = 100;
+  }
+  writeScores(scores);
+}
+
 export function getScores(): PlayerScore[] {
-  return [...scores];
+  return readScores();
 }
 
 export function getTitle(score: number, maxScore: number): string {

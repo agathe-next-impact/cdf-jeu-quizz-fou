@@ -39,11 +39,16 @@ export default function ResultsPage() {
     }
 
     const score = parseInt(scoreStr, 10);
+    const answersRaw = sessionStorage.getItem("answers");
+    let answers = [];
+    try {
+      answers = answersRaw ? JSON.parse(answersRaw) : [];
+    } catch { /* ignore */ }
 
     fetch("/api/scores", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pseudo, score }),
+      body: JSON.stringify({ pseudo, score, answers }),
     })
       .then((res) => res.json())
       .then((data: ScoreResult) => {

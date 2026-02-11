@@ -12,6 +12,9 @@ export default function QuizPage() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [answeredPoints, setAnsweredPoints] = useState(0);
+  const [playerAnswers, setPlayerAnswers] = useState<
+    { questionId: number; question: string; answerIndex: number; answerText: string; points: number }[]
+  >([]);
 
   useEffect(() => {
     const stored = sessionStorage.getItem("pseudo");
@@ -26,11 +29,23 @@ export default function QuizPage() {
     (answerIndex: number) => {
       if (showFeedback) return;
 
-      const points = questions[currentQuestion].answers[answerIndex].points;
+      const q = questions[currentQuestion];
+      const answer = q.answers[answerIndex];
+      const points = answer.points;
       setSelectedAnswer(answerIndex);
       setAnsweredPoints(points);
       setShowFeedback(true);
       setScore((prev) => prev + points);
+
+      const newAnswer = {
+        questionId: q.id,
+        question: q.question,
+        answerIndex,
+        answerText: answer.text,
+        points,
+      };
+      const updatedAnswers = [...playerAnswers, newAnswer];
+      setPlayerAnswers(updatedAnswers);
 
       setTimeout(() => {
         if (currentQuestion < questions.length - 1) {
@@ -41,11 +56,12 @@ export default function QuizPage() {
         } else {
           const finalScore = score + points;
           sessionStorage.setItem("score", String(finalScore));
+          sessionStorage.setItem("answers", JSON.stringify(updatedAnswers));
           router.push("/results");
         }
       }, 1200);
     },
-    [currentQuestion, router, score, showFeedback]
+    [currentQuestion, router, score, showFeedback, playerAnswers]
   );
 
   if (!pseudo) {
