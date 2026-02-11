@@ -1,88 +1,43 @@
-import fs from "node:fs";
-import path from "node:path";
+import {
+  wpGetScores,
+  wpAddScore,
+  isWordPressConfigured,
+} from "@/lib/wordpress";
+import type { WPPlayerAnswer, WPPlayerScore } from "@/lib/wordpress";
 
-export interface PlayerAnswer {
-  questionId: number;
-  question: string;
-  answerIndex: number;
-  answerText: string;
-  points: number;
-}
+// Re-export types so existing imports keep working
+export type PlayerAnswer = WPPlayerAnswer;
+export type PlayerScore = WPPlayerScore;
 
-export interface PlayerScore {
-  pseudo: string;
-  score: number;
-  title: string;
-  date: string;
-  answers: PlayerAnswer[];
-}
-
-// On Vercel the project directory is read-only.
-// Use /tmp (the only writable directory) when running on Vercel,
-// otherwise use the local data/ folder (development / self-hosted).
-const DATA_DIR = process.env.VERCEL
-  ? path.join("/tmp", "data")
-  : path.join(process.cwd(), "data");
-const SCORES_FILE = path.join(DATA_DIR, "scores.json");
-
-// In-memory fallback if the filesystem is completely unavailable.
-let memoryScores: PlayerScore[] = [];
-let useMemory = false;
-
-function ensureDataDir(): void {
-  try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-  } catch {
-    useMemory = true;
+/**
+ * Add a score.
+ * - WordPress configured → persists in WP via REST API
+ * - No WordPress        → in-memory fallback (dev / preview)
+ */
+export async function addScore(entry: PlayerScore): Promise<void> {
+  if (isWordPressConfigured()) {
+    await wpAddScore(entry);
+    return;
   }
+  // Fallback: in-memory
+  memoryScores.push(entry);
+  memoryScores.sort((a, b) => b.score - a.score);
+  if (memoryScores.length > 100) memoryScores.length = 100;
 }
 
-function readScores(): PlayerScore[] {
-  if (useMemory) return memoryScores;
-  ensureDataDir();
-  try {
-    if (!fs.existsSync(SCORES_FILE)) return [];
-    const raw = fs.readFileSync(SCORES_FILE, "utf-8");
-    if (!raw.trim()) return [];
-    return JSON.parse(raw);
-  } catch {
-    return memoryScores;
+/**
+ * Get all scores (top 100, sorted by score desc).
+ */
+export async function getScores(): Promise<PlayerScore[]> {
+  if (isWordPressConfigured()) {
+    return wpGetScores();
   }
+  return [...memoryScores];
 }
 
-function writeScores(scores: PlayerScore[]): void {
-  // Always keep the in-memory copy up to date
-  memoryScores = scores;
-
-  if (useMemory) return;
-
-  ensureDataDir();
-  try {
-    const tmpFile = SCORES_FILE + ".tmp";
-    fs.writeFileSync(tmpFile, JSON.stringify(scores, null, 2), "utf-8");
-    fs.renameSync(tmpFile, SCORES_FILE);
-  } catch {
-    // Filesystem write failed — keep running with in-memory store
-    useMemory = true;
-  }
-}
-
-export function addScore(entry: PlayerScore): void {
-  const scores = readScores();
-  scores.push(entry);
-  scores.sort((a, b) => b.score - a.score);
-  if (scores.length > 100) {
-    scores.length = 100;
-  }
-  writeScores(scores);
-}
-
-export function getScores(): PlayerScore[] {
-  return readScores();
-}
-
+/**
+ * Compute the title based on the score percentage.
+ */
 export function getTitle(score: number, maxScore: number): string {
   const percentage = (score / maxScore) * 100;
   if (percentage >= 90) return "Complètement Fou / Folle !";
@@ -93,3 +48,6 @@ export function getTitle(score: number, maxScore: number): string {
   if (percentage >= 15) return "Presque Sage";
   return "Trop Sage !";
 }
+
+// In-memory fallback for development without WordPress
+const memoryScores: PlayerScore[] = [];

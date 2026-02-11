@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = getScores();
+    const scores = await getScores();
     const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
   };
 
   try {
-    addScore(entry);
+    await addScore(entry);
   } catch (err) {
     console.error("POST /api/scores write error:", err);
     return NextResponse.json(
