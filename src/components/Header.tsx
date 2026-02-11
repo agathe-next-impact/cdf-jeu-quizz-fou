@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { usePlayer } from "@/context/PlayerContext";
 
 export default function Header() {
   const pathname = usePathname();
+  const { player } = usePlayer();
   const isQuizFou = pathname.startsWith("/quiz-fou");
   const isDSM6 = pathname.startsWith("/dsm6");
   const isGame = isQuizFou || isDSM6;
@@ -25,7 +27,7 @@ export default function Header() {
             <p className="text-xs text-purple-200 tracking-wide">{subtitle}</p>
           </div>
         </Link>
-        <nav className="flex gap-3">
+        <nav className="flex gap-3 items-center">
           {isQuizFou && (
             <Link
               href="/quiz-fou/classement"
@@ -53,17 +55,39 @@ export default function Header() {
             <>
               <Link
                 href="/quiz-fou"
-                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all hidden sm:inline-block"
               >
                 Quizz Fou
               </Link>
               <Link
                 href="/dsm6"
-                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all hidden sm:inline-block"
               >
                 DSM-6
               </Link>
             </>
+          )}
+
+          {/* Profile / Auth */}
+          {player ? (
+            <Link
+              href="/profil"
+              className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-all"
+            >
+              <span className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-xs font-black">
+                {player.pseudo.charAt(0).toUpperCase()}
+              </span>
+              <span className="text-sm font-semibold hidden sm:inline">
+                {player.pseudo}
+              </span>
+            </Link>
+          ) : (
+            <Link
+              href="/connexion"
+              className="text-sm font-semibold bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-all"
+            >
+              Connexion
+            </Link>
           )}
         </nav>
       </div>

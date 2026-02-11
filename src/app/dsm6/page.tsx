@@ -1,12 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { usePlayer } from "@/context/PlayerContext";
 
 export default function DSM6Home() {
+  const { player } = usePlayer();
   const [pseudo, setPseudo] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    if (player?.pseudo && !pseudo) {
+      setPseudo(player.pseudo);
+    }
+  }, [player]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

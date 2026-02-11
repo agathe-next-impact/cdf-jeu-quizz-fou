@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
+import { PlayerProvider } from "@/context/PlayerContext";
 
 export const metadata: Metadata = {
   title: "Comme des Fous | Les jeux les plus fous du web",
@@ -16,8 +17,10 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className="antialiased min-h-screen">
-        <Header />
-        <main>{children}</main>
+        <PlayerProvider>
+          <Header />
+          <main>{children}</main>
+        </PlayerProvider>
       </body>
     </html>
   );
