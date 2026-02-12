@@ -240,7 +240,7 @@ interface ScoreEntry {
   date: string;
 }
 
-const GAME_LIST = [
+export const GAME_LIST = [
   { name: "DSM-6 Version Beta", slug: "/dsm6", restBase: "dsm6-scores", apiPath: "/api/dsm6-scores" },
   { name: "Test de Rorschach", slug: "/rorschach", restBase: "rorschach-scores", apiPath: "/api/rorschach-scores" },
   { name: "Évaluation Émotionnelle", slug: "/evaluation", restBase: "evaluation-scores", apiPath: "/api/evaluation-scores" },
@@ -394,4 +394,65 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
   results.sort((a, b) => b.globalScore - a.globalScore);
 
   return results;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Per-game leaderboards                                              */
+/* ------------------------------------------------------------------ */
+export interface GameLeaderboardEntry {
+  pseudo: string;
+  score: number;
+  title: string;
+}
+
+export interface GameLeaderboard {
+  game: string;
+  emoji: string;
+  slug: string;
+  entries: GameLeaderboardEntry[];
+}
+
+const GAME_EMOJIS: Record<string, string> = {
+  "DSM-6 Version Beta": "🏥",
+  "Test de Rorschach": "🫠",
+  "Évaluation Émotionnelle": "🧠",
+  "Évasion Psychiatrique": "🏥",
+  "Test de Motricité Fine": "🎯",
+  "Test Cognitif Absurde": "🧠",
+};
+
+export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard[]> {
+  const allGameScores: ScoreEntry[][] = await Promise.all(
+    GAME_LIST.map((game) =>
+      isWordPressConfigured()
+        ? wpGetScores(game.restBase)
+        : getScoresForGame(game.restBase)
+    )
+  );
+
+  return GAME_LIST.map((game, gi) => {
+    const scores = allGameScores[gi];
+
+    // Keep only the best score per pseudo
+    const bestByPseudo = new Map<string, ScoreEntry>();
+    for (const entry of scores) {
+      const key = entry.pseudo.toLowerCase();
+      const prev = bestByPseudo.get(key);
+      if (!prev || entry.score > prev.score) {
+        bestByPseudo.set(key, entry);
+      }
+    }
+
+    const entries = [...bestByPseudo.values()]
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map((e) => ({ pseudo: e.pseudo, score: e.score, title: e.title }));
+
+    return {
+      game: game.name,
+      emoji: GAME_EMOJIS[game.name] ?? "🎮",
+      slug: game.slug,
+      entries,
+    };
+  });
 }

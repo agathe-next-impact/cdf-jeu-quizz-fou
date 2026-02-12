@@ -1,19 +1,22 @@
 import { NextResponse } from "next/server";
-import { getAllPlayersGlobalScores } from "@/data/players";
+import { getAllPlayersGlobalScores, getPerGameLeaderboards } from "@/data/players";
 import { getBadgeForScore } from "@/data/badges";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const players = await getAllPlayersGlobalScores();
+    const [players, perGame] = await Promise.all([
+      getAllPlayersGlobalScores(),
+      getPerGameLeaderboards(5),
+    ]);
 
-    const leaderboard = players.slice(0, 10).map((p) => ({
+    const global = players.slice(0, 10).map((p) => ({
       ...p,
       badge: getBadgeForScore(p.globalScore),
     }));
 
-    return NextResponse.json(leaderboard);
+    return NextResponse.json({ global, perGame });
   } catch (err) {
     console.error("Hall of fame error:", err);
     return NextResponse.json(
