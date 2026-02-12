@@ -10,7 +10,10 @@ export default function Header() {
   const isQuizFou = pathname.startsWith("/quiz-fou");
   const isDSM6 = pathname.startsWith("/dsm6");
   const isRorschach = pathname.startsWith("/rorschach");
-  const isGame = isQuizFou || isDSM6 || isRorschach;
+  const isEvaluation = pathname.startsWith("/evaluation");
+  const isEvasion = pathname.startsWith("/evasion");
+  const isMotricite = pathname.startsWith("/motricite");
+  const isGame = isQuizFou || isDSM6 || isRorschach || isEvaluation || isEvasion || isMotricite;
 
   const subtitle = isQuizFou
     ? "Le Quizz le plus fou !"
@@ -18,7 +21,13 @@ export default function Header() {
       ? "DSM-6 — Version Beta"
       : isRorschach
         ? "Test de Rorschach"
-        : "Les jeux les plus fous !";
+        : isEvaluation
+          ? "Évaluation Émotionnelle"
+          : isEvasion
+            ? "Évasion Psychiatrique"
+            : isMotricite
+              ? "Test de Motricité Fine"
+              : "Les jeux les plus fous !";
 
   return (
     <header className="gradient-bg text-white py-4 px-6 shadow-lg">
@@ -50,6 +59,30 @@ export default function Header() {
           {isRorschach && (
             <Link
               href="/rorschach/classement"
+              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+            >
+              Classement
+            </Link>
+          )}
+          {isEvaluation && (
+            <Link
+              href="/evaluation/classement"
+              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+            >
+              Classement
+            </Link>
+          )}
+          {isEvasion && (
+            <Link
+              href="/evasion/classement"
+              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+            >
+              Classement
+            </Link>
+          )}
+          {isMotricite && (
+            <Link
+              href="/motricite/classement"
               className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
             >
               Classement
