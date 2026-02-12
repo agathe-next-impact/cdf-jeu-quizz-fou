@@ -65,12 +65,35 @@ export default function ProfilPage() {
     }
 
     fetch(`/api/auth/profile?pseudo=${encodeURIComponent(player.pseudo)}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`Profile API ${res.status}`);
+        return res.json();
+      })
       .then((data: ProfileData) => {
         setProfile(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error("Profile fetch error:", err);
+        // Fallback: build a minimal profile from context data so the page doesn't crash
+        setProfile({
+          player: {
+            id: player.id ?? "",
+            pseudo: player.pseudo,
+            email: player.email,
+            avatar: player.avatar,
+            createdAt: player.createdAt,
+            madnessSince: player.madnessSince ?? "",
+            bio: player.bio ?? "",
+            autodiagnostic: player.autodiagnostic ?? "",
+          },
+          games: [],
+          globalScore: 0,
+          badge: { name: "Patient Admis", emoji: "🏥", minScore: 0, color: "text-gray-400" },
+          nextBadge: { name: "Cas Intéressant", emoji: "🔬", minScore: 50, color: "text-blue-400" },
+        });
+        setLoading(false);
+      });
   }, [player, authLoading, router]);
 
   // Sync badge to context/localStorage when profile loads

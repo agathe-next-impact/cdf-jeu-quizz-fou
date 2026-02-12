@@ -83,30 +83,52 @@ interface WPPlayerPost {
   };
 }
 
+function wpPostToPlayer(post: WPPlayerPost): Player | null {
+  if (!post.acf) return null;
+  return {
+    id: String(post.id),
+    pseudo: post.acf.player_pseudo,
+    email: post.acf.player_email,
+    avatar: post.acf.player_avatar || "🤪",
+    passwordHash: post.acf.player_password_hash,
+    createdAt: post.acf.player_created_at,
+    madnessSince: post.acf.player_madness_since || "",
+    bio: post.acf.player_bio || "",
+    autodiagnostic: post.acf.player_autodiagnostic || "",
+  };
+}
+
 async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
-  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
-  const res = await fetch(url, {
+  // Try slug-based lookup first (exact match, no indexing delay)
+  const slugUrl = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&slug=${encodeURIComponent(pseudo.toLowerCase())}&_fields=id,acf`;
+  const slugRes = await fetch(slugUrl, {
+    headers: { Accept: "application/json", Authorization: wpAuth() },
+    next: { revalidate: 0 },
+  });
+  if (slugRes.ok) {
+    const slugPosts: WPPlayerPost[] = await slugRes.json();
+    if (slugPosts.length > 0) {
+      const player = wpPostToPlayer(slugPosts[0]);
+      if (player) return player;
+    }
+  } else {
+    console.error(`wpFindPlayerByPseudo slug lookup failed: ${slugRes.status}`, await slugRes.text().catch(() => ""));
+  }
+
+  // Fallback: search-based lookup
+  const searchUrl = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=10&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
+  const res = await fetch(searchUrl, {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
   });
   if (!res.ok) {
-    console.error(`wpFindPlayerByPseudo failed: ${res.status}`, await res.text().catch(() => ""));
+    console.error(`wpFindPlayerByPseudo search failed: ${res.status}`, await res.text().catch(() => ""));
     return null;
   }
   const posts: WPPlayerPost[] = await res.json();
-  const match = posts.find((p) => p.acf.player_pseudo === pseudo);
+  const match = posts.find((p) => p.acf?.player_pseudo === pseudo);
   if (!match) return null;
-  return {
-    id: String(match.id),
-    pseudo: match.acf.player_pseudo,
-    email: match.acf.player_email,
-    avatar: match.acf.player_avatar || "🤪",
-    passwordHash: match.acf.player_password_hash,
-    createdAt: match.acf.player_created_at,
-    madnessSince: match.acf.player_madness_since || "",
-    bio: match.acf.player_bio || "",
-    autodiagnostic: match.acf.player_autodiagnostic || "",
-  };
+  return wpPostToPlayer(match);
 }
 
 async function wpFindPlayerByEmail(email: string): Promise<Player | null> {
@@ -120,19 +142,9 @@ async function wpFindPlayerByEmail(email: string): Promise<Player | null> {
     return null;
   }
   const posts: WPPlayerPost[] = await res.json();
-  const match = posts.find((p) => p.acf.player_email === email);
+  const match = posts.find((p) => p.acf?.player_email === email);
   if (!match) return null;
-  return {
-    id: String(match.id),
-    pseudo: match.acf.player_pseudo,
-    email: match.acf.player_email,
-    avatar: match.acf.player_avatar || "🤪",
-    passwordHash: match.acf.player_password_hash,
-    createdAt: match.acf.player_created_at,
-    madnessSince: match.acf.player_madness_since || "",
-    bio: match.acf.player_bio || "",
-    autodiagnostic: match.acf.player_autodiagnostic || "",
-  };
+  return wpPostToPlayer(match);
 }
 
 async function wpCreatePlayer(player: Player): Promise<void> {
