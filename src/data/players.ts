@@ -317,6 +317,71 @@ async function wpUpdatePlayerProfile(
 }
 
 /* ------------------------------------------------------------------ */
+/*  Password reset                                                      */
+/* ------------------------------------------------------------------ */
+export async function updatePlayerPassword(
+  pseudo: string,
+  email: string,
+  newPassword: string
+): Promise<boolean> {
+  if (isWordPressConfigured()) {
+    return wpUpdatePlayerPassword(pseudo, email, newPassword);
+  }
+  const player = memoryPlayers.find(
+    (p) => p.pseudo.toLowerCase() === pseudo.toLowerCase() && p.email === email.toLowerCase().trim()
+  );
+  if (!player) return false;
+  player.passwordHash = hashPassword(newPassword);
+  return true;
+}
+
+async function wpUpdatePlayerPassword(
+  pseudo: string,
+  email: string,
+  newPassword: string
+): Promise<boolean> {
+  const player = await wpFindPlayerByPseudo(pseudo);
+  if (!player) return false;
+  if (player.email.toLowerCase() !== email.toLowerCase().trim()) return false;
+
+  const updateRes = await fetch(`${WP_URL}/wp-json/wp/v2/cdf-players/${player.id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: wpAuth(),
+    },
+    body: JSON.stringify({
+      acf: { player_password_hash: hashPassword(newPassword) },
+    }),
+  });
+  return updateRes.ok;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Account deletion                                                    */
+/* ------------------------------------------------------------------ */
+export async function deletePlayer(pseudo: string): Promise<boolean> {
+  if (isWordPressConfigured()) {
+    return wpDeletePlayer(pseudo);
+  }
+  const idx = memoryPlayers.findIndex((p) => p.pseudo === pseudo);
+  if (idx === -1) return false;
+  memoryPlayers.splice(idx, 1);
+  return true;
+}
+
+async function wpDeletePlayer(pseudo: string): Promise<boolean> {
+  const player = await wpFindPlayerByPseudo(pseudo);
+  if (!player) return false;
+
+  const res = await fetch(`${WP_URL}/wp-json/wp/v2/cdf-players/${player.id}?force=true`, {
+    method: "DELETE",
+    headers: { Authorization: wpAuth() },
+  });
+  return res.ok;
+}
+
+/* ------------------------------------------------------------------ */
 /*  Aggregate stats across games                                       */
 /* ------------------------------------------------------------------ */
 interface ScoreEntry {

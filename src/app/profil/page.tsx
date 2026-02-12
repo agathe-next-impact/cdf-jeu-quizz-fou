@@ -56,6 +56,10 @@ export default function ProfilPage() {
   const [madnessValue, setMadnessValue] = useState("");
   const [diagValue, setDiagValue] = useState("");
   const [saving, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -138,6 +142,30 @@ export default function ProfilPage() {
       setEditingMadness(false);
     }
     setSaving(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!player) return;
+    setDeleteError("");
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/auth/delete-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo: player.pseudo, password: deletePassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setDeleteError(data.error || "Erreur lors de la suppression");
+        setDeleting(false);
+        return;
+      }
+      logout();
+      router.push("/");
+    } catch {
+      setDeleteError("Erreur réseau");
+      setDeleting(false);
+    }
   };
 
   if (authLoading || loading || !profile) {
@@ -471,6 +499,60 @@ export default function ProfilPage() {
           >
             Se d&eacute;connecter
           </button>
+        </div>
+
+        {/* Danger zone */}
+        <div className="mt-12 animate-slide-up" style={{ animationDelay: "0.5s" }}>
+          {!showDeleteConfirm ? (
+            <div className="text-center">
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="text-xs text-red-400/60 hover:text-red-500 font-medium transition-colors"
+              >
+                Supprimer mon compte
+              </button>
+            </div>
+          ) : (
+            <div className="card border-2 border-red-200 bg-red-50/50">
+              <h3 className="text-sm font-bold text-red-600 mb-2">
+                Supprimer le compte
+              </h3>
+              <p className="text-xs text-red-500/70 mb-4">
+                Cette action est irr&eacute;versible. Ton compte et tes donn&eacute;es de profil seront supprim&eacute;s.
+              </p>
+              <div className="mb-3">
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Confirme avec ton mot de passe"
+                  className="w-full px-3 py-2 rounded-xl border-2 border-red-200 focus:border-red-400 focus:outline-none bg-white text-purple-dark text-sm transition-colors"
+                />
+              </div>
+              {deleteError && (
+                <p className="text-red-500 text-xs font-medium mb-3">{deleteError}</p>
+              )}
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setDeletePassword("");
+                    setDeleteError("");
+                  }}
+                  className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1.5 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleting || !deletePassword}
+                  className="text-xs font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {deleting ? "Suppression..." : "Supprimer définitivement"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
