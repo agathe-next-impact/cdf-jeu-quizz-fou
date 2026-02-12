@@ -15,9 +15,14 @@ interface GameStats {
 }
 
 interface ProfileData {
-  player: { id: string; pseudo: string; email: string; createdAt: string };
+  player: { id: string; pseudo: string; email: string; avatar: string; createdAt: string };
   games: GameStats[];
 }
+
+const AVATARS = [
+  "🤪", "😎", "🧠", "👻", "🦊", "🐱", "🐸", "🎃",
+  "🤖", "👽", "🦄", "🐧", "🎭", "🔥", "💀", "🫠",
+];
 
 const GAME_EMOJIS: Record<string, string> = {
   "DSM-6 Version Beta": "🏥",
@@ -29,10 +34,11 @@ const GAME_EMOJIS: Record<string, string> = {
 };
 
 export default function ProfilPage() {
-  const { player, loading: authLoading, logout } = usePlayer();
+  const { player, loading: authLoading, logout, updateAvatar } = usePlayer();
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -70,9 +76,41 @@ export default function ProfilPage() {
       <div className="max-w-2xl mx-auto">
         {/* Profile header */}
         <div className="card text-center mb-8 animate-slide-up">
-          <div className="w-20 h-20 rounded-full gradient-bg flex items-center justify-center text-3xl text-white font-black mx-auto mb-4">
-            {profile.player.pseudo.charAt(0).toUpperCase()}
+          <div className="relative inline-block mx-auto mb-4">
+            <button
+              onClick={() => setShowAvatarPicker(!showAvatarPicker)}
+              className="w-20 h-20 rounded-full gradient-bg flex items-center justify-center text-4xl mx-auto hover:scale-105 transition-transform"
+              title="Changer d'avatar"
+            >
+              {profile.player.avatar || profile.player.pseudo.charAt(0).toUpperCase()}
+            </button>
+            <span className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs shadow border border-purple/20">
+              ✏️
+            </span>
           </div>
+          {showAvatarPicker && (
+            <div className="flex flex-wrap gap-2 justify-center mb-4 animate-slide-up">
+              {AVATARS.map((a) => (
+                <button
+                  key={a}
+                  onClick={async () => {
+                    await updateAvatar(a);
+                    setProfile((prev) =>
+                      prev ? { ...prev, player: { ...prev.player, avatar: a } } : prev
+                    );
+                    setShowAvatarPicker(false);
+                  }}
+                  className={`text-2xl w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                    profile.player.avatar === a
+                      ? "bg-purple/20 ring-2 ring-purple scale-110"
+                      : "bg-purple/5 hover:bg-purple/10"
+                  }`}
+                >
+                  {a}
+                </button>
+              ))}
+            </div>
+          )}
           <h1 className="text-3xl font-black gradient-text mb-1">
             {profile.player.pseudo}
           </h1>

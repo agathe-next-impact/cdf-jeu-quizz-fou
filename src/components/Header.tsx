@@ -112,8 +112,8 @@ export default function Header() {
               href="/profil"
               className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-all"
             >
-              <span className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-xs font-black">
-                {player.pseudo.charAt(0).toUpperCase()}
+              <span className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-sm">
+                {player.avatar || player.pseudo.charAt(0).toUpperCase()}
               </span>
               <span className="text-sm font-semibold hidden sm:inline">
                 {player.pseudo}

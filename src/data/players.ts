@@ -7,10 +7,18 @@ import {
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
+export const AVATARS = [
+  "🤪", "😎", "🧠", "👻", "🦊", "🐱", "🐸", "🎃",
+  "🤖", "👽", "🦄", "🐧", "🎭", "🔥", "💀", "🫠",
+] as const;
+
+export type AvatarEmoji = (typeof AVATARS)[number];
+
 export interface Player {
   id: string;
   pseudo: string;
   email: string;
+  avatar: string;
   passwordHash: string;
   createdAt: string;
 }
@@ -63,6 +71,7 @@ interface WPPlayerPost {
   acf: {
     player_pseudo: string;
     player_email: string;
+    player_avatar: string;
     player_password_hash: string;
     player_created_at: string;
   };
@@ -82,6 +91,7 @@ async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
     id: String(match.id),
     pseudo: match.acf.player_pseudo,
     email: match.acf.player_email,
+    avatar: match.acf.player_avatar || "🤪",
     passwordHash: match.acf.player_password_hash,
     createdAt: match.acf.player_created_at,
   };
@@ -101,6 +111,7 @@ async function wpFindPlayerByEmail(email: string): Promise<Player | null> {
     id: String(match.id),
     pseudo: match.acf.player_pseudo,
     email: match.acf.player_email,
+    avatar: match.acf.player_avatar || "🤪",
     passwordHash: match.acf.player_password_hash,
     createdAt: match.acf.player_created_at,
   };
@@ -119,6 +130,7 @@ async function wpCreatePlayer(player: Player): Promise<void> {
       acf: {
         player_pseudo: player.pseudo,
         player_email: player.email,
+        player_avatar: player.avatar,
         player_password_hash: player.passwordHash,
         player_created_at: player.createdAt,
       },
@@ -154,12 +166,14 @@ export async function findPlayerByEmail(email: string): Promise<Player | null> {
 export async function createPlayer(
   pseudo: string,
   email: string,
-  password: string
+  password: string,
+  avatar: string = "🤪"
 ): Promise<PublicPlayer> {
   const player: Player = {
     id: crypto.randomUUID(),
     pseudo,
     email: email.toLowerCase().trim(),
+    avatar,
     passwordHash: hashPassword(password),
     createdAt: new Date().toISOString(),
   };
@@ -177,6 +191,43 @@ export async function createPlayer(
 export function toPublicPlayer(player: Player): PublicPlayer {
   const { passwordHash: _, ...publicPlayer } = player;
   return publicPlayer;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Avatar update                                                      */
+/* ------------------------------------------------------------------ */
+export async function updatePlayerAvatar(pseudo: string, avatar: string): Promise<boolean> {
+  if (isWordPressConfigured()) {
+    return wpUpdatePlayerAvatar(pseudo, avatar);
+  }
+  const player = memoryPlayers.find((p) => p.pseudo === pseudo);
+  if (!player) return false;
+  player.avatar = avatar;
+  return true;
+}
+
+async function wpUpdatePlayerAvatar(pseudo: string, avatar: string): Promise<boolean> {
+  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
+  const res = await fetch(url, {
+    headers: { Accept: "application/json", Authorization: wpAuth() },
+    next: { revalidate: 0 },
+  });
+  if (!res.ok) return false;
+  const posts: WPPlayerPost[] = await res.json();
+  const match = posts.find((p) => p.acf.player_pseudo === pseudo);
+  if (!match) return false;
+
+  const updateRes = await fetch(`${WP_URL}/wp-json/wp/v2/cdf-players/${match.id}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: wpAuth(),
+    },
+    body: JSON.stringify({
+      acf: { player_avatar: avatar },
+    }),
+  });
+  return updateRes.ok;
 }
 
 /* ------------------------------------------------------------------ */

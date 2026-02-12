@@ -79,6 +79,12 @@ function cdf_player_fields() {
 			'type'  => 'email',
 		],
 		[
+			'key'   => 'field_pl_avatar',
+			'label' => 'Avatar',
+			'name'  => 'player_avatar',
+			'type'  => 'text',
+		],
+		[
 			'key'          => 'field_pl_password_hash',
 			'label'        => 'Mot de passe (hash)',
 			'name'         => 'player_password_hash',

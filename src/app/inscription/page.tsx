@@ -5,12 +5,18 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
 
+const AVATARS = [
+  "🤪", "😎", "🧠", "👻", "🦊", "🐱", "🐸", "🎃",
+  "🤖", "👽", "🦄", "🐧", "🎭", "🔥", "💀", "🫠",
+];
+
 export default function InscriptionPage() {
   const { register } = usePlayer();
   const router = useRouter();
   const [pseudo, setPseudo] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [avatar, setAvatar] = useState("🤪");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -19,7 +25,7 @@ export default function InscriptionPage() {
     setError("");
     setSubmitting(true);
 
-    const err = await register(pseudo.trim(), email.trim(), password);
+    const err = await register(pseudo.trim(), email.trim(), password, avatar);
     if (err) {
       setError(err);
       setSubmitting(false);
@@ -42,6 +48,25 @@ export default function InscriptionPage() {
 
         <div className="card">
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-purple-dark mb-2">Choisis ton avatar</label>
+              <div className="flex flex-wrap gap-2 justify-center">
+                {AVATARS.map((a) => (
+                  <button
+                    key={a}
+                    type="button"
+                    onClick={() => setAvatar(a)}
+                    className={`text-2xl w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                      avatar === a
+                        ? "bg-purple/20 ring-2 ring-purple scale-110"
+                        : "bg-purple/5 hover:bg-purple/10"
+                    }`}
+                  >
+                    {a}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div>
               <label className="block text-sm font-semibold text-purple-dark mb-1">Pseudo</label>
               <input
