@@ -23,6 +23,7 @@ export interface Player {
   createdAt: string;
   madnessSince: string;
   bio: string;
+  autodiagnostic: string;
 }
 
 export type PublicPlayer = Omit<Player, "passwordHash">;
@@ -78,6 +79,7 @@ interface WPPlayerPost {
     player_created_at: string;
     player_madness_since?: string;
     player_bio?: string;
+    player_autodiagnostic?: string;
   };
 }
 
@@ -100,6 +102,7 @@ async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
     createdAt: match.acf.player_created_at,
     madnessSince: match.acf.player_madness_since || "",
     bio: match.acf.player_bio || "",
+    autodiagnostic: match.acf.player_autodiagnostic || "",
   };
 }
 
@@ -122,6 +125,7 @@ async function wpFindPlayerByEmail(email: string): Promise<Player | null> {
     createdAt: match.acf.player_created_at,
     madnessSince: match.acf.player_madness_since || "",
     bio: match.acf.player_bio || "",
+    autodiagnostic: match.acf.player_autodiagnostic || "",
   };
 }
 
@@ -143,6 +147,7 @@ async function wpCreatePlayer(player: Player): Promise<void> {
         player_created_at: player.createdAt,
         player_madness_since: player.madnessSince,
         player_bio: player.bio,
+        player_autodiagnostic: player.autodiagnostic,
       },
     }),
   });
@@ -188,6 +193,7 @@ export async function createPlayer(
     createdAt: new Date().toISOString(),
     madnessSince: "",
     bio: "",
+    autodiagnostic: "",
   };
 
   if (isWordPressConfigured()) {
@@ -243,11 +249,11 @@ async function wpUpdatePlayerAvatar(pseudo: string, avatar: string): Promise<boo
 }
 
 /* ------------------------------------------------------------------ */
-/*  Profile fields update (madnessSince, bio)                          */
+/*  Profile fields update (madnessSince, bio, autodiagnostic)          */
 /* ------------------------------------------------------------------ */
 export async function updatePlayerProfile(
   pseudo: string,
-  fields: { madnessSince?: string; bio?: string }
+  fields: { madnessSince?: string; bio?: string; autodiagnostic?: string }
 ): Promise<boolean> {
   if (isWordPressConfigured()) {
     return wpUpdatePlayerProfile(pseudo, fields);
@@ -256,12 +262,13 @@ export async function updatePlayerProfile(
   if (!player) return false;
   if (fields.madnessSince !== undefined) player.madnessSince = fields.madnessSince;
   if (fields.bio !== undefined) player.bio = fields.bio;
+  if (fields.autodiagnostic !== undefined) player.autodiagnostic = fields.autodiagnostic;
   return true;
 }
 
 async function wpUpdatePlayerProfile(
   pseudo: string,
-  fields: { madnessSince?: string; bio?: string }
+  fields: { madnessSince?: string; bio?: string; autodiagnostic?: string }
 ): Promise<boolean> {
   const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
   const res = await fetch(url, {
@@ -276,6 +283,7 @@ async function wpUpdatePlayerProfile(
   const acf: Record<string, string> = {};
   if (fields.madnessSince !== undefined) acf.player_madness_since = fields.madnessSince;
   if (fields.bio !== undefined) acf.player_bio = fields.bio;
+  if (fields.autodiagnostic !== undefined) acf.player_autodiagnostic = fields.autodiagnostic;
 
   const updateRes = await fetch(`${WP_URL}/wp-json/wp/v2/cdf-players/${match.id}`, {
     method: "POST",

@@ -22,7 +22,7 @@ interface BadgeData {
 }
 
 interface ProfileData {
-  player: { id: string; pseudo: string; email: string; avatar: string; createdAt: string; madnessSince: string; bio: string };
+  player: { id: string; pseudo: string; email: string; avatar: string; createdAt: string; madnessSince: string; bio: string; autodiagnostic: string };
   games: GameStats[];
   globalScore: number;
   badge: BadgeData;
@@ -51,8 +51,10 @@ export default function ProfilPage() {
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
   const [editingBio, setEditingBio] = useState(false);
   const [editingMadness, setEditingMadness] = useState(false);
+  const [editingDiag, setEditingDiag] = useState(false);
   const [bioValue, setBioValue] = useState("");
   const [madnessValue, setMadnessValue] = useState("");
+  const [diagValue, setDiagValue] = useState("");
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
@@ -87,6 +89,18 @@ export default function ProfilPage() {
         prev ? { ...prev, player: { ...prev.player, bio: bioValue } } : prev
       );
       setEditingBio(false);
+    }
+    setSaving(false);
+  };
+
+  const saveDiag = async () => {
+    setSaving(true);
+    const err = await updateProfile({ autodiagnostic: diagValue });
+    if (!err) {
+      setProfile((prev) =>
+        prev ? { ...prev, player: { ...prev.player, autodiagnostic: diagValue } } : prev
+      );
+      setEditingDiag(false);
     }
     setSaving(false);
   };
@@ -259,6 +273,61 @@ export default function ProfilPage() {
             ) : (
               <p className="text-sm text-purple-dark/70 italic">
                 {profile.player.bio || "Aucune citation pour l\u2019instant..."}
+              </p>
+            )}
+          </div>
+
+          {/* Autodiagnostic */}
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+                Autodiagnostic
+              </label>
+              {!editingDiag && (
+                <button
+                  onClick={() => {
+                    setDiagValue(profile.player.autodiagnostic || "");
+                    setEditingDiag(true);
+                  }}
+                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                >
+                  Modifier
+                </button>
+              )}
+            </div>
+            {editingDiag ? (
+              <div>
+                <textarea
+                  value={diagValue}
+                  onChange={(e) => setDiagValue(e.target.value)}
+                  maxLength={200}
+                  rows={2}
+                  placeholder="Ton autodiagnostic totalement fiable..."
+                  className="w-full px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm resize-none transition-colors"
+                />
+                <div className="flex items-center justify-between mt-1.5">
+                  <span className="text-xs text-purple/30">{diagValue.length}/200</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setEditingDiag(false)}
+                      className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                      disabled={saving}
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={saveDiag}
+                      disabled={saving}
+                      className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {saving ? "..." : "Enregistrer"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-purple-dark/70 italic">
+                {profile.player.autodiagnostic || "Aucun diagnostic pos\u00e9 pour l\u2019instant..."}
               </p>
             )}
           </div>

@@ -4,6 +4,7 @@ import { updatePlayerProfile } from "@/data/players";
 export const dynamic = "force-dynamic";
 
 const BIO_MAX_LENGTH = 160;
+const AUTODIAG_MAX_LENGTH = 200;
 
 export async function POST(request: NextRequest) {
   let body: Record<string, unknown>;
@@ -13,13 +14,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "JSON invalide" }, { status: 400 });
   }
 
-  const { pseudo, madnessSince, bio } = body;
+  const { pseudo, madnessSince, bio, autodiagnostic } = body;
 
   if (!pseudo || typeof pseudo !== "string") {
     return NextResponse.json({ error: "Pseudo requis" }, { status: 400 });
   }
 
-  const fields: { madnessSince?: string; bio?: string } = {};
+  const fields: { madnessSince?: string; bio?: string; autodiagnostic?: string } = {};
 
   if (madnessSince !== undefined) {
     if (typeof madnessSince !== "string") {
@@ -42,6 +43,19 @@ export async function POST(request: NextRequest) {
       );
     }
     fields.bio = bio;
+  }
+
+  if (autodiagnostic !== undefined) {
+    if (typeof autodiagnostic !== "string") {
+      return NextResponse.json({ error: "Autodiagnostic invalide" }, { status: 400 });
+    }
+    if (autodiagnostic.length > AUTODIAG_MAX_LENGTH) {
+      return NextResponse.json(
+        { error: `Autodiagnostic trop long (max ${AUTODIAG_MAX_LENGTH} caractères)` },
+        { status: 400 }
+      );
+    }
+    fields.autodiagnostic = autodiagnostic;
   }
 
   if (Object.keys(fields).length === 0) {

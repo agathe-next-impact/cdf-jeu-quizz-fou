@@ -12,6 +12,7 @@ interface Player {
   createdAt: string;
   madnessSince?: string;
   bio?: string;
+  autodiagnostic?: string;
 }
 
 interface PlayerContextType {
@@ -20,7 +21,7 @@ interface PlayerContextType {
   login: (pseudo: string, password: string) => Promise<string | null>;
   register: (pseudo: string, email: string, password: string, avatar?: string) => Promise<string | null>;
   updateAvatar: (avatar: string) => Promise<string | null>;
-  updateProfile: (fields: { madnessSince?: string; bio?: string }) => Promise<string | null>;
+  updateProfile: (fields: { madnessSince?: string; bio?: string; autodiagnostic?: string }) => Promise<string | null>;
   updateBadge: (emoji: string, name: string) => void;
   logout: () => void;
 }
@@ -111,7 +112,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, [player]);
 
-  const updateProfile = useCallback(async (fields: { madnessSince?: string; bio?: string }): Promise<string | null> => {
+  const updateProfile = useCallback(async (fields: { madnessSince?: string; bio?: string; autodiagnostic?: string }): Promise<string | null> => {
     if (!player) return "Non connecté";
     try {
       const res = await fetch("/api/auth/profile-update", {
