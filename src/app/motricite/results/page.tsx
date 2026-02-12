@@ -10,6 +10,7 @@ interface LevelResult {
   levelIndex: number;
   levelName: string;
   hits: number;
+  misses: number;
   total: number;
   successRate: number;
   diagnosis: { condition: string; severity: string; explanation: string };
@@ -58,7 +59,7 @@ export default function MotriciteResultsPage() {
       questionId: i,
       question: lr.levelName,
       answerIndex: lr.hits,
-      answerText: `${lr.hits}/${lr.total} (${lr.successRate}%)`,
+      answerText: `${lr.hits}/${lr.total} cibles, ${lr.misses ?? 0} ratés (${lr.successRate}%)`,
       points: lr.successRate,
     }));
 
@@ -241,6 +242,11 @@ export default function MotriciteResultsPage() {
 
                   <div className="text-xs text-purple-dark/40 mb-3">
                     {lr.hits}/{lr.total} cibles touchées
+                    {lr.misses > 0 && (
+                      <span className="text-red-400 ml-2">
+                        · {lr.misses} clic{lr.misses > 1 ? "s" : ""} raté{lr.misses > 1 ? "s" : ""}
+                      </span>
+                    )}
                   </div>
 
                   <div className="bg-[#0d9488]/5 rounded-xl p-3">

@@ -21,7 +21,7 @@ export const motriciteLevels: MotriciteLevel[] = [
     description: "Cliquez sur 5 cibles. Facile, n'est-ce pas ?",
     targetSize: 40,
     targetCount: 5,
-    duration: 15,
+    duration: 12,
     behavior: "static",
   },
   {
@@ -31,7 +31,7 @@ export const motriciteLevels: MotriciteLevel[] = [
       "Les cibles rétrécissent. Un vrai professionnel n'aura aucun mal.",
     targetSize: 15,
     targetCount: 5,
-    duration: 20,
+    duration: 12,
     behavior: "shrinking",
   },
   {
@@ -41,7 +41,7 @@ export const motriciteLevels: MotriciteLevel[] = [
       "Elles bougent maintenant. Votre coordination va être testée.",
     targetSize: 30,
     targetCount: 5,
-    duration: 25,
+    duration: 12,
     behavior: "moving",
   },
   {
@@ -51,7 +51,7 @@ export const motriciteLevels: MotriciteLevel[] = [
       "Des micro-tremblements. Seule une main parfaitement stable réussira.",
     targetSize: 20,
     targetCount: 5,
-    duration: 20,
+    duration: 12,
     behavior: "jittery",
   },
   {
@@ -61,7 +61,7 @@ export const motriciteLevels: MotriciteLevel[] = [
       "Cibles minuscules, mobiles ET tremblantes. Impossible pour un cerveau défaillant.",
     targetSize: 10,
     targetCount: 7,
-    duration: 30,
+    duration: 12,
     behavior: "all",
   },
 ];

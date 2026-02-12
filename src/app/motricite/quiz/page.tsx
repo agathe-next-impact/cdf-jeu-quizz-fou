@@ -39,6 +39,7 @@ interface LevelResult {
   levelIndex: number;
   levelName: string;
   hits: number;
+  misses: number;
   total: number;
   successRate: number;
   diagnosis: { condition: string; severity: string; explanation: string };
@@ -72,6 +73,7 @@ export default function MotriciteQuizPage() {
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hitsRef = useRef(0);
+  const missesRef = useRef(0);
   const levelRef = useRef<MotriciteLevel>(motriciteLevels[0]);
   const startTimeRef = useRef(0);
 
@@ -134,6 +136,7 @@ export default function MotriciteQuizPage() {
       const level = motriciteLevels[levelIndex];
       levelRef.current = level;
       hitsRef.current = 0;
+      missesRef.current = 0;
       setHits(0);
       setMisses(0);
       setTimeLeft(level.duration);
@@ -212,15 +215,19 @@ export default function MotriciteQuizPage() {
 
       const level = motriciteLevels[levelIndex];
       const h = hitsRef.current;
-      const total = level.targetCount;
-      const successRate = total > 0 ? Math.round((h / total) * 100) : 0;
+      const m = missesRef.current;
+      const totalClicks = h + m;
+      // Score = accuracy percentage: hits / total clicks (penalizes misses)
+      // If no clicks at all, score is 0
+      const successRate = totalClicks > 0 ? Math.round((h / totalClicks) * 100) : 0;
       const diagnosis = getLevelDiagnosis(levelIndex, successRate);
 
       const result: LevelResult = {
         levelIndex,
         levelName: level.name,
         hits: h,
-        total,
+        misses: m,
+        total: level.targetCount,
         successRate,
         diagnosis,
       };
@@ -260,7 +267,8 @@ export default function MotriciteQuizPage() {
     if (phase !== "playing") return;
     // Only count as miss if clicked on the arena background, not a target
     if ((e.target as HTMLElement).dataset.arena === "true") {
-      setMisses((prev) => prev + 1);
+      missesRef.current += 1;
+      setMisses(missesRef.current);
     }
   }
 
@@ -378,6 +386,11 @@ export default function MotriciteQuizPage() {
             <div className="text-sm font-semibold text-[#0d9488]">
               {hits}/{level.targetCount}
             </div>
+            {misses > 0 && (
+              <div className="text-sm font-semibold text-red-400">
+                {misses} raté{misses > 1 ? "s" : ""}
+              </div>
+            )}
             <div
               className={`text-lg font-black px-3 py-1 rounded-full ${
                 timeLeft <= 5
@@ -490,9 +503,14 @@ export default function MotriciteQuizPage() {
             Résultat Niveau {currentLevel + 1}
           </div>
 
-          <h2 className="text-2xl font-black text-purple-dark mb-2">
+          <h2 className="text-2xl font-black text-purple-dark mb-1">
             {lastResult.hits} / {lastResult.total} cibles touchées
           </h2>
+          {lastResult.misses > 0 && (
+            <p className="text-sm font-medium text-red-400 mb-1">
+              {lastResult.misses} clic{lastResult.misses > 1 ? "s" : ""} raté{lastResult.misses > 1 ? "s" : ""}
+            </p>
+          )}
 
           <div
             className={`text-4xl font-black mb-4 ${
