@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Confetti from "@/components/Confetti";
+import RegisterInvite from "@/components/RegisterInvite";
 import {
   rorschachQuestions,
   getRorschachProfile,
@@ -166,6 +167,9 @@ export default function RorschachResultsPage() {
             Indice de pathologie : {percentage}%
           </div>
         </div>
+
+        {/* Register invite */}
+        <RegisterInvite />
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
