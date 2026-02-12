@@ -89,7 +89,10 @@ async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
   });
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.error(`wpFindPlayerByPseudo failed: ${res.status}`, await res.text().catch(() => ""));
+    return null;
+  }
   const posts: WPPlayerPost[] = await res.json();
   const match = posts.find((p) => p.acf.player_pseudo === pseudo);
   if (!match) return null;
@@ -112,7 +115,10 @@ async function wpFindPlayerByEmail(email: string): Promise<Player | null> {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
   });
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.error(`wpFindPlayerByEmail failed: ${res.status}`, await res.text().catch(() => ""));
+    return null;
+  }
   const posts: WPPlayerPost[] = await res.json();
   const match = posts.find((p) => p.acf.player_email === email);
   if (!match) return null;
@@ -152,7 +158,9 @@ async function wpCreatePlayer(player: Player): Promise<void> {
     }),
   });
   if (!res.ok) {
-    throw new Error(`WP create player failed: ${res.status}`);
+    const errText = await res.text().catch(() => "");
+    console.error(`WP create player failed: ${res.status}`, errText);
+    throw new Error(`WP create player failed: ${res.status} — ${errText}`);
   }
 }
 

@@ -65,9 +65,10 @@ export async function POST(request: NextRequest) {
     const player = await createPlayer(pseudo.trim(), email.trim(), password, playerAvatar);
     return NextResponse.json(player, { status: 201 });
   } catch (err) {
-    console.error("Register error:", err);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Register error:", message);
     return NextResponse.json(
-      { error: "Erreur lors de l'inscription" },
+      { error: "Erreur lors de l'inscription", detail: message },
       { status: 500 }
     );
   }
