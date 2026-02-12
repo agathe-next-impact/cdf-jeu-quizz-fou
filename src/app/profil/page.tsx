@@ -14,9 +14,19 @@ interface GameStats {
   lastPlayed: string;
 }
 
+interface BadgeData {
+  name: string;
+  emoji: string;
+  minScore: number;
+  color: string;
+}
+
 interface ProfileData {
   player: { id: string; pseudo: string; email: string; avatar: string; createdAt: string };
   games: GameStats[];
+  globalScore: number;
+  badge: BadgeData;
+  nextBadge: BadgeData | null;
 }
 
 const AVATARS = [
@@ -34,7 +44,7 @@ const GAME_EMOJIS: Record<string, string> = {
 };
 
 export default function ProfilPage() {
-  const { player, loading: authLoading, logout, updateAvatar } = usePlayer();
+  const { player, loading: authLoading, logout, updateAvatar, updateBadge } = usePlayer();
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,6 +65,14 @@ export default function ProfilPage() {
       })
       .catch(() => setLoading(false));
   }, [player, authLoading, router]);
+
+  // Sync badge to context/localStorage when profile loads
+  useEffect(() => {
+    if (profile?.badge) {
+      updateBadge(profile.badge.emoji, profile.badge.name);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.badge?.name]);
 
   if (authLoading || loading || !profile) {
     return (
@@ -114,10 +132,18 @@ export default function ProfilPage() {
           <h1 className="text-3xl font-black gradient-text mb-1">
             {profile.player.pseudo}
           </h1>
+          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple/10 mb-2 ${profile.badge.color}`}>
+            <span className="text-base">{profile.badge.emoji}</span>
+            <span className="text-sm font-bold">{profile.badge.name}</span>
+          </div>
           <p className="text-sm text-purple/50 mb-4">
             Membre depuis le {memberSince}
           </p>
           <div className="flex justify-center gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-black text-purple">{profile.globalScore}</div>
+              <div className="text-xs text-purple/50 font-medium">score global</div>
+            </div>
             <div className="text-center">
               <div className="text-2xl font-black text-purple">{profile.games.length}</div>
               <div className="text-xs text-purple/50 font-medium">
@@ -131,6 +157,22 @@ export default function ProfilPage() {
               </div>
             </div>
           </div>
+          {profile.nextBadge && (
+            <div className="mt-4">
+              <div className="flex items-center justify-center gap-2 text-xs text-purple/40 mb-1.5">
+                <span>Prochain badge : {profile.nextBadge.emoji} {profile.nextBadge.name}</span>
+                <span className="font-bold">{profile.nextBadge.minScore - profile.globalScore} pts restants</span>
+              </div>
+              <div className="w-full max-w-xs mx-auto h-2 bg-purple/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full gradient-bg rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.min(100, ((profile.globalScore - profile.badge.minScore) / (profile.nextBadge.minScore - profile.badge.minScore)) * 100)}%`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Game stats */}

@@ -118,6 +118,11 @@ export default function Header() {
               <span className="text-sm font-semibold hidden sm:inline">
                 {player.pseudo}
               </span>
+              {player.badgeEmoji && (
+                <span className="text-xs hidden sm:inline" title={player.badgeName}>
+                  {player.badgeEmoji}
+                </span>
+              )}
             </Link>
           ) : (
             <Link

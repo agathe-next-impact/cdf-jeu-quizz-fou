@@ -7,6 +7,8 @@ interface Player {
   pseudo: string;
   email: string;
   avatar: string;
+  badgeEmoji?: string;
+  badgeName?: string;
   createdAt: string;
 }
 
@@ -16,6 +18,7 @@ interface PlayerContextType {
   login: (pseudo: string, password: string) => Promise<string | null>;
   register: (pseudo: string, email: string, password: string, avatar?: string) => Promise<string | null>;
   updateAvatar: (avatar: string) => Promise<string | null>;
+  updateBadge: (emoji: string, name: string) => void;
   logout: () => void;
 }
 
@@ -25,6 +28,7 @@ const PlayerContext = createContext<PlayerContextType>({
   login: async () => "Non initialisé",
   register: async () => "Non initialisé",
   updateAvatar: async () => "Non initialisé",
+  updateBadge: () => {},
   logout: () => {},
 });
 
@@ -103,13 +107,20 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, [player]);
 
+  const updateBadge = useCallback((emoji: string, name: string) => {
+    if (!player) return;
+    const updated = { ...player, badgeEmoji: emoji, badgeName: name };
+    setPlayer(updated);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+  }, [player]);
+
   const logout = useCallback(() => {
     setPlayer(null);
     localStorage.removeItem(STORAGE_KEY);
   }, []);
 
   return (
-    <PlayerContext.Provider value={{ player, loading, login, register, updateAvatar, logout }}>
+    <PlayerContext.Provider value={{ player, loading, login, register, updateAvatar, updateBadge, logout }}>
       {children}
     </PlayerContext.Provider>
   );

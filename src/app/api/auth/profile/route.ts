@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { findPlayerByPseudo, toPublicPlayer, getPlayerStats } from "@/data/players";
+import { getBadgeForScore, getNextBadge } from "@/data/badges";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,16 @@ export async function GET(request: NextRequest) {
     }
 
     const games = await getPlayerStats(pseudo);
+    const globalScore = games.reduce((sum, g) => sum + g.bestScore, 0);
+    const badge = getBadgeForScore(globalScore);
+    const nextBadge = getNextBadge(globalScore);
 
     return NextResponse.json({
       player: toPublicPlayer(player),
       games,
+      globalScore,
+      badge,
+      nextBadge,
     });
   } catch (err) {
     console.error("Profile error:", err);
