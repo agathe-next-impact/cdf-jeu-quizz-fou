@@ -98,10 +98,10 @@ export default function Header() {
           ) : (
             <>
               <Link
-                href="/dsm6"
-                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all hidden sm:inline-block"
+                href="/hall-of-fame"
+                className="text-sm font-semibold bg-yellow-400/20 hover:bg-yellow-400/30 px-4 py-2 rounded-full transition-all"
               >
-                DSM-6
+                🏆 Hall of Fame
               </Link>
             </>
           )}

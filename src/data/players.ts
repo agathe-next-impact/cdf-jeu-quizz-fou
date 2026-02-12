@@ -240,19 +240,19 @@ interface ScoreEntry {
   date: string;
 }
 
-export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
-  const games: { name: string; slug: string; restBase: string; apiPath: string }[] = [
-    { name: "DSM-6 Version Beta", slug: "/dsm6", restBase: "dsm6-scores", apiPath: "/api/dsm6-scores" },
-    { name: "Test de Rorschach", slug: "/rorschach", restBase: "rorschach-scores", apiPath: "/api/rorschach-scores" },
-    { name: "Évaluation Émotionnelle", slug: "/evaluation", restBase: "evaluation-scores", apiPath: "/api/evaluation-scores" },
-    { name: "Évasion Psychiatrique", slug: "/evasion", restBase: "evasion-scores", apiPath: "/api/evasion-scores" },
-    { name: "Test de Motricité Fine", slug: "/motricite", restBase: "motricite-scores", apiPath: "/api/motricite-scores" },
-    { name: "Test Cognitif Absurde", slug: "/cognitif", restBase: "cognitif-scores", apiPath: "/api/cognitif-scores" },
-  ];
+const GAME_LIST = [
+  { name: "DSM-6 Version Beta", slug: "/dsm6", restBase: "dsm6-scores", apiPath: "/api/dsm6-scores" },
+  { name: "Test de Rorschach", slug: "/rorschach", restBase: "rorschach-scores", apiPath: "/api/rorschach-scores" },
+  { name: "Évaluation Émotionnelle", slug: "/evaluation", restBase: "evaluation-scores", apiPath: "/api/evaluation-scores" },
+  { name: "Évasion Psychiatrique", slug: "/evasion", restBase: "evasion-scores", apiPath: "/api/evasion-scores" },
+  { name: "Test de Motricité Fine", slug: "/motricite", restBase: "motricite-scores", apiPath: "/api/motricite-scores" },
+  { name: "Test Cognitif Absurde", slug: "/cognitif", restBase: "cognitif-scores", apiPath: "/api/cognitif-scores" },
+];
 
+export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
   const stats: GameStats[] = [];
 
-  for (const game of games) {
+  for (const game of GAME_LIST) {
     let allScores: ScoreEntry[];
 
     if (isWordPressConfigured()) {
@@ -312,4 +312,86 @@ async function getScoresForGame(restBase: string): Promise<ScoreEntry[]> {
     return getCognitifScores();
   }
   return [];
+}
+
+/* ------------------------------------------------------------------ */
+/*  Global leaderboard across all games                                */
+/* ------------------------------------------------------------------ */
+export interface GlobalPlayerScore {
+  pseudo: string;
+  avatar: string;
+  globalScore: number;
+  gamesPlayed: number;
+}
+
+export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> {
+  // Collect all scores from every game
+  const allGameScores: ScoreEntry[][] = await Promise.all(
+    GAME_LIST.map((game) =>
+      isWordPressConfigured()
+        ? wpGetScores(game.restBase)
+        : getScoresForGame(game.restBase)
+    )
+  );
+
+  // Map pseudo -> { bestScorePerGame, gamesPlayed }
+  const playerMap = new Map<string, { bestScores: Map<number, number>; totalGames: Set<number> }>();
+
+  for (let gi = 0; gi < allGameScores.length; gi++) {
+    for (const entry of allGameScores[gi]) {
+      const key = entry.pseudo.toLowerCase();
+      if (!playerMap.has(key)) {
+        playerMap.set(key, { bestScores: new Map(), totalGames: new Set() });
+      }
+      const data = playerMap.get(key)!;
+      data.totalGames.add(gi);
+      const prev = data.bestScores.get(gi) ?? 0;
+      if (entry.score > prev) {
+        data.bestScores.set(gi, entry.score);
+      }
+    }
+  }
+
+  // Build results with avatar lookup
+  const results: GlobalPlayerScore[] = [];
+
+  for (const [, data] of playerMap) {
+    let globalScore = 0;
+    for (const score of data.bestScores.values()) {
+      globalScore += score;
+    }
+    results.push({
+      pseudo: "",    // filled below
+      avatar: "🤪",
+      globalScore,
+      gamesPlayed: data.totalGames.size,
+    });
+  }
+
+  // Fill pseudos with original casing from first score encounter
+  let idx = 0;
+  for (const [key] of playerMap) {
+    // Find original casing
+    let originalPseudo = key;
+    for (const scores of allGameScores) {
+      const match = scores.find((s) => s.pseudo.toLowerCase() === key);
+      if (match) {
+        originalPseudo = match.pseudo;
+        break;
+      }
+    }
+    results[idx].pseudo = originalPseudo;
+
+    // Try to get avatar from player record
+    const player = await findPlayerByPseudo(originalPseudo);
+    if (player) {
+      results[idx].avatar = player.avatar || "🤪";
+    }
+    idx++;
+  }
+
+  // Sort by global score descending
+  results.sort((a, b) => b.globalScore - a.globalScore);
+
+  return results;
 }

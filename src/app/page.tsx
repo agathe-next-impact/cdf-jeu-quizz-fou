@@ -76,6 +76,17 @@ export default function HomePage() {
           </p>
         </div>
 
+        {/* Hall of Fame CTA */}
+        <div className="text-center mb-8 animate-slide-up" style={{ animationDelay: "0.05s" }}>
+          <Link
+            href="/hall-of-fame"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-purple-600 text-white font-bold px-6 py-3 rounded-full hover:scale-105 transition-transform shadow-lg"
+          >
+            <span className="text-lg">🏆</span>
+            Hall of Fame — Top 10 des plus fous
+          </Link>
+        </div>
+
         {/* Game grid */}
         <div className="grid sm:grid-cols-2 gap-6">
           {games.map((game, i) => (
