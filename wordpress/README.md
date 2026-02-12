@@ -147,7 +147,13 @@ POST /wp-json/wp/v2/cdf-players
 POST /wp-json/wp/v2/cdf-players/{id}   (mise \u00e0 jour)
 ```
 
-Toutes les requ\u00eates POST n\u00e9cessitent l'en-t\u00eate `Authorization: Basic <base64>`.
+Les requ\u00eates **GET** sont publiques (pas d'authentification requise).
+Les requ\u00eates **POST** n\u00e9cessitent l'en-t\u00eate `Authorization: Basic <base64>`.
+
+> Le plugin utilise un contr\u00f4leur REST personnalis\u00e9 (`CDF_Public_Posts_Controller`)
+> qui autorise les lectures anonymes tout en prot\u00e9geant les \u00e9critures.
+> Cela est n\u00e9cessaire car les CPT sont d\u00e9clar\u00e9s avec `public => false`
+> (pour \u00e9viter qu'ils apparaissent dans les r\u00e9sultats de recherche WordPress).
 
 ---
 
@@ -177,6 +183,7 @@ add_action( 'init', function () {
 |---|---|
 | Les champs ACF n'apparaissent pas | V\u00e9rifier qu'ACF est install\u00e9 et activ\u00e9 |
 | Erreur 401 sur les POST | V\u00e9rifier le mot de passe d'application et les identifiants |
+| Erreur 403 sur les GET | V\u00e9rifier que le plugin est bien en v9.1+ (avec `CDF_Public_Posts_Controller`). D\u00e9sactiver puis r\u00e9activer le plugin pour r\u00e9initialiser les CPT |
 | Erreur 403 sur les POST | V\u00e9rifier que l'utilisateur a le r\u00f4le Administrateur |
 | `acf` vide dans la r\u00e9ponse REST | D\u00e9sactiver puis r\u00e9activer le plugin pour r\u00e9initialiser les champs |
 | Scores non persist\u00e9s | V\u00e9rifier les 3 variables `.env.local` et red\u00e9marrer Next.js |
