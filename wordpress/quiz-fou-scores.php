@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Comme des Fous - Scores & Joueurs
  * Description: Custom Post Types et champs ACF pour stocker les scores des jeux et les profils joueurs.
- * Version: 8.0.0
+ * Version: 9.0.0
  * Requires PHP: 7.4
  *
  * Instructions :
@@ -96,6 +96,31 @@ function cdf_player_fields() {
 			'label' => "Date d'inscription",
 			'name'  => 'player_created_at',
 			'type'  => 'text',
+		],
+		[
+			'key'          => 'field_pl_madness_since',
+			'label'        => 'Début de la folie',
+			'name'         => 'player_madness_since',
+			'type'         => 'text',
+			'instructions' => 'Date au format YYYY-MM-DD.',
+		],
+		[
+			'key'          => 'field_pl_bio',
+			'label'        => 'Citation / Mini-bio',
+			'name'         => 'player_bio',
+			'type'         => 'textarea',
+			'maxlength'    => 160,
+			'rows'         => 2,
+			'instructions' => 'Citation ou mini-bio du joueur (160 caractères max).',
+		],
+		[
+			'key'          => 'field_pl_autodiagnostic',
+			'label'        => 'Autodiagnostic',
+			'name'         => 'player_autodiagnostic',
+			'type'         => 'textarea',
+			'maxlength'    => 200,
+			'rows'         => 2,
+			'instructions' => 'Autodiagnostic du joueur (200 caractères max).',
 		],
 	];
 }
