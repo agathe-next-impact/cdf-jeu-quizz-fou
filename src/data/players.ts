@@ -191,7 +191,6 @@ interface ScoreEntry {
 
 export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
   const games: { name: string; slug: string; restBase: string; apiPath: string }[] = [
-    { name: "Le Quizz Fou", slug: "/quiz-fou", restBase: "quiz-scores", apiPath: "/api/scores" },
     { name: "DSM-6 Version Beta", slug: "/dsm6", restBase: "dsm6-scores", apiPath: "/api/dsm6-scores" },
     { name: "Test de Rorschach", slug: "/rorschach", restBase: "rorschach-scores", apiPath: "/api/rorschach-scores" },
     { name: "Évaluation Émotionnelle", slug: "/evaluation", restBase: "evaluation-scores", apiPath: "/api/evaluation-scores" },
@@ -237,10 +236,6 @@ export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
 }
 
 async function getScoresForGame(restBase: string): Promise<ScoreEntry[]> {
-  if (restBase === "quiz-scores") {
-    const { getScores } = await import("@/data/scores");
-    return getScores();
-  }
   if (restBase === "dsm6-scores") {
     const { getDSM6Scores } = await import("@/data/dsm6-scores");
     return getDSM6Scores();

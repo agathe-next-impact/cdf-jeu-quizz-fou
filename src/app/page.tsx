@@ -2,15 +2,6 @@ import Link from "next/link";
 
 const games = [
   {
-    slug: "/quiz-fou",
-    emoji: "🤪",
-    title: "Le Quizz Fou",
-    description: "15 questions pour mesurer ton niveau de folie ! Réponds et découvre ton titre.",
-    tags: ["Quizz", "Solo", "Classement"],
-    color: "from-purple to-purple-light",
-    border: "border-purple/20 hover:border-purple/50",
-  },
-  {
     slug: "/dsm6",
     emoji: "🏥",
     title: "DSM-6 Version Beta",

@@ -98,21 +98,6 @@ function cdf_player_fields() {
 /*  1. Custom Post Types                                               */
 /* ================================================================== */
 add_action( 'init', function () {
-	// Quizz Fou scores
-	register_post_type( 'quiz_score', [
-		'labels'       => [
-			'name'          => 'Scores Quiz Fou',
-			'singular_name' => 'Score Quiz Fou',
-		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'quiz-scores',
-		'menu_icon'    => 'dashicons-chart-bar',
-		'supports'     => [ 'title' ],
-	] );
-
 	// DSM-6 scores
 	register_post_type( 'dsm6_score', [
 		'labels'       => [
@@ -229,16 +214,7 @@ add_action( 'acf/init', function () {
 
 	$fields = cdf_score_fields();
 
-	// Quiz Fou
-	acf_add_local_field_group( [
-		'key'          => 'group_quiz_score',
-		'title'        => 'Données du Score — Quiz Fou',
-		'fields'       => $fields,
-		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'quiz_score' ] ] ],
-		'show_in_rest' => true,
-	] );
-
-	// DSM-6 (réutilise les mêmes champs avec des clés uniques)
+	// DSM-6
 	$dsm6_fields = array_map( function ( $f ) {
 		$f['key'] = str_replace( 'field_', 'field_dsm6_', $f['key'] );
 		return $f;
@@ -336,7 +312,7 @@ add_action( 'acf/init', function () {
 /*  3. Exposer les champs ACF dans la REST API                         */
 /* ================================================================== */
 add_action( 'rest_api_init', function () {
-	foreach ( [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score', 'cdf_player' ] as $cpt ) {
+	foreach ( [ 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score', 'cdf_player' ] as $cpt ) {
 		register_rest_field( $cpt, 'acf', [
 			'get_callback' => function ( $post ) {
 				return get_fields( $post['id'] ) ?: [];
@@ -351,7 +327,6 @@ add_action( 'rest_api_init', function () {
 /* ================================================================== */
 add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 	$allowed = [
-		'edit_quiz_scores', 'publish_quiz_scores', 'edit_published_quiz_scores',
 		'edit_dsm6_scores', 'publish_dsm6_scores', 'edit_published_dsm6_scores',
 		'edit_rorschach_scores', 'publish_rorschach_scores', 'edit_published_rorschach_scores',
 		'edit_evaluation_scores', 'publish_evaluation_scores', 'edit_published_evaluation_scores',
@@ -372,7 +347,7 @@ add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 add_action( 'acf/save_post', function ( $post_id ) {
 	$type = get_post_type( $post_id );
 
-	if ( in_array( $type, [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score' ], true ) ) {
+	if ( in_array( $type, [ 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score' ], true ) ) {
 		$pseudo = get_field( 'player_pseudo', $post_id );
 		$score  = get_field( 'player_score', $post_id );
 		if ( $pseudo ) {
