@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Comme des Fous - Scores & Joueurs
  * Description: Custom Post Types et champs ACF pour stocker les scores des jeux et les profils joueurs.
- * Version: 7.0.0
+ * Version: 9.3.0
  * Requires PHP: 7.4
  *
  * Instructions :
@@ -79,6 +79,12 @@ function cdf_player_fields() {
 			'type'  => 'email',
 		],
 		[
+			'key'   => 'field_pl_avatar',
+			'label' => 'Avatar',
+			'name'  => 'player_avatar',
+			'type'  => 'text',
+		],
+		[
 			'key'          => 'field_pl_password_hash',
 			'label'        => 'Mot de passe (hash)',
 			'name'         => 'player_password_hash',
@@ -91,116 +97,177 @@ function cdf_player_fields() {
 			'name'  => 'player_created_at',
 			'type'  => 'text',
 		],
+		[
+			'key'          => 'field_pl_madness_since',
+			'label'        => 'Début de la folie',
+			'name'         => 'player_madness_since',
+			'type'         => 'text',
+			'instructions' => 'Date au format YYYY-MM-DD.',
+		],
+		[
+			'key'          => 'field_pl_bio',
+			'label'        => 'Citation / Mini-bio',
+			'name'         => 'player_bio',
+			'type'         => 'textarea',
+			'maxlength'    => 160,
+			'rows'         => 2,
+			'instructions' => 'Citation ou mini-bio du joueur (160 caractères max).',
+		],
+		[
+			'key'          => 'field_pl_autodiagnostic',
+			'label'        => 'Autodiagnostic',
+			'name'         => 'player_autodiagnostic',
+			'type'         => 'textarea',
+			'maxlength'    => 200,
+			'rows'         => 2,
+			'instructions' => 'Autodiagnostic du joueur (200 caractères max).',
+		],
 	];
+}
+
+/* ================================================================== */
+/*  REST controller : lectures publiques, écritures authentifiées       */
+/* ================================================================== */
+class CDF_Public_Posts_Controller extends WP_REST_Posts_Controller {
+	/**
+	 * Allow unauthenticated GET on the collection (list scores / players).
+	 */
+	public function get_items_permissions_check( $request ) {
+		if ( 'edit' === $request['context'] ) {
+			return parent::get_items_permissions_check( $request );
+		}
+		return true;
+	}
+
+	/**
+	 * Allow unauthenticated GET on a single published post.
+	 */
+	public function get_item_permissions_check( $request ) {
+		$post = $this->get_post( $request['id'] );
+		if ( is_wp_error( $post ) ) {
+			return $post;
+		}
+		if ( 'publish' === $post->post_status && 'edit' !== $request['context'] ) {
+			return true;
+		}
+		return parent::get_item_permissions_check( $request );
+	}
 }
 
 /* ================================================================== */
 /*  1. Custom Post Types                                               */
 /* ================================================================== */
 add_action( 'init', function () {
-	// Quizz Fou scores
-	register_post_type( 'quiz_score', [
-		'labels'       => [
-			'name'          => 'Scores Quiz Fou',
-			'singular_name' => 'Score Quiz Fou',
-		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'quiz-scores',
-		'menu_icon'    => 'dashicons-chart-bar',
-		'supports'     => [ 'title' ],
-	] );
-
 	// DSM-6 scores
 	register_post_type( 'dsm6_score', [
-		'labels'       => [
+		'labels'                => [
 			'name'          => 'Scores DSM-6',
 			'singular_name' => 'Score DSM-6',
 		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'dsm6-scores',
-		'menu_icon'    => 'dashicons-heart',
-		'supports'     => [ 'title' ],
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'show_in_rest'          => true,
+		'rest_base'             => 'dsm6-scores',
+		'rest_controller_class' => 'CDF_Public_Posts_Controller',
+		'menu_icon'             => 'dashicons-heart',
+		'supports'              => [ 'title' ],
 	] );
 
 	// Rorschach scores
 	register_post_type( 'rorschach_score', [
-		'labels'       => [
+		'labels'                => [
 			'name'          => 'Scores Rorschach',
 			'singular_name' => 'Score Rorschach',
 		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'rorschach-scores',
-		'menu_icon'    => 'dashicons-visibility',
-		'supports'     => [ 'title' ],
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'show_in_rest'          => true,
+		'rest_base'             => 'rorschach-scores',
+		'rest_controller_class' => 'CDF_Public_Posts_Controller',
+		'menu_icon'             => 'dashicons-visibility',
+		'supports'              => [ 'title' ],
 	] );
 
 	// Évaluation Émotionnelle scores
 	register_post_type( 'evaluation_score', [
-		'labels'       => [
+		'labels'                => [
 			'name'          => 'Scores Évaluation',
 			'singular_name' => 'Score Évaluation',
 		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'evaluation-scores',
-		'menu_icon'    => 'dashicons-welcome-learn-more',
-		'supports'     => [ 'title' ],
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'show_in_rest'          => true,
+		'rest_base'             => 'evaluation-scores',
+		'rest_controller_class' => 'CDF_Public_Posts_Controller',
+		'menu_icon'             => 'dashicons-welcome-learn-more',
+		'supports'              => [ 'title' ],
 	] );
 
 	// Évasion Psychiatrique scores
 	register_post_type( 'evasion_score', [
-		'labels'       => [
+		'labels'                => [
 			'name'          => 'Scores Évasion',
 			'singular_name' => 'Score Évasion',
 		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'evasion-scores',
-		'menu_icon'    => 'dashicons-lock',
-		'supports'     => [ 'title' ],
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'show_in_rest'          => true,
+		'rest_base'             => 'evasion-scores',
+		'rest_controller_class' => 'CDF_Public_Posts_Controller',
+		'menu_icon'             => 'dashicons-lock',
+		'supports'              => [ 'title' ],
 	] );
 
 	// Motricité Fine scores
 	register_post_type( 'motricite_score', [
-		'labels'       => [
+		'labels'                => [
 			'name'          => 'Scores Motricité',
 			'singular_name' => 'Score Motricité',
 		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'motricite-scores',
-		'menu_icon'    => 'dashicons-games',
-		'supports'     => [ 'title' ],
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'show_in_rest'          => true,
+		'rest_base'             => 'motricite-scores',
+		'rest_controller_class' => 'CDF_Public_Posts_Controller',
+		'menu_icon'             => 'dashicons-games',
+		'supports'              => [ 'title' ],
+	] );
+
+	// Test Cognitif Absurde scores
+	register_post_type( 'cognitif_score', [
+		'labels'                => [
+			'name'          => 'Scores Cognitif',
+			'singular_name' => 'Score Cognitif',
+		],
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'show_in_rest'          => true,
+		'rest_base'             => 'cognitif-scores',
+		'rest_controller_class' => 'CDF_Public_Posts_Controller',
+		'menu_icon'             => 'dashicons-lightbulb',
+		'supports'              => [ 'title' ],
 	] );
 
 	// Player profiles
 	register_post_type( 'cdf_player', [
-		'labels'       => [
+		'labels'                => [
 			'name'          => 'Joueurs',
 			'singular_name' => 'Joueur',
 		],
-		'public'       => false,
-		'show_ui'      => true,
-		'show_in_menu' => true,
-		'show_in_rest' => true,
-		'rest_base'    => 'cdf-players',
-		'menu_icon'    => 'dashicons-admin-users',
-		'supports'     => [ 'title' ],
+		'public'                => false,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'show_in_rest'          => true,
+		'rest_base'             => 'cdf-players',
+		'rest_controller_class' => 'CDF_Public_Posts_Controller',
+		'menu_icon'             => 'dashicons-admin-users',
+		'supports'              => [ 'title' ],
 	] );
 } );
 
@@ -214,16 +281,7 @@ add_action( 'acf/init', function () {
 
 	$fields = cdf_score_fields();
 
-	// Quiz Fou
-	acf_add_local_field_group( [
-		'key'          => 'group_quiz_score',
-		'title'        => 'Données du Score — Quiz Fou',
-		'fields'       => $fields,
-		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'quiz_score' ] ] ],
-		'show_in_rest' => true,
-	] );
-
-	// DSM-6 (réutilise les mêmes champs avec des clés uniques)
+	// DSM-6
 	$dsm6_fields = array_map( function ( $f ) {
 		$f['key'] = str_replace( 'field_', 'field_dsm6_', $f['key'] );
 		return $f;
@@ -293,6 +351,20 @@ add_action( 'acf/init', function () {
 		'show_in_rest' => true,
 	] );
 
+	// Test Cognitif Absurde
+	$cognitif_fields = array_map( function ( $f ) {
+		$f['key'] = str_replace( 'field_', 'field_cognitif_', $f['key'] );
+		return $f;
+	}, $fields );
+
+	acf_add_local_field_group( [
+		'key'          => 'group_cognitif_score',
+		'title'        => 'Données du Score — Test Cognitif Absurde',
+		'fields'       => $cognitif_fields,
+		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'cognitif_score' ] ] ],
+		'show_in_rest' => true,
+	] );
+
 	// Player profiles
 	acf_add_local_field_group( [
 		'key'          => 'group_cdf_player',
@@ -307,28 +379,43 @@ add_action( 'acf/init', function () {
 /*  3. Exposer les champs ACF dans la REST API                         */
 /* ================================================================== */
 add_action( 'rest_api_init', function () {
-	foreach ( [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cdf_player' ] as $cpt ) {
+	foreach ( [ 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score', 'cdf_player' ] as $cpt ) {
 		register_rest_field( $cpt, 'acf', [
 			'get_callback' => function ( $post ) {
 				return get_fields( $post['id'] ) ?: [];
 			},
-			'schema'       => null,
+			'update_callback' => function ( $value, $post ) {
+				if ( ! is_array( $value ) || ! function_exists( 'update_field' ) ) {
+					return;
+				}
+				foreach ( $value as $field_name => $field_value ) {
+					update_field( $field_name, $field_value, $post->ID );
+				}
+			},
+			'schema' => null,
 		] );
 	}
 } );
 
 /* ================================================================== */
-/*  4. Permissions : autoriser la création via API authentifiée         */
+/*  4. Permissions : autoriser la création/suppression via API auth.     */
 /* ================================================================== */
 add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 	$allowed = [
-		'edit_quiz_scores', 'publish_quiz_scores', 'edit_published_quiz_scores',
 		'edit_dsm6_scores', 'publish_dsm6_scores', 'edit_published_dsm6_scores',
+		'delete_dsm6_scores', 'delete_published_dsm6_scores',
 		'edit_rorschach_scores', 'publish_rorschach_scores', 'edit_published_rorschach_scores',
+		'delete_rorschach_scores', 'delete_published_rorschach_scores',
 		'edit_evaluation_scores', 'publish_evaluation_scores', 'edit_published_evaluation_scores',
+		'delete_evaluation_scores', 'delete_published_evaluation_scores',
 		'edit_evasion_scores', 'publish_evasion_scores', 'edit_published_evasion_scores',
+		'delete_evasion_scores', 'delete_published_evasion_scores',
 		'edit_motricite_scores', 'publish_motricite_scores', 'edit_published_motricite_scores',
+		'delete_motricite_scores', 'delete_published_motricite_scores',
+		'edit_cognitif_scores', 'publish_cognitif_scores', 'edit_published_cognitif_scores',
+		'delete_cognitif_scores', 'delete_published_cognitif_scores',
 		'edit_cdf_players', 'publish_cdf_players', 'edit_published_cdf_players',
+		'delete_cdf_players', 'delete_published_cdf_players',
 	];
 	if ( in_array( $cap, $allowed, true ) ) {
 		return [ 'read' ];
@@ -342,7 +429,7 @@ add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 add_action( 'acf/save_post', function ( $post_id ) {
 	$type = get_post_type( $post_id );
 
-	if ( in_array( $type, [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score' ], true ) ) {
+	if ( in_array( $type, [ 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score' ], true ) ) {
 		$pseudo = get_field( 'player_pseudo', $post_id );
 		$score  = get_field( 'player_score', $post_id );
 		if ( $pseudo ) {

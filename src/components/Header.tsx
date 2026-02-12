@@ -7,17 +7,15 @@ import { usePlayer } from "@/context/PlayerContext";
 export default function Header() {
   const pathname = usePathname();
   const { player } = usePlayer();
-  const isQuizFou = pathname.startsWith("/quiz-fou");
   const isDSM6 = pathname.startsWith("/dsm6");
   const isRorschach = pathname.startsWith("/rorschach");
   const isEvaluation = pathname.startsWith("/evaluation");
   const isEvasion = pathname.startsWith("/evasion");
   const isMotricite = pathname.startsWith("/motricite");
-  const isGame = isQuizFou || isDSM6 || isRorschach || isEvaluation || isEvasion || isMotricite;
+  const isCognitif = pathname.startsWith("/cognitif");
+  const isGame = isDSM6 || isRorschach || isEvaluation || isEvasion || isMotricite || isCognitif;
 
-  const subtitle = isQuizFou
-    ? "Le Quizz le plus fou !"
-    : isDSM6
+  const subtitle = isDSM6
       ? "DSM-6 — Version Beta"
       : isRorschach
         ? "Test de Rorschach"
@@ -27,7 +25,9 @@ export default function Header() {
             ? "Évasion Psychiatrique"
             : isMotricite
               ? "Test de Motricité Fine"
-              : "Les jeux les plus fous !";
+              : isCognitif
+                ? "Test Cognitif Absurde"
+                : "Les jeux les plus fous !";
 
   return (
     <header className="gradient-bg text-white py-4 px-6 shadow-lg">
@@ -40,14 +40,6 @@ export default function Header() {
           </div>
         </Link>
         <nav className="flex gap-3 items-center">
-          {isQuizFou && (
-            <Link
-              href="/quiz-fou/classement"
-              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
-            >
-              Classement
-            </Link>
-          )}
           {isDSM6 && (
             <Link
               href="/dsm6/classement"
@@ -88,6 +80,14 @@ export default function Header() {
               Classement
             </Link>
           )}
+          {isCognitif && (
+            <Link
+              href="/cognitif/classement"
+              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+            >
+              Classement
+            </Link>
+          )}
           {isGame ? (
             <Link
               href="/"
@@ -98,16 +98,10 @@ export default function Header() {
           ) : (
             <>
               <Link
-                href="/quiz-fou"
-                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all hidden sm:inline-block"
+                href="/hall-of-fame"
+                className="text-sm font-semibold bg-yellow-400/20 hover:bg-yellow-400/30 px-4 py-2 rounded-full transition-all"
               >
-                Quizz Fou
-              </Link>
-              <Link
-                href="/dsm6"
-                className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all hidden sm:inline-block"
-              >
-                DSM-6
+                🏆 Hall of Fame
               </Link>
             </>
           )}
@@ -118,12 +112,17 @@ export default function Header() {
               href="/profil"
               className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-all"
             >
-              <span className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-xs font-black">
-                {player.pseudo.charAt(0).toUpperCase()}
+              <span className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-sm">
+                {player.avatar || player.pseudo.charAt(0).toUpperCase()}
               </span>
               <span className="text-sm font-semibold hidden sm:inline">
                 {player.pseudo}
               </span>
+              {player.badgeEmoji && (
+                <span className="text-xs hidden sm:inline" title={player.badgeName}>
+                  {player.badgeEmoji}
+                </span>
+              )}
             </Link>
           ) : (
             <Link

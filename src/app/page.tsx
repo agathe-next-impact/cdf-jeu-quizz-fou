@@ -2,15 +2,6 @@ import Link from "next/link";
 
 const games = [
   {
-    slug: "/quiz-fou",
-    emoji: "🤪",
-    title: "Le Quizz Fou",
-    description: "15 questions pour mesurer ton niveau de folie ! Réponds et découvre ton titre.",
-    tags: ["Quizz", "Solo", "Classement"],
-    color: "from-purple to-purple-light",
-    border: "border-purple/20 hover:border-purple/50",
-  },
-  {
     slug: "/dsm6",
     emoji: "🏥",
     title: "DSM-6 Version Beta",
@@ -56,24 +47,13 @@ const games = [
     border: "border-[#0d9488]/20 hover:border-[#0d9488]/50",
   },
   {
-    slug: "#",
-    emoji: "🎨",
-    title: "Devine le Dessin",
-    description: "Dessine, devine et fais rire tout le monde. Le plus fou gagne !",
-    tags: ["Dessin", "Multijoueur"],
-    color: "from-pink-dark to-pink",
-    border: "border-pink/20 hover:border-pink/50",
-    soon: true,
-  },
-  {
-    slug: "#",
-    emoji: "⚡",
-    title: "Le Vrai ou Faux Express",
-    description: "30 secondes pour répondre à un max de questions. Vrai ou faux, à toi de trancher !",
-    tags: ["Rapidité", "Solo", "Chrono"],
-    color: "from-orange to-yellow",
-    border: "border-orange/20 hover:border-orange/50",
-    soon: true,
+    slug: "/cognitif",
+    emoji: "🧠",
+    title: "Test Cognitif Absurde",
+    description: "8 questions de logique, 30 secondes chrono, un QI calculé avec une précision douteuse. Tapez vos réponses et découvrez votre diagnostic cérébral.",
+    tags: ["Logique", "Solo", "Classement"],
+    color: "from-[#2c3e50] to-[#e74c3c]",
+    border: "border-[#2c3e50]/20 hover:border-[#2c3e50]/50",
   },
 ];
 
@@ -96,25 +76,26 @@ export default function HomePage() {
           </p>
         </div>
 
+        {/* Hall of Fame CTA */}
+        <div className="text-center mb-8 animate-slide-up" style={{ animationDelay: "0.05s" }}>
+          <Link
+            href="/hall-of-fame"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-purple-600 text-white font-bold px-6 py-3 rounded-full hover:scale-105 transition-transform shadow-lg"
+          >
+            <span className="text-lg">🏆</span>
+            Hall of Fame — Top 10 des plus fous
+          </Link>
+        </div>
+
         {/* Game grid */}
         <div className="grid sm:grid-cols-2 gap-6">
           {games.map((game, i) => (
             <Link
               key={game.slug + i}
               href={game.slug}
-              aria-disabled={game.soon}
-              className={`card border-2 ${game.border} relative group flex flex-col animate-slide-up ${
-                game.soon ? "opacity-70 pointer-events-none" : ""
-              }`}
+              className={`card border-2 ${game.border} relative group flex flex-col animate-slide-up`}
               style={{ animationDelay: `${i * 0.1}s` }}
-              tabIndex={game.soon ? -1 : undefined}
             >
-              {game.soon && (
-                <span className="absolute top-4 right-4 bg-purple/10 text-purple text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Bientôt
-                </span>
-              )}
-
               <div className="text-5xl mb-4">{game.emoji}</div>
 
               <h2 className="text-xl font-black text-purple-dark mb-2 group-hover:text-purple transition-colors">
@@ -136,13 +117,11 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {!game.soon && (
-                <div className="mt-5">
-                  <span className={`inline-block bg-gradient-to-r ${game.color} text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform`}>
-                    Jouer
-                  </span>
-                </div>
-              )}
+              <div className="mt-5">
+                <span className={`inline-block bg-gradient-to-r ${game.color} text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform`}>
+                  Jouer
+                </span>
+              </div>
             </Link>
           ))}
         </div>

@@ -13,18 +13,18 @@ interface PlayerScore {
 const MEDAL_EMOJIS = ["🥇", "🥈", "🥉"];
 
 function getRowBg(index: number): string {
-  if (index === 0) return "bg-yellow/20 border-yellow/40";
-  if (index === 1) return "bg-gray-100 border-gray-200";
-  if (index === 2) return "bg-orange/10 border-orange/30";
-  return "bg-white border-purple/5";
+  if (index === 0) return "bg-[#2c3e50]/10 border-[#2c3e50]/30";
+  if (index === 1) return "bg-[#2c3e50]/5 border-[#2c3e50]/20";
+  if (index === 2) return "bg-[#2c3e50]/[0.03] border-[#2c3e50]/10";
+  return "bg-white border-[#2c3e50]/5";
 }
 
-export default function ClassementPage() {
+export default function CognitifClassementPage() {
   const [scores, setScores] = useState<PlayerScore[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/scores")
+    fetch("/api/cognitif-scores")
       .then((res) => res.json())
       .then((data: PlayerScore[]) => {
         setScores(data);
@@ -40,32 +40,46 @@ export default function ClassementPage() {
       <div className="max-w-2xl w-full">
         {/* Header */}
         <div className="text-center mb-10 animate-slide-up">
-          <div className="text-5xl mb-4">🏆</div>
-          <h1 className="text-4xl md:text-5xl font-black gradient-text mb-2">
-            Classement
+          <div className="text-5xl mb-4">🧠</div>
+          <h1
+            className="text-4xl md:text-5xl font-black mb-2"
+            style={{
+              background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Classement des QI
           </h1>
           <p className="text-purple-dark/60 font-medium">
-            Les joueurs les plus fous du web !
+            Les cerveaux les plus (dys)fonctionnels
           </p>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-purple animate-pulse">
-              Chargement du classement...
+            <div className="text-xl text-[#2c3e50] animate-pulse">
+              Compilation des résultats cérébraux...
             </div>
           </div>
         ) : scores.length === 0 ? (
           <div className="card text-center py-12 animate-slide-up">
-            <div className="text-5xl mb-4">😴</div>
+            <div className="text-5xl mb-4">📋</div>
             <h2 className="text-xl font-bold text-purple-dark mb-2">
-              Personne n&apos;a encore joué !
+              Aucun cobaye testé
             </h2>
             <p className="text-purple/50 mb-6">
-              Sois le premier fou à apparaître ici
+              Soyez le premier à mesurer votre QI absurde
             </p>
-            <Link href="/quiz-fou" className="btn-primary inline-block">
-              Jouer maintenant
+            <Link
+              href="/cognitif"
+              className="inline-block font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105"
+              style={{
+                background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
+              }}
+            >
+              Passer le test
             </Link>
           </div>
         ) : (
@@ -81,7 +95,7 @@ export default function ClassementPage() {
                   {index < 3 ? (
                     <span className="text-2xl">{MEDAL_EMOJIS[index]}</span>
                   ) : (
-                    <span className="text-lg font-black text-purple/40">
+                    <span className="text-lg font-black text-[#2c3e50]/40">
                       #{index + 1}
                     </span>
                   )}
@@ -92,17 +106,31 @@ export default function ClassementPage() {
                   <div className="font-bold text-purple-dark truncate">
                     {player.pseudo}
                   </div>
-                  <div className="text-xs text-purple/40 font-medium">
+                  <div className="text-xs text-[#2c3e50]/40 font-medium">
                     {player.title}
                   </div>
                 </div>
 
                 {/* Score */}
                 <div className="text-right shrink-0">
-                  <div className="text-2xl font-black text-purple">
-                    {player.score}
+                  <div
+                    className={`text-2xl font-black ${
+                      player.score >= 145
+                        ? "text-[#e74c3c]"
+                        : player.score >= 130
+                          ? "text-green-600"
+                          : player.score >= 115
+                            ? "text-[#3498db]"
+                            : player.score >= 100
+                              ? "text-[#2c3e50]"
+                              : "text-orange"
+                    }`}
+                  >
+                    QI {player.score}
                   </div>
-                  <div className="text-xs text-purple/30 font-medium">pts</div>
+                  <div className="text-xs text-[#2c3e50]/30 font-medium">
+                    points
+                  </div>
                 </div>
               </div>
             ))}
@@ -111,7 +139,7 @@ export default function ClassementPage() {
 
         {/* Back button */}
         <div className="text-center mt-10">
-          <Link href="/quiz-fou" className="btn-secondary inline-block">
+          <Link href="/cognitif" className="btn-secondary inline-block">
             Retour au jeu
           </Link>
         </div>

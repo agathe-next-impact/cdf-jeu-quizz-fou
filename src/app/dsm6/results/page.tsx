@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Confetti from "@/components/Confetti";
+import RegisterInvite from "@/components/RegisterInvite";
 import { dsm6Questions, getDSM6Profile } from "@/data/dsm6-questions";
 
 interface ScoreResult {
@@ -144,6 +145,9 @@ export default function DSM6ResultsPage() {
             Indice de pathologie : {percentage}%
           </div>
         </div>
+
+        {/* Register invite */}
+        <RegisterInvite />
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

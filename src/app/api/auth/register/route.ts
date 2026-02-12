@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "JSON invalide" }, { status: 400 });
   }
 
-  const { pseudo, email, password } = body;
+  const { pseudo, email, password, avatar } = body;
 
   if (!pseudo || typeof pseudo !== "string" || pseudo.trim().length < 2) {
     return NextResponse.json(
@@ -61,12 +61,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const player = await createPlayer(pseudo.trim(), email.trim(), password);
+    const playerAvatar = typeof avatar === "string" && avatar ? avatar : "🤪";
+    const player = await createPlayer(pseudo.trim(), email.trim(), password, playerAvatar);
     return NextResponse.json(player, { status: 201 });
   } catch (err) {
-    console.error("Register error:", err);
+    const message = err instanceof Error ? err.message : String(err);
+    console.error("Register error:", message);
     return NextResponse.json(
-      { error: "Erreur lors de l'inscription" },
+      { error: "Erreur lors de l'inscription", detail: message },
       { status: 500 }
     );
   }

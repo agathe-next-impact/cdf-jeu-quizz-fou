@@ -14,25 +14,52 @@ interface GameStats {
   lastPlayed: string;
 }
 
-interface ProfileData {
-  player: { id: string; pseudo: string; email: string; createdAt: string };
-  games: GameStats[];
+interface BadgeData {
+  name: string;
+  emoji: string;
+  minScore: number;
+  color: string;
 }
 
+interface ProfileData {
+  player: { id: string; pseudo: string; email: string; avatar: string; createdAt: string; madnessSince: string; bio: string; autodiagnostic: string };
+  games: GameStats[];
+  globalScore: number;
+  badge: BadgeData;
+  nextBadge: BadgeData | null;
+}
+
+const AVATARS = [
+  "🤪", "😎", "🧠", "👻", "🦊", "🐱", "🐸", "🎃",
+  "🤖", "👽", "🦄", "🐧", "🎭", "🔥", "💀", "🫠",
+];
+
 const GAME_EMOJIS: Record<string, string> = {
-  "Le Quizz Fou": "🤪",
   "DSM-6 Version Beta": "🏥",
   "Test de Rorschach": "🫠",
   "Évaluation Émotionnelle": "🧠",
   "Évasion Psychiatrique": "🏥",
   "Test de Motricité Fine": "🎯",
+  "Test Cognitif Absurde": "🧠",
 };
 
 export default function ProfilPage() {
-  const { player, loading: authLoading, logout } = usePlayer();
+  const { player, loading: authLoading, logout, updateAvatar, updateProfile, updateBadge } = usePlayer();
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [editingBio, setEditingBio] = useState(false);
+  const [editingMadness, setEditingMadness] = useState(false);
+  const [editingDiag, setEditingDiag] = useState(false);
+  const [bioValue, setBioValue] = useState("");
+  const [madnessValue, setMadnessValue] = useState("");
+  const [diagValue, setDiagValue] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteError, setDeleteError] = useState("");
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -42,13 +69,104 @@ export default function ProfilPage() {
     }
 
     fetch(`/api/auth/profile?pseudo=${encodeURIComponent(player.pseudo)}`)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error(`Profile API ${res.status}`);
+        return res.json();
+      })
       .then((data: ProfileData) => {
         setProfile(data);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((err) => {
+        console.error("Profile fetch error:", err);
+        // Fallback: build a minimal profile from context data so the page doesn't crash
+        setProfile({
+          player: {
+            id: player.id ?? "",
+            pseudo: player.pseudo,
+            email: player.email,
+            avatar: player.avatar,
+            createdAt: player.createdAt,
+            madnessSince: player.madnessSince ?? "",
+            bio: player.bio ?? "",
+            autodiagnostic: player.autodiagnostic ?? "",
+          },
+          games: [],
+          globalScore: 0,
+          badge: { name: "Patient Admis", emoji: "🏥", minScore: 0, color: "text-gray-400" },
+          nextBadge: { name: "Cas Intéressant", emoji: "🔬", minScore: 50, color: "text-blue-400" },
+        });
+        setLoading(false);
+      });
   }, [player, authLoading, router]);
+
+  // Sync badge to context/localStorage when profile loads
+  useEffect(() => {
+    if (profile?.badge) {
+      updateBadge(profile.badge.emoji, profile.badge.name);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile?.badge?.name]);
+
+  const saveBio = async () => {
+    setSaving(true);
+    const err = await updateProfile({ bio: bioValue });
+    if (!err) {
+      setProfile((prev) =>
+        prev ? { ...prev, player: { ...prev.player, bio: bioValue } } : prev
+      );
+      setEditingBio(false);
+    }
+    setSaving(false);
+  };
+
+  const saveDiag = async () => {
+    setSaving(true);
+    const err = await updateProfile({ autodiagnostic: diagValue });
+    if (!err) {
+      setProfile((prev) =>
+        prev ? { ...prev, player: { ...prev.player, autodiagnostic: diagValue } } : prev
+      );
+      setEditingDiag(false);
+    }
+    setSaving(false);
+  };
+
+  const saveMadness = async () => {
+    setSaving(true);
+    const err = await updateProfile({ madnessSince: madnessValue });
+    if (!err) {
+      setProfile((prev) =>
+        prev ? { ...prev, player: { ...prev.player, madnessSince: madnessValue } } : prev
+      );
+      setEditingMadness(false);
+    }
+    setSaving(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!player) return;
+    setDeleteError("");
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/auth/delete-account", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo: player.pseudo, password: deletePassword }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setDeleteError(data.error || "Erreur lors de la suppression");
+        setDeleting(false);
+        return;
+      }
+      logout();
+      router.push("/");
+    } catch {
+      setDeleteError("Erreur réseau");
+      setDeleting(false);
+    }
+  };
 
   if (authLoading || loading || !profile) {
     return (
@@ -70,16 +188,56 @@ export default function ProfilPage() {
       <div className="max-w-2xl mx-auto">
         {/* Profile header */}
         <div className="card text-center mb-8 animate-slide-up">
-          <div className="w-20 h-20 rounded-full gradient-bg flex items-center justify-center text-3xl text-white font-black mx-auto mb-4">
-            {profile.player.pseudo.charAt(0).toUpperCase()}
+          <div className="relative inline-block mx-auto mb-4">
+            <button
+              onClick={() => setShowAvatarPicker(!showAvatarPicker)}
+              className="w-20 h-20 rounded-full gradient-bg flex items-center justify-center text-4xl mx-auto hover:scale-105 transition-transform"
+              title="Changer d'avatar"
+            >
+              {profile.player.avatar || profile.player.pseudo.charAt(0).toUpperCase()}
+            </button>
+            <span className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs shadow border border-purple/20">
+              ✏️
+            </span>
           </div>
+          {showAvatarPicker && (
+            <div className="flex flex-wrap gap-2 justify-center mb-4 animate-slide-up">
+              {AVATARS.map((a) => (
+                <button
+                  key={a}
+                  onClick={async () => {
+                    await updateAvatar(a);
+                    setProfile((prev) =>
+                      prev ? { ...prev, player: { ...prev.player, avatar: a } } : prev
+                    );
+                    setShowAvatarPicker(false);
+                  }}
+                  className={`text-2xl w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                    profile.player.avatar === a
+                      ? "bg-purple/20 ring-2 ring-purple scale-110"
+                      : "bg-purple/5 hover:bg-purple/10"
+                  }`}
+                >
+                  {a}
+                </button>
+              ))}
+            </div>
+          )}
           <h1 className="text-3xl font-black gradient-text mb-1">
             {profile.player.pseudo}
           </h1>
+          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple/10 mb-2 ${profile.badge.color}`}>
+            <span className="text-base">{profile.badge.emoji}</span>
+            <span className="text-sm font-bold">{profile.badge.name}</span>
+          </div>
           <p className="text-sm text-purple/50 mb-4">
             Membre depuis le {memberSince}
           </p>
           <div className="flex justify-center gap-6">
+            <div className="text-center">
+              <div className="text-2xl font-black text-purple">{profile.globalScore}<span className="text-sm font-bold text-purple/40">/100</span></div>
+              <div className="text-xs text-purple/50 font-medium">score global</div>
+            </div>
             <div className="text-center">
               <div className="text-2xl font-black text-purple">{profile.games.length}</div>
               <div className="text-xs text-purple/50 font-medium">
@@ -92,6 +250,192 @@ export default function ProfilPage() {
                 {totalPlays === 1 ? "partie" : "parties"}
               </div>
             </div>
+          </div>
+          {profile.nextBadge && (
+            <div className="mt-4">
+              <div className="flex items-center justify-center gap-2 text-xs text-purple/40 mb-1.5">
+                <span>Prochain badge : {profile.nextBadge.emoji} {profile.nextBadge.name}</span>
+                <span className="font-bold">{profile.nextBadge.minScore - profile.globalScore} points restants</span>
+              </div>
+              <div className="w-full max-w-xs mx-auto h-2 bg-purple/10 rounded-full overflow-hidden">
+                <div
+                  className="h-full gradient-bg rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.min(100, ((profile.globalScore - profile.badge.minScore) / (profile.nextBadge.minScore - profile.badge.minScore)) * 100)}%`,
+                  }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Editable profile fields */}
+        <div className="card mb-8 animate-slide-up" style={{ animationDelay: "0.05s" }}>
+          <h2 className="text-lg font-black text-purple-dark mb-4">Mon dossier patient</h2>
+
+          {/* Bio / Citation */}
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+                Citation / Mini-bio
+              </label>
+              {!editingBio && (
+                <button
+                  onClick={() => {
+                    setBioValue(profile.player.bio || "");
+                    setEditingBio(true);
+                  }}
+                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                >
+                  Modifier
+                </button>
+              )}
+            </div>
+            {editingBio ? (
+              <div>
+                <textarea
+                  value={bioValue}
+                  onChange={(e) => setBioValue(e.target.value)}
+                  maxLength={160}
+                  rows={2}
+                  placeholder="Une citation, une id&eacute;e folle, ta devise..."
+                  className="w-full px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm resize-none transition-colors"
+                />
+                <div className="flex items-center justify-between mt-1.5">
+                  <span className="text-xs text-purple/30">{bioValue.length}/160</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setEditingBio(false)}
+                      className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                      disabled={saving}
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={saveBio}
+                      disabled={saving}
+                      className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {saving ? "..." : "Enregistrer"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-purple-dark/70 italic">
+                {profile.player.bio || "Aucune citation pour l\u2019instant..."}
+              </p>
+            )}
+          </div>
+
+          {/* Autodiagnostic */}
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+                Autodiagnostic
+              </label>
+              {!editingDiag && (
+                <button
+                  onClick={() => {
+                    setDiagValue(profile.player.autodiagnostic || "");
+                    setEditingDiag(true);
+                  }}
+                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                >
+                  Modifier
+                </button>
+              )}
+            </div>
+            {editingDiag ? (
+              <div>
+                <textarea
+                  value={diagValue}
+                  onChange={(e) => setDiagValue(e.target.value)}
+                  maxLength={200}
+                  rows={2}
+                  placeholder="Ton autodiagnostic totalement fiable..."
+                  className="w-full px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm resize-none transition-colors"
+                />
+                <div className="flex items-center justify-between mt-1.5">
+                  <span className="text-xs text-purple/30">{diagValue.length}/200</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setEditingDiag(false)}
+                      className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                      disabled={saving}
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={saveDiag}
+                      disabled={saving}
+                      className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {saving ? "..." : "Enregistrer"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-purple-dark/70 italic">
+                {profile.player.autodiagnostic || "Aucun diagnostic pos\u00e9 pour l\u2019instant..."}
+              </p>
+            )}
+          </div>
+
+          {/* Date de d&eacute;but de folie */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+                D&eacute;but de la folie
+              </label>
+              {!editingMadness && (
+                <button
+                  onClick={() => {
+                    setMadnessValue(profile.player.madnessSince || "");
+                    setEditingMadness(true);
+                  }}
+                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                >
+                  Modifier
+                </button>
+              )}
+            </div>
+            {editingMadness ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={madnessValue}
+                  onChange={(e) => setMadnessValue(e.target.value)}
+                  max={new Date().toISOString().split("T")[0]}
+                  className="flex-1 px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm transition-colors"
+                />
+                <button
+                  onClick={() => setEditingMadness(false)}
+                  className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                  disabled={saving}
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={saveMadness}
+                  disabled={saving}
+                  className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {saving ? "..." : "OK"}
+                </button>
+              </div>
+            ) : (
+              <p className="text-sm text-purple-dark/70">
+                {profile.player.madnessSince
+                  ? new Date(profile.player.madnessSince + "T00:00:00").toLocaleDateString("fr-FR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Date inconnue"}
+              </p>
+            )}
           </div>
         </div>
 
@@ -155,6 +499,60 @@ export default function ProfilPage() {
           >
             Se d&eacute;connecter
           </button>
+        </div>
+
+        {/* Danger zone */}
+        <div className="mt-12 animate-slide-up" style={{ animationDelay: "0.5s" }}>
+          {!showDeleteConfirm ? (
+            <div className="text-center">
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="text-xs text-red-400/60 hover:text-red-500 font-medium transition-colors"
+              >
+                Supprimer mon compte
+              </button>
+            </div>
+          ) : (
+            <div className="card border-2 border-red-200 bg-red-50/50">
+              <h3 className="text-sm font-bold text-red-600 mb-2">
+                Supprimer le compte
+              </h3>
+              <p className="text-xs text-red-500/70 mb-4">
+                Cette action est irr&eacute;versible. Ton compte et tes donn&eacute;es de profil seront supprim&eacute;s.
+              </p>
+              <div className="mb-3">
+                <input
+                  type="password"
+                  value={deletePassword}
+                  onChange={(e) => setDeletePassword(e.target.value)}
+                  placeholder="Confirme avec ton mot de passe"
+                  className="w-full px-3 py-2 rounded-xl border-2 border-red-200 focus:border-red-400 focus:outline-none bg-white text-purple-dark text-sm transition-colors"
+                />
+              </div>
+              {deleteError && (
+                <p className="text-red-500 text-xs font-medium mb-3">{deleteError}</p>
+              )}
+              <div className="flex gap-2 justify-end">
+                <button
+                  onClick={() => {
+                    setShowDeleteConfirm(false);
+                    setDeletePassword("");
+                    setDeleteError("");
+                  }}
+                  className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1.5 transition-colors"
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleting || !deletePassword}
+                  className="text-xs font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {deleting ? "Suppression..." : "Supprimer définitivement"}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
