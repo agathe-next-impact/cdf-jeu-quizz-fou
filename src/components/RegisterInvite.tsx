@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
+import { Ticket, X } from "lucide-react";
 
 export default function RegisterInvite() {
   const { player, loading } = usePlayer();
@@ -11,20 +12,22 @@ export default function RegisterInvite() {
   if (loading || player || dismissed) return null;
 
   return (
-    <div className="card mb-6 border-2 border-purple/20 bg-purple/5 text-center relative">
+    <div className="card mb-6 border border-blue text-center relative">
       <button
         onClick={() => setDismissed(true)}
-        className="absolute top-2 right-3 text-purple/40 hover:text-purple/70 text-lg leading-none"
+        className="absolute top-2 right-3 text-blue hover:text-blue leading-none"
         aria-label="Fermer"
       >
-        &times;
+        <X size={18} />
       </button>
 
-      <div className="text-4xl mb-3">🎫</div>
-      <h3 className="text-lg font-black text-purple-dark mb-1">
+      <div className="flex justify-center mb-3">
+        <Ticket size={36} className="text-black" />
+      </div>
+      <h3 className="text-lg font-black text-black mb-1">
         Envie de sauvegarder tes scores ?
       </h3>
-      <p className="text-sm text-purple-dark/60 mb-4">
+      <p className="text-sm text-black mb-4">
         Inscris-toi pour apparaitre dans les classements et suivre ta progression.
       </p>
       <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -36,7 +39,7 @@ export default function RegisterInvite() {
         </Link>
         <button
           onClick={() => setDismissed(true)}
-          className="text-sm font-semibold text-purple/50 hover:text-purple/70 transition-colors"
+          className="text-sm font-semibold text-blue hover:text-blue transition-colors"
         >
           Non merci
         </button>

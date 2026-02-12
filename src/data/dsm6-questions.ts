@@ -217,7 +217,7 @@ export interface DSM6Profile {
 export const dsm6Profiles: DSM6Profile[] = [
   {
     minPercent: 90,
-    emoji: "🏥",
+    emoji: "hospital",
     title: "Cas Clinique Certifié",
     subtitle: "Page 4 782 du DSM-6",
     description:
@@ -225,7 +225,7 @@ export const dsm6Profiles: DSM6Profile[] = [
   },
   {
     minPercent: 75,
-    emoji: "🧪",
+    emoji: "flask-conical",
     title: "Spécimen Remarquable",
     subtitle: "Étude de cas en cours",
     description:
@@ -233,7 +233,7 @@ export const dsm6Profiles: DSM6Profile[] = [
   },
   {
     minPercent: 60,
-    emoji: "📋",
+    emoji: "clipboard-list",
     title: "Pathologie Avancée",
     subtitle: "Plusieurs syndromes détectés",
     description:
@@ -241,7 +241,7 @@ export const dsm6Profiles: DSM6Profile[] = [
   },
   {
     minPercent: 45,
-    emoji: "🔬",
+    emoji: "microscope",
     title: "Déviance Modérée",
     subtitle: "Sous observation",
     description:
@@ -249,7 +249,7 @@ export const dsm6Profiles: DSM6Profile[] = [
   },
   {
     minPercent: 30,
-    emoji: "📎",
+    emoji: "paperclip",
     title: "Légèrement Dysfonctionnel(le)",
     subtitle: "Dans la norme... presque",
     description:
@@ -257,7 +257,7 @@ export const dsm6Profiles: DSM6Profile[] = [
   },
   {
     minPercent: 15,
-    emoji: "✅",
+    emoji: "check",
     title: "Suspicieusement Normal(e)",
     subtitle: "Le comité a des doutes",
     description:
@@ -265,7 +265,7 @@ export const dsm6Profiles: DSM6Profile[] = [
   },
   {
     minPercent: 0,
-    emoji: "🚨",
+    emoji: "siren",
     title: "Dangereusement Sain(e) d'Esprit",
     subtitle: "ALERTE ROUGE",
     description:

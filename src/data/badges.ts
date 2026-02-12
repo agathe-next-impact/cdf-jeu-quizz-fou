@@ -7,16 +7,16 @@ export interface Badge {
 
 /** Thresholds are on a 0–100 normalized scale (average % across played games) */
 export const BADGES: Badge[] = [
-  { name: "Patient Admis",          emoji: "🏥", minScore: 0,   color: "text-gray-400" },
-  { name: "Cas Intéressant",        emoji: "🔬", minScore: 10,  color: "text-blue-400" },
-  { name: "Sujet Instable",         emoji: "⚡", minScore: 20,  color: "text-green-500" },
-  { name: "Cobaye Prometteur",      emoji: "🧪", minScore: 35,  color: "text-teal-500" },
-  { name: "Esprit Dérangé",         emoji: "🌀", minScore: 50,  color: "text-purple-500" },
-  { name: "Cerveau Hyperactif",     emoji: "🧠", minScore: 65,  color: "text-pink-500" },
-  { name: "Aliéné Confirmé",        emoji: "🔥", minScore: 75,  color: "text-orange-500" },
-  { name: "Génie Incompris",        emoji: "💎", minScore: 85,  color: "text-cyan-400" },
-  { name: "Légende de l'Asile",     emoji: "👑", minScore: 92,  color: "text-yellow-500" },
-  { name: "Dieu de la Folie",       emoji: "⭐", minScore: 98,  color: "text-amber-400" },
+  { name: "Patient Admis",          emoji: "hospital", minScore: 0,   color: "text-black/40" },
+  { name: "Cas Intéressant",        emoji: "microscope", minScore: 10,  color: "text-blue" },
+  { name: "Sujet Instable",         emoji: "zap", minScore: 20,  color: "text-blue" },
+  { name: "Cobaye Prometteur",      emoji: "flask-conical", minScore: 35,  color: "text-blue" },
+  { name: "Esprit Dérangé",         emoji: "rotate-ccw", minScore: 50,  color: "text-blue" },
+  { name: "Cerveau Hyperactif",     emoji: "brain", minScore: 65,  color: "text-red" },
+  { name: "Aliéné Confirmé",        emoji: "flame", minScore: 75,  color: "text-yellow" },
+  { name: "Génie Incompris",        emoji: "gem", minScore: 85,  color: "text-blue" },
+  { name: "Légende de l'Asile",     emoji: "crown", minScore: 92,  color: "text-yellow" },
+  { name: "Dieu de la Folie",       emoji: "star", minScore: 98,  color: "text-yellow" },
 ];
 
 export function getBadgeForScore(globalScore: number): Badge {

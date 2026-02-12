@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Hospital, ClipboardList, Check } from "lucide-react";
 import { dsm6Questions } from "@/data/dsm6-questions";
 
 export default function DSM6QuizPage() {
@@ -67,7 +68,7 @@ export default function DSM6QuizPage() {
   if (!pseudo) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-purple animate-pulse">Chargement du dossier patient...</div>
+        <div className="text-xl text-blue animate-pulse">Chargement du dossier patient...</div>
       </div>
     );
   }
@@ -82,19 +83,18 @@ export default function DSM6QuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-purple">
+            <span className="text-sm font-bold text-blue">
               Question {currentQuestion + 1}/{dsm6Questions.length}
             </span>
-            <span className="text-sm font-bold text-purple">
+            <span className="text-sm font-bold text-blue">
               Patient {pseudo} — {score} pts
             </span>
           </div>
-          <div className="w-full bg-purple/10 rounded-full h-3 overflow-hidden">
+          <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-blue"
               style={{
                 width: `${progress}%`,
-                background: "linear-gradient(90deg, #1a365d, #e53e3e)",
               }}
             />
           </div>
@@ -102,14 +102,14 @@ export default function DSM6QuizPage() {
 
         {/* Section badge */}
         <div className="flex justify-center mb-4">
-          <span className="bg-red-100 text-red-700 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
+          <span className="text-red px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
             {question.section}
           </span>
         </div>
 
         {/* Question card */}
-        <div key={question.id} className="card mb-6 text-center animate-slide-up border-2 border-purple/5">
-          <h2 className="text-xl md:text-2xl font-black text-purple-dark leading-snug">
+        <div key={question.id} className="card mb-6 text-center animate-slide-up border border-blue">
+          <h2 className="text-xl md:text-2xl font-black text-black leading-snug">
             {question.question}
           </h2>
         </div>
@@ -122,10 +122,10 @@ export default function DSM6QuizPage() {
             const isMedPoints = showFeedback && isSelected && answeredPoints >= 10 && answeredPoints < 25;
             const isLowPoints = showFeedback && isSelected && answeredPoints < 10;
 
-            let bgClass = "bg-white hover:bg-purple/5 border-2 border-purple/10 hover:border-purple/30";
-            if (isHighPoints) bgClass = "bg-red-50 border-2 border-red-400 scale-[1.02]";
-            if (isMedPoints) bgClass = "bg-yellow/20 border-2 border-yellow scale-[1.02]";
-            if (isLowPoints) bgClass = "bg-green/20 border-2 border-green scale-[1.02]";
+            let bgClass = "bg-white border border-blue hover:border-blue";
+            if (isHighPoints) bgClass = "border border-red scale-[1.02]";
+            if (isMedPoints) bgClass = "border border-yellow scale-[1.02]";
+            if (isLowPoints) bgClass = "border border-blue scale-[1.02]";
 
             return (
               <button
@@ -135,15 +135,15 @@ export default function DSM6QuizPage() {
                 className={`${bgClass} rounded-2xl px-6 py-4 text-left transition-all duration-300 cursor-pointer disabled:cursor-default flex items-center gap-4 animate-slide-up`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <span className="w-10 h-10 rounded-full bg-purple/10 flex items-center justify-center font-bold text-purple text-sm shrink-0">
+                <span className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-blue text-sm shrink-0">
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span className="font-semibold text-purple-dark flex-1">
+                <span className="font-semibold text-black flex-1">
                   {answer.text}
                 </span>
                 {showFeedback && isSelected && (
                   <span className="text-sm font-bold animate-bounce-in">
-                    {answeredPoints >= 25 ? "🏥" : answeredPoints >= 10 ? "📋" : "✅"} +{answeredPoints}
+                    {answeredPoints >= 25 ? <Hospital size={20} /> : answeredPoints >= 10 ? <ClipboardList size={20} /> : <Check size={20} />} +{answeredPoints}
                   </span>
                 )}
               </button>
@@ -153,10 +153,10 @@ export default function DSM6QuizPage() {
 
         {/* Score bar */}
         <div className="mt-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-purple/5 px-4 py-2 rounded-full">
-            <span className="text-sm font-medium text-purple/60">Indice de folie</span>
-            <span className="text-lg font-black text-purple">{score}</span>
-            <span className="text-sm text-purple/40">/ {maxScore}</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
+            <span className="text-sm font-medium text-blue">Indice de folie</span>
+            <span className="text-lg font-black text-blue">{score}</span>
+            <span className="text-sm text-blue">/ {maxScore}</span>
           </div>
         </div>
       </div>

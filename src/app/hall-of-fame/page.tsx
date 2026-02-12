@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import GameIcon from "@/components/GameIcon";
+import { Trophy, Ghost, Medal } from "lucide-react";
 
 interface BadgeData {
   name: string;
@@ -31,20 +33,20 @@ interface GameLeaderboard {
   entries: GameLeaderboardEntry[];
 }
 
-const MEDAL_EMOJIS = ["🥇", "🥈", "🥉"];
+const MEDAL_COLORS = ["text-yellow", "text-black/60", "text-yellow/70"];
 
 function getRowBg(index: number): string {
-  if (index === 0) return "bg-yellow-50 border-yellow-300";
-  if (index === 1) return "bg-gray-50 border-gray-200";
-  if (index === 2) return "bg-orange-50 border-orange-200";
-  return "bg-white border-purple/5";
+  if (index === 0) return "border-yellow";
+  if (index === 1) return "border-black";
+  if (index === 2) return "border-yellow";
+  return "bg-white border-blue";
 }
 
 function getGameRowBg(index: number): string {
-  if (index === 0) return "bg-yellow-50/60 border-yellow-200";
-  if (index === 1) return "bg-gray-50/60 border-gray-100";
-  if (index === 2) return "bg-orange-50/60 border-orange-100";
-  return "bg-white/60 border-purple/5";
+  if (index === 0) return "border-yellow";
+  if (index === 1) return "border-black";
+  if (index === 2) return "border-yellow";
+  return "border-blue";
 }
 
 export default function HallOfFamePage() {
@@ -68,37 +70,31 @@ export default function HallOfFamePage() {
       <div className="max-w-2xl w-full">
         {/* Header */}
         <div className="text-center mb-10 animate-slide-up">
-          <div className="text-5xl mb-4">🏆</div>
+          <div className="flex justify-center mb-4"><Trophy size={48} className="text-black" /></div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-2"
-            style={{
-              background: "linear-gradient(135deg, #d97706, #7c3aed)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="text-4xl md:text-5xl font-black text-black mb-2"
           >
             Hall of Fame
           </h1>
-          <p className="text-purple-dark/60 font-medium">
+          <p className="text-black font-medium">
             Les patients les plus fous de l&apos;asile
           </p>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-purple animate-pulse">
+            <div className="text-xl text-blue animate-pulse">
               Consultation des archives...
             </div>
           </div>
         ) : entries.length === 0 && perGame.every((g) => g.entries.length === 0) ? (
           <div className="card text-center py-12 animate-slide-up">
-            <div className="text-5xl mb-4">👻</div>
-            <h2 className="text-xl font-bold text-purple-dark mb-2">
+            <div className="flex justify-center mb-4"><Ghost size={48} className="text-black" /></div>
+            <h2 className="text-xl font-bold text-black mb-2">
               L&apos;asile est vide
             </h2>
-            <p className="text-purple/50 mb-6">
-              Aucun patient n&apos;a encore jou&eacute;. Sois le premier !
+            <p className="text-blue mb-6">
+              Aucun patient n&apos;a encore joué. Sois le premier !
             </p>
             <Link href="/" className="btn-primary inline-block">
               Choisir un jeu
@@ -109,50 +105,50 @@ export default function HallOfFamePage() {
             {/* ======== GLOBAL TOP 10 ======== */}
             {entries.length > 0 && (
               <section className="mb-14">
-                <h2 className="text-2xl font-black text-purple-dark mb-5 text-center animate-slide-up">
+                <h2 className="text-2xl font-black text-black mb-5 text-center animate-slide-up">
                   Classement Global
                 </h2>
                 <div className="space-y-3">
                   {entries.map((entry, index) => (
                     <div
                       key={entry.pseudo}
-                      className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
+                      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
                       {/* Rank */}
                       <div className="w-12 text-center shrink-0">
                         {index < 3 ? (
-                          <span className="text-2xl">{MEDAL_EMOJIS[index]}</span>
+                          <Medal size={24} className={MEDAL_COLORS[index]} />
                         ) : (
-                          <span className="text-lg font-black text-purple/40">
+                          <span className="text-lg font-black text-blue">
                             #{index + 1}
                           </span>
                         )}
                       </div>
 
                       {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-xl shrink-0">
-                        {entry.avatar}
+                      <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                        <GameIcon name={entry.avatar} size={22} />
                       </div>
 
                       {/* Player info */}
                       <div className="flex-1 min-w-0">
-                        <div className="font-bold text-purple-dark truncate">
+                        <div className="font-bold text-black truncate">
                           {entry.pseudo}
                         </div>
                         <div className={`inline-flex items-center gap-1 text-xs font-semibold ${entry.badge.color}`}>
-                          <span>{entry.badge.emoji}</span>
+                          <span><GameIcon name={entry.badge.emoji} size={16} /></span>
                           <span>{entry.badge.name}</span>
                         </div>
-                        <div className="text-xs text-purple/30 mt-0.5">
+                        <div className="text-xs text-blue mt-0.5">
                           {entry.gamesPlayed} {entry.gamesPlayed === 1 ? "jeu" : "jeux"}
                         </div>
                       </div>
 
                       {/* Score */}
                       <div className="text-right shrink-0">
-                        <div className="text-2xl font-black text-purple">
-                          {entry.globalScore}<span className="text-sm font-bold text-purple/30">/100</span>
+                        <div className="text-2xl font-black text-blue">
+                          {entry.globalScore}<span className="text-sm font-bold text-blue">/100</span>
                         </div>
                       </div>
                     </div>
@@ -163,27 +159,27 @@ export default function HallOfFamePage() {
 
             {/* ======== PER-GAME TOP 5 ======== */}
             <section>
-              <h2 className="text-2xl font-black text-purple-dark mb-6 text-center animate-slide-up">
+              <h2 className="text-2xl font-black text-black mb-6 text-center animate-slide-up">
                 Hall of Fame par jeu
               </h2>
               <div className="grid sm:grid-cols-2 gap-6">
                 {perGame.map((game, gi) => (
                   <div
                     key={game.slug}
-                    className="card border-2 border-purple/10 animate-slide-up"
+                    className="card border border-blue animate-slide-up"
                     style={{ animationDelay: `${gi * 0.08}s` }}
                   >
                     {/* Game header */}
                     <div className="flex items-center gap-2 mb-4">
-                      <span className="text-2xl">{game.emoji}</span>
-                      <h3 className="text-lg font-black text-purple-dark leading-tight">
+                      <span className="flex items-center"><GameIcon name={game.emoji} size={24} /></span>
+                      <h3 className="text-lg font-black text-black leading-tight">
                         {game.game}
                       </h3>
                     </div>
 
                     {game.entries.length === 0 ? (
-                      <p className="text-sm text-purple/40 italic">
-                        Aucun score enregistr&eacute;
+                      <p className="text-sm text-blue italic">
+                        Aucun score enregistré
                       </p>
                     ) : (
                       <div className="space-y-2">
@@ -195,9 +191,9 @@ export default function HallOfFamePage() {
                             {/* Rank */}
                             <div className="w-8 text-center shrink-0">
                               {index < 3 ? (
-                                <span className="text-lg">{MEDAL_EMOJIS[index]}</span>
+                                <Medal size={20} className={MEDAL_COLORS[index]} />
                               ) : (
-                                <span className="text-sm font-black text-purple/30">
+                                <span className="text-sm font-black text-blue">
                                   #{index + 1}
                                 </span>
                               )}
@@ -205,20 +201,20 @@ export default function HallOfFamePage() {
 
                             {/* Player info */}
                             <div className="flex-1 min-w-0">
-                              <div className="font-bold text-sm text-purple-dark truncate">
+                              <div className="font-bold text-sm text-black truncate">
                                 {entry.pseudo}
                               </div>
-                              <div className="text-xs text-purple/40 truncate">
+                              <div className="text-xs text-blue truncate">
                                 {entry.title}
                               </div>
                             </div>
 
                             {/* Score */}
                             <div className="text-right shrink-0">
-                              <div className="text-lg font-black text-purple">
+                              <div className="text-lg font-black text-blue">
                                 {entry.score}
                               </div>
-                              <div className="text-[10px] text-purple/25 font-medium">pts</div>
+                              <div className="text-[10px] text-blue font-medium">pts</div>
                             </div>
                           </div>
                         ))}
@@ -229,7 +225,7 @@ export default function HallOfFamePage() {
                     <div className="mt-3 text-center">
                       <Link
                         href={`${game.slug}/classement`}
-                        className="text-xs font-semibold text-purple/50 hover:text-purple transition-colors"
+                        className="text-xs font-semibold text-blue hover:text-blue transition-colors"
                       >
                         Voir le classement complet &rarr;
                       </Link>

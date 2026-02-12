@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePlayer } from "@/context/PlayerContext";
+import { ThemeToggle } from "./ThemeToggle";
+import { Laugh, Trophy } from "lucide-react";
+import GameIcon from "./GameIcon";
 
 export default function Header() {
   const pathname = usePathname();
@@ -30,20 +33,20 @@ export default function Header() {
                 : "Les jeux les plus fous !";
 
   return (
-    <header className="gradient-bg text-white py-4 px-6 shadow-lg">
+    <header className="bg-black text-white py-4 px-6">
       <div className="max-w-4xl mx-auto flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-          <span className="text-3xl">🤪</span>
+        <Link href="/" className="flex items-center gap-3">
+          <Laugh size={28} className="text-white" />
           <div>
             <h1 className="text-xl font-bold leading-tight">Comme des Fous</h1>
-            <p className="text-xs text-purple-200 tracking-wide">{subtitle}</p>
+            <p className="text-xs text-blue tracking-wide">{subtitle}</p>
           </div>
         </Link>
         <nav className="flex gap-3 items-center">
           {isDSM6 && (
             <Link
               href="/dsm6/classement"
-              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Classement
             </Link>
@@ -51,7 +54,7 @@ export default function Header() {
           {isRorschach && (
             <Link
               href="/rorschach/classement"
-              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Classement
             </Link>
@@ -59,7 +62,7 @@ export default function Header() {
           {isEvaluation && (
             <Link
               href="/evaluation/classement"
-              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Classement
             </Link>
@@ -67,7 +70,7 @@ export default function Header() {
           {isEvasion && (
             <Link
               href="/evasion/classement"
-              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Classement
             </Link>
@@ -75,7 +78,7 @@ export default function Header() {
           {isMotricite && (
             <Link
               href="/motricite/classement"
-              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Classement
             </Link>
@@ -83,7 +86,7 @@ export default function Header() {
           {isCognitif && (
             <Link
               href="/cognitif/classement"
-              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Classement
             </Link>
@@ -91,7 +94,7 @@ export default function Header() {
           {isGame ? (
             <Link
               href="/"
-              className="text-sm font-semibold bg-white/10 hover:bg-white/20 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Tous les jeux
             </Link>
@@ -99,9 +102,9 @@ export default function Header() {
             <>
               <Link
                 href="/hall-of-fame"
-                className="text-sm font-semibold bg-yellow-400/20 hover:bg-yellow-400/30 px-4 py-2 rounded-full transition-all"
+                className="text-sm font-semibold px-4 py-2 rounded-full transition-all inline-flex items-center gap-1.5"
               >
-                🏆 Hall of Fame
+                <Trophy size={16} /> Hall of Fame
               </Link>
             </>
           )}
@@ -110,28 +113,29 @@ export default function Header() {
           {player ? (
             <Link
               href="/profil"
-              className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-all"
+              className="flex items-center gap-2 px-4 py-2 rounded-full transition-all"
             >
-              <span className="w-6 h-6 rounded-full bg-white/30 flex items-center justify-center text-sm">
-                {player.avatar || player.pseudo.charAt(0).toUpperCase()}
+              <span className="w-6 h-6 rounded-full flex items-center justify-center text-sm">
+                <GameIcon name={player.avatar || player.pseudo.charAt(0).toUpperCase()} size={18} />
               </span>
               <span className="text-sm font-semibold hidden sm:inline">
                 {player.pseudo}
               </span>
               {player.badgeEmoji && (
-                <span className="text-xs hidden sm:inline" title={player.badgeName}>
-                  {player.badgeEmoji}
+                <span className="hidden sm:inline" title={player.badgeName}>
+                  <GameIcon name={player.badgeEmoji} size={14} />
                 </span>
               )}
             </Link>
           ) : (
             <Link
               href="/connexion"
-              className="text-sm font-semibold bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-all"
+              className="text-sm font-semibold px-4 py-2 rounded-full transition-all"
             >
               Connexion
             </Link>
           )}
+          <ThemeToggle />
         </nav>
       </div>
     </header>

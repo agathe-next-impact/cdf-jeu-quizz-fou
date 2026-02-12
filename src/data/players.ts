@@ -9,8 +9,8 @@ import {
 /*  Types                                                              */
 /* ------------------------------------------------------------------ */
 export const AVATARS = [
-  "🤪", "😎", "🧠", "👻", "🦊", "🐱", "🐸", "🎃",
-  "🤖", "👽", "🦄", "🐧", "🎭", "🔥", "💀", "🫠",
+  "laugh", "glasses", "brain", "ghost", "squirrel", "cat", "fish", "skull",
+  "bot", "orbit", "sparkles", "bird", "palette", "flame", "bone", "droplets",
 ] as const;
 
 export type AvatarEmoji = (typeof AVATARS)[number];
@@ -90,7 +90,7 @@ function wpPostToPlayer(post: WPPlayerPost): Player | null {
     id: String(post.id),
     pseudo: post.acf.player_pseudo,
     email: post.acf.player_email,
-    avatar: post.acf.player_avatar || "🤪",
+    avatar: post.acf.player_avatar || "laugh",
     passwordHash: post.acf.player_password_hash,
     createdAt: post.acf.player_created_at,
     madnessSince: post.acf.player_madness_since || "",
@@ -203,7 +203,7 @@ export async function createPlayer(
   pseudo: string,
   email: string,
   password: string,
-  avatar: string = "🤪"
+  avatar: string = "laugh"
 ): Promise<PublicPlayer> {
   const player: Player = {
     id: crypto.randomUUID(),
@@ -584,7 +584,7 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
 
     results.push({
       pseudo: "",    // filled below
-      avatar: "🤪",
+      avatar: "laugh",
       globalScore,
       gamesPlayed: data.totalGames.size,
     });
@@ -607,7 +607,7 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
     // Try to get avatar from player record
     const player = await findPlayerByPseudo(originalPseudo);
     if (player) {
-      results[idx].avatar = player.avatar || "🤪";
+      results[idx].avatar = player.avatar || "laugh";
     }
     idx++;
   }
@@ -635,12 +635,12 @@ export interface GameLeaderboard {
 }
 
 const GAME_EMOJIS: Record<string, string> = {
-  "DSM-6 Version Beta": "🏥",
-  "Test de Rorschach": "🫠",
-  "Évaluation Émotionnelle": "🧠",
-  "Évasion Psychiatrique": "🏥",
-  "Test de Motricité Fine": "🎯",
-  "Test Cognitif Absurde": "🧠",
+  "DSM-6 Version Beta": "hospital",
+  "Test de Rorschach": "palette",
+  "Évaluation Émotionnelle": "brain",
+  "Évasion Psychiatrique": "door-open",
+  "Test de Motricité Fine": "target",
+  "Test Cognitif Absurde": "brain",
 };
 
 export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard[]> {
@@ -672,7 +672,7 @@ export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard
 
     return {
       game: game.name,
-      emoji: GAME_EMOJIS[game.name] ?? "🎮",
+      emoji: GAME_EMOJIS[game.name] ?? "gamepad-2",
       slug: game.slug,
       entries,
     };

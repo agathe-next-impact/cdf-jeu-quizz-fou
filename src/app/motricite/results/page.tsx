@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Confetti from "@/components/Confetti";
 import RegisterInvite from "@/components/RegisterInvite";
+import GameIcon from "@/components/GameIcon";
 import { getMotriciteProfile } from "@/data/motricite-questions";
 
 interface LevelResult {
@@ -107,7 +108,7 @@ export default function MotriciteResultsPage() {
   if (loading || !result) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-[#0d9488] animate-pulse">
+        <div className="text-xl text-blue animate-pulse">
           Compilation du rapport neurologique...
         </div>
       </div>
@@ -123,29 +124,21 @@ export default function MotriciteResultsPage() {
       <div className="max-w-lg w-full animate-slide-up">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="text-8xl mb-4 animate-bounce-in">
-            {profile.emoji}
+          <div className="mb-4 animate-bounce-in flex justify-center">
+            <GameIcon name={profile.emoji} size={80} />
           </div>
 
-          <div className="inline-block bg-[#0d9488]/10 text-[#0d9488] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+          <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
             Rapport Neuromoteur
           </div>
 
-          <h1
-            className="text-3xl md:text-4xl font-black mb-1 leading-tight"
-            style={{
-              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
+          <h1 className="text-3xl md:text-4xl font-black mb-1 leading-tight text-blue">
             {profile.title}
           </h1>
-          <p className="text-sm font-semibold text-[#0d9488]/50 mb-2">
+          <p className="text-sm font-semibold text-blue mb-2">
             {profile.subtitle}
           </p>
-          <p className="text-lg text-purple-dark/60 font-medium">
+          <p className="text-lg text-black font-medium">
             Patient : {result.pseudo}
           </p>
         </div>
@@ -155,49 +148,49 @@ export default function MotriciteResultsPage() {
           <div
             className={`text-6xl font-black mb-1 ${
               result.score >= 90
-                ? "text-green-600"
+                ? "text-blue"
                 : result.score >= 70
-                  ? "text-[#0d9488]"
+                  ? "text-blue"
                   : result.score >= 50
-                    ? "text-orange"
-                    : "text-red-600"
+                    ? "text-yellow"
+                    : "text-red"
             }`}
           >
             {result.score}%
           </div>
-          <div className="text-sm text-[#0d9488]/50 font-medium mb-4">
+          <div className="text-sm text-blue font-medium mb-4">
             Précision globale
           </div>
 
           {/* Visual bar */}
-          <div className="w-full bg-[#0d9488]/10 rounded-full h-4 overflow-hidden">
+          <div className="w-full rounded-full h-4 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-1000 ease-out"
+              className={`h-full rounded-full transition-all duration-1000 ease-out ${
+                result.score >= 80
+                  ? "bg-blue"
+                  : result.score >= 60
+                    ? "bg-blue"
+                    : result.score >= 40
+                      ? "bg-yellow"
+                      : "bg-red"
+              }`}
               style={{
                 width: `${result.score}%`,
-                background:
-                  result.score >= 90
-                    ? "linear-gradient(90deg, #22c55e, #16a34a)"
-                    : result.score >= 70
-                      ? "linear-gradient(90deg, #0d9488, #14b8a6)"
-                      : result.score >= 50
-                        ? "linear-gradient(90deg, #f97316, #ea580c)"
-                        : "linear-gradient(90deg, #ef4444, #dc2626)",
               }}
             />
           </div>
         </div>
 
         {/* Profile description */}
-        <div className="card mb-6 border-2 border-[#0d9488]/5">
-          <p className="text-sm text-purple-dark/70 leading-relaxed italic mb-4">
+        <div className="card mb-6 border border-blue">
+          <p className="text-sm text-black leading-relaxed italic mb-4">
             &laquo; {profile.description} &raquo;
           </p>
-          <div className="border-t border-[#0d9488]/10 pt-3">
-            <p className="text-xs font-bold text-[#0d9488] uppercase mb-1">
+          <div className="border-t border-blue pt-3">
+            <p className="text-xs font-bold text-blue uppercase mb-1">
               Recommandation
             </p>
-            <p className="text-sm text-purple-dark/60 leading-relaxed">
+            <p className="text-sm text-black leading-relaxed">
               {profile.recommendation}
             </p>
           </div>
@@ -206,15 +199,7 @@ export default function MotriciteResultsPage() {
         {/* Per-level breakdown */}
         {levelResults.length > 0 && (
           <>
-            <h2
-              className="text-xl font-black mb-4"
-              style={{
-                background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
-            >
+            <h2 className="text-xl font-black mb-4 text-blue">
               Détail par niveau
             </h2>
 
@@ -222,52 +207,52 @@ export default function MotriciteResultsPage() {
               {levelResults.map((lr) => (
                 <div
                   key={lr.levelIndex}
-                  className="card border-2 border-[#0d9488]/10"
+                  className="card border border-blue"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div className="font-bold text-purple-dark text-sm">
+                    <div className="font-bold text-black text-sm">
                       Niv. {lr.levelIndex + 1} — {lr.levelName}
                     </div>
                     <div
                       className={`text-lg font-black ${
                         lr.successRate >= 80
-                          ? "text-green-600"
+                          ? "text-blue"
                           : lr.successRate >= 50
-                            ? "text-orange"
-                            : "text-red-600"
+                            ? "text-yellow"
+                            : "text-red"
                       }`}
                     >
                       {lr.successRate}%
                     </div>
                   </div>
 
-                  <div className="text-xs text-purple-dark/40 mb-3">
+                  <div className="text-xs text-black mb-3">
                     {lr.hits}/{lr.total} cibles touchées
                     {lr.misses > 0 && (
-                      <span className="text-red-400 ml-2">
+                      <span className="text-red ml-2">
                         · {lr.misses} clic{lr.misses > 1 ? "s" : ""} raté{lr.misses > 1 ? "s" : ""}
                       </span>
                     )}
                   </div>
 
-                  <div className="bg-[#0d9488]/5 rounded-xl p-3">
+                  <div className="rounded-xl p-3">
                     <div className="flex items-center gap-2 mb-1">
                       <span
                         className={`text-[10px] font-black px-2 py-0.5 rounded-full uppercase ${
                           lr.successRate >= 80
-                            ? "bg-amber-100 text-amber-700"
+                            ? "text-yellow"
                             : lr.successRate >= 50
-                              ? "bg-orange/10 text-orange"
-                              : "bg-red-100 text-red-600"
+                              ? "text-yellow"
+                              : "text-red"
                         }`}
                       >
                         {lr.diagnosis.severity}
                       </span>
-                      <span className="text-xs font-bold text-purple-dark/70">
+                      <span className="text-xs font-bold text-black">
                         {lr.diagnosis.condition}
                       </span>
                     </div>
-                    <p className="text-xs text-purple-dark/50 leading-relaxed italic">
+                    <p className="text-xs text-black leading-relaxed italic">
                       {lr.diagnosis.explanation}
                     </p>
                   </div>
@@ -279,19 +264,19 @@ export default function MotriciteResultsPage() {
 
         {/* Pathologies summary */}
         {levelResults.length > 0 && (
-          <div className="card mb-6 border-2 border-red-200/50 bg-red-50/30">
-            <h3 className="font-black text-red-600 text-sm uppercase mb-3">
+          <div className="card mb-6 border border-red">
+            <h3 className="font-black text-red text-sm uppercase mb-3">
               Pathologies détectées
             </h3>
             <ul className="space-y-2">
               {levelResults.map((lr) => (
                 <li key={lr.levelIndex} className="flex items-start gap-2">
-                  <span className="text-red-400 mt-0.5">•</span>
+                  <span className="text-red mt-0.5">•</span>
                   <div>
-                    <span className="text-sm font-bold text-purple-dark/80">
+                    <span className="text-sm font-bold text-black">
                       {lr.diagnosis.condition}
                     </span>
-                    <span className="text-xs text-purple-dark/40 ml-2">
+                    <span className="text-xs text-black ml-2">
                       ({lr.diagnosis.severity})
                     </span>
                   </div>
@@ -312,10 +297,7 @@ export default function MotriciteResultsPage() {
               sessionStorage.removeItem("motricite-level-results");
               router.push("/motricite/quiz");
             }}
-            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 hover:shadow-lg"
-            style={{
-              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-            }}
+            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 bg-blue"
           >
             Nouveau test
           </button>
@@ -327,7 +309,7 @@ export default function MotriciteResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-purple/30 italic text-center">
+        <p className="mt-8 text-xs text-blue italic text-center">
           Ce rapport a été rédigé par un algorithme qui n&apos;a aucune formation
           médicale. Toute ressemblance avec un vrai diagnostic est purement
           fortuite.

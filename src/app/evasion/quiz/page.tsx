@@ -79,7 +79,7 @@ export default function EvasionQuizPage() {
   if (!pseudo) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-[#1e3c72] animate-pulse">
+        <div className="text-xl text-blue animate-pulse">
           Le Dr. Moreau vous attend...
         </div>
       </div>
@@ -96,19 +96,18 @@ export default function EvasionQuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-[#1e3c72]">
+            <span className="text-sm font-bold text-blue">
               Scène {currentQuestion + 1}/{evasionQuestions.length}
             </span>
-            <span className="text-sm font-bold text-[#1e3c72]">
+            <span className="text-sm font-bold text-blue">
               Patient {pseudo}
             </span>
           </div>
-          <div className="w-full bg-[#1e3c72]/10 rounded-full h-3 overflow-hidden">
+          <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-blue"
               style={{
                 width: `${progress}%`,
-                background: "linear-gradient(90deg, #1e3c72, #2a5298)",
               }}
             />
           </div>
@@ -117,14 +116,14 @@ export default function EvasionQuizPage() {
         {/* Days counter */}
         <div className="text-center mb-6 animate-slide-up">
           <div
-            className={`inline-flex items-center gap-3 px-6 py-3 rounded-full border-2 transition-all duration-300 ${
+            className={`inline-flex items-center gap-3 px-6 py-3 rounded-full border transition-all duration-300 ${
               totalDays <= 10
-                ? "bg-green-50 border-green-300 text-green-800"
+                ? "border-blue text-blue"
                 : totalDays <= 30
-                  ? "bg-[#1e3c72]/5 border-[#1e3c72]/20 text-[#1e3c72]"
+                  ? "border-blue text-blue"
                   : totalDays <= 50
-                    ? "bg-orange/10 border-orange/30 text-orange"
-                    : "bg-red-50 border-red-300 text-red-700"
+                    ? "border-yellow text-yellow"
+                    : "border-red text-red"
             }`}
           >
             <span className="text-sm font-medium">
@@ -136,7 +135,7 @@ export default function EvasionQuizPage() {
           {showFeedback && (
             <div
               className={`mt-2 text-sm font-bold animate-bounce-in ${
-                lastPoints < 0 ? "text-green-600" : "text-red-500"
+                lastPoints < 0 ? "text-blue" : "text-red"
               }`}
             >
               {lastPoints < 0
@@ -149,14 +148,14 @@ export default function EvasionQuizPage() {
         {/* Story narrative */}
         <div
           key={question.id}
-          className="card mb-6 animate-slide-up border-2 border-[#1e3c72]/5 bg-white"
+          className="card mb-6 animate-slide-up border border-blue bg-white"
         >
-          <p className="text-sm text-purple-dark/70 leading-relaxed italic mb-4">
+          <p className="text-sm text-black leading-relaxed italic mb-4">
             {question.story}
           </p>
-          <div className="border-t border-[#1e3c72]/10 pt-4">
-            <p className="text-base font-bold text-[#1e3c72]">
-              <span className="text-[#667eea]">Dr. Moreau :</span>{" "}
+          <div className="border-t border-blue pt-4">
+            <p className="text-base font-bold text-blue">
+              <span className="text-blue">Dr. Moreau :</span>{" "}
               &laquo; {question.question} &raquo;
             </p>
           </div>
@@ -168,12 +167,12 @@ export default function EvasionQuizPage() {
             const isSelected = selectedAnswer === index;
 
             let bgClass =
-              "bg-white hover:bg-[#1e3c72]/5 border-2 border-[#1e3c72]/10 hover:border-[#1e3c72]/30";
+              "bg-white border border-blue hover:border-blue";
             if (showFeedback && isSelected) {
               bgClass =
                 lastPoints < 0
-                  ? "bg-green-50 border-2 border-green-400 scale-[1.02]"
-                  : "bg-red-50 border-2 border-red-400 scale-[1.02]";
+                  ? "border border-blue scale-[1.02]"
+                  : "border border-red scale-[1.02]";
             }
 
             return (
@@ -185,20 +184,17 @@ export default function EvasionQuizPage() {
                 style={{ animationDelay: `${index * 0.08}s` }}
               >
                 <span
-                  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm shrink-0"
-                  style={{
-                    background: "linear-gradient(135deg, #1e3c72, #2a5298)",
-                  }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm shrink-0 bg-blue"
                 >
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span className="font-semibold text-purple-dark flex-1">
+                <span className="font-semibold text-black flex-1">
                   {choice.text}
                 </span>
                 {showFeedback && isSelected && (
                   <span
                     className={`text-sm font-bold animate-bounce-in ${
-                      lastPoints < 0 ? "text-green-600" : "text-red-500"
+                      lastPoints < 0 ? "text-blue" : "text-red"
                     }`}
                   >
                     {lastPoints < 0 ? `${lastPoints}j` : `+${lastPoints}j`}

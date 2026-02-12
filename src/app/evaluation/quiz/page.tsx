@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import GameIcon from "@/components/GameIcon";
 import { evaluationQuestions } from "@/data/evaluation-questions";
 
 export default function EvaluationQuizPage() {
@@ -94,7 +95,7 @@ export default function EvaluationQuizPage() {
   if (!pseudo) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-[#667eea] animate-pulse">
+        <div className="text-xl text-blue animate-pulse">
           Préparation de la consultation...
         </div>
       </div>
@@ -108,10 +109,10 @@ export default function EvaluationQuizPage() {
 
   function getSeverityColor(sev: string): string {
     if (["CRITIQUE", "EXPLOSIF", "TOXIQUE", "DANGEREUX"].includes(sev))
-      return "bg-red-500";
+      return "bg-red";
     if (["ALARMANT", "GRAVE", "AIGU", "PATHOLOGIQUE"].includes(sev))
-      return "bg-orange-500";
-    return "bg-yellow-500";
+      return "bg-yellow";
+    return "bg-yellow";
   }
 
   return (
@@ -120,19 +121,18 @@ export default function EvaluationQuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-[#667eea]">
+            <span className="text-sm font-bold text-blue">
               Question {currentQuestion + 1}/{evaluationQuestions.length}
             </span>
-            <span className="text-sm font-bold text-[#667eea]">
+            <span className="text-sm font-bold text-blue">
               Patient {pseudo} &mdash; {score} pts
             </span>
           </div>
-          <div className="w-full bg-[#667eea]/10 rounded-full h-3 overflow-hidden">
+          <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-blue"
               style={{
                 width: `${progress}%`,
-                background: "linear-gradient(90deg, #667eea, #764ba2)",
               }}
             />
           </div>
@@ -141,12 +141,12 @@ export default function EvaluationQuizPage() {
         {/* Emoji display */}
         <div
           key={question.id}
-          className="card mb-6 text-center animate-slide-up border-2 border-[#667eea]/5 bg-white"
+          className="card mb-6 text-center animate-slide-up border border-blue bg-white"
         >
-          <div className="text-[120px] leading-none my-6 animate-float">
-            {question.emoji}
+          <div className="flex justify-center my-6 animate-float">
+            <GameIcon name={question.emoji} size={120} />
           </div>
-          <h2 className="text-xl font-black text-purple-dark">
+          <h2 className="text-xl font-black text-black">
             {question.question}
           </h2>
         </div>
@@ -157,10 +157,10 @@ export default function EvaluationQuizPage() {
             const isSelected = selectedAnswer === index;
 
             let bgClass =
-              "bg-white hover:bg-[#667eea]/5 border-2 border-[#667eea]/10 hover:border-[#667eea]/30";
+              "bg-white border border-blue hover:border-blue";
             if (showFeedback && isSelected) {
               bgClass =
-                "bg-red-50 border-2 border-red-400 scale-[1.02]";
+                "border border-red scale-[1.02]";
             }
 
             return (
@@ -172,14 +172,11 @@ export default function EvaluationQuizPage() {
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <span
-                  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm shrink-0"
-                  style={{
-                    background: "linear-gradient(135deg, #667eea, #764ba2)",
-                  }}
+                  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm shrink-0 bg-blue"
                 >
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span className="font-semibold text-purple-dark flex-1">
+                <span className="font-semibold text-black flex-1">
                   {answer.text}
                 </span>
                 {showFeedback && isSelected && (
@@ -195,14 +192,14 @@ export default function EvaluationQuizPage() {
         {/* Diagnostic feedback */}
         {showFeedback && diagnosis && (
           <div className="mt-4 animate-shake">
-            <div className="card bg-red-50 border-2 border-red-300">
-              <h3 className="text-lg font-black text-red-800 mb-2">
+            <div className="card border border-red">
+              <h3 className="text-lg font-black text-red mb-2">
                 Diagnostic instantané
               </h3>
-              <p className="text-sm font-bold text-red-700 mb-2">
+              <p className="text-sm font-bold text-red mb-2">
                 {diagnosis}
               </p>
-              <p className="text-sm text-red-600/80 leading-relaxed mb-3">
+              <p className="text-sm text-red leading-relaxed mb-3">
                 {explanation}
               </p>
               <div
@@ -216,12 +213,12 @@ export default function EvaluationQuizPage() {
 
         {/* Score bar */}
         <div className="mt-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-[#667eea]/5 px-4 py-2 rounded-full">
-            <span className="text-sm font-medium text-[#667eea]/60">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
+            <span className="text-sm font-medium text-blue">
               Indice de pathologie
             </span>
-            <span className="text-lg font-black text-[#667eea]">{score}</span>
-            <span className="text-sm text-[#667eea]/40">/ {maxScore}</span>
+            <span className="text-lg font-black text-blue">{score}</span>
+            <span className="text-sm text-blue">/ {maxScore}</span>
           </div>
         </div>
       </div>

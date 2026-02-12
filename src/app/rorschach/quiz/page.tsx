@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { Brain, ClipboardList, Search } from "lucide-react";
 import { rorschachQuestions } from "@/data/rorschach-questions";
 
 /* ------------------------------------------------------------------ */
@@ -47,7 +48,7 @@ function InkBlot({
 
   return (
     <div className="relative w-full max-w-[280px] aspect-square mx-auto">
-      <svg viewBox="0 0 100 100" className="w-full h-full drop-shadow-lg">
+      <svg viewBox="0 0 100 100" className="w-full h-full">
         <defs>
           <radialGradient id={`grad-${seed}`}>
             <stop offset="0%" stopColor={colors[0]} />
@@ -164,7 +165,7 @@ export default function RorschachQuizPage() {
   if (!pseudo) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-purple animate-pulse">
+        <div className="text-xl text-blue animate-pulse">
           Préparation de la séance...
         </div>
       </div>
@@ -182,20 +183,19 @@ export default function RorschachQuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-purple">
+            <span className="text-sm font-bold text-blue">
               Tache {currentQuestion + 1}/{rorschachQuestions.length}
             </span>
-            <span className="text-sm font-bold text-purple">
+            <span className="text-sm font-bold text-blue">
               Sujet {pseudo} &mdash; {score} pts
             </span>
           </div>
-          <div className="w-full bg-purple/10 rounded-full h-3 overflow-hidden">
+          <div className="w-full rounded-full h-3 overflow-hidden">
             <div
               className="h-full rounded-full transition-all duration-500 ease-out"
               style={{
                 width: `${progress}%`,
-                background:
-                  "linear-gradient(90deg, #1a1a2e, #6b21a8, #1a1a2e)",
+                backgroundColor: "var(--color-blue)",
               }}
             />
           </div>
@@ -204,12 +204,12 @@ export default function RorschachQuizPage() {
         {/* Inkblot display */}
         <div
           key={question.id}
-          className="card mb-6 text-center animate-slide-up border-2 border-purple/5 bg-white"
+          className="card mb-6 text-center animate-slide-up border border-blue bg-white"
         >
           <div className="mb-4">
             <InkBlot seed={question.blotSeed} colors={question.blotColors} />
           </div>
-          <h2 className="text-xl font-black text-purple-dark">
+          <h2 className="text-xl font-black text-black">
             Que voyez-vous ?
           </h2>
         </div>
@@ -220,17 +220,17 @@ export default function RorschachQuizPage() {
             const isSelected = selectedAnswer === index;
 
             let bgClass =
-              "bg-white hover:bg-purple/5 border-2 border-purple/10 hover:border-purple/30";
+              "bg-white border border-blue hover:border-blue";
             if (showFeedback && isSelected) {
               if (answeredPoints >= 25)
                 bgClass =
-                  "bg-red-50 border-2 border-red-400 scale-[1.02]";
+                  "border border-red scale-[1.02]";
               else if (answeredPoints >= 15)
                 bgClass =
-                  "bg-yellow/20 border-2 border-yellow scale-[1.02]";
+                  "border border-yellow scale-[1.02]";
               else
                 bgClass =
-                  "bg-orange/10 border-2 border-orange/40 scale-[1.02]";
+                  "border border-yellow scale-[1.02]";
             }
 
             return (
@@ -241,19 +241,19 @@ export default function RorschachQuizPage() {
                 className={`${bgClass} rounded-2xl px-6 py-4 text-left transition-all duration-300 cursor-pointer disabled:cursor-default flex items-center gap-4 animate-slide-up`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <span className="w-10 h-10 rounded-full bg-purple/10 flex items-center justify-center font-bold text-purple text-sm shrink-0">
+                <span className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-blue text-sm shrink-0">
                   {String.fromCharCode(65 + index)}
                 </span>
-                <span className="font-semibold text-purple-dark flex-1">
+                <span className="font-semibold text-black flex-1">
                   {answer.text}
                 </span>
                 {showFeedback && isSelected && (
                   <span className="text-sm font-bold animate-bounce-in">
                     {answeredPoints >= 25
-                      ? "🧠"
+                      ? <Brain size={20} />
                       : answeredPoints >= 15
-                        ? "📝"
-                        : "🔍"}{" "}
+                        ? <ClipboardList size={20} />
+                        : <Search size={20} />}{" "}
                     +{answeredPoints}
                   </span>
                 )}
@@ -264,9 +264,9 @@ export default function RorschachQuizPage() {
 
         {/* Interpretation feedback */}
         {showFeedback && interpretation && (
-          <div className="mt-4 card bg-purple/5 border-2 border-purple/10 animate-slide-up">
-            <p className="text-sm text-purple-dark/80 italic font-medium text-center">
-              <span className="text-purple font-bold">Analyse :</span>{" "}
+          <div className="mt-4 card border border-blue animate-slide-up">
+            <p className="text-sm text-black italic font-medium text-center">
+              <span className="text-blue font-bold">Analyse :</span>{" "}
               {interpretation}
             </p>
           </div>
@@ -274,12 +274,12 @@ export default function RorschachQuizPage() {
 
         {/* Score bar */}
         <div className="mt-6 text-center">
-          <div className="inline-flex items-center gap-2 bg-purple/5 px-4 py-2 rounded-full">
-            <span className="text-sm font-medium text-purple/60">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
+            <span className="text-sm font-medium text-blue">
               Indice de pathologie
             </span>
-            <span className="text-lg font-black text-purple">{score}</span>
-            <span className="text-sm text-purple/40">/ {maxScore}</span>
+            <span className="text-lg font-black text-blue">{score}</span>
+            <span className="text-sm text-blue">/ {maxScore}</span>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Medal, Hospital, ClipboardList } from "lucide-react";
 
 interface PlayerScore {
   pseudo: string;
@@ -10,13 +11,13 @@ interface PlayerScore {
   date: string;
 }
 
-const MEDAL_EMOJIS = ["🥇", "🥈", "🥉"];
+const MEDAL_COLORS = ["text-yellow", "text-black/60", "text-yellow/70"];
 
 function getRowBg(index: number): string {
-  if (index === 0) return "bg-[#1e3c72]/10 border-[#1e3c72]/30";
-  if (index === 1) return "bg-[#1e3c72]/5 border-[#1e3c72]/20";
-  if (index === 2) return "bg-[#1e3c72]/[0.03] border-[#1e3c72]/10";
-  return "bg-white border-[#1e3c72]/5";
+  if (index === 0) return "border-blue";
+  if (index === 1) return "border-blue";
+  if (index === 2) return "border-blue";
+  return "bg-white border-blue";
 }
 
 export default function EvasionClassementPage() {
@@ -40,44 +41,35 @@ export default function EvasionClassementPage() {
       <div className="max-w-2xl w-full">
         {/* Header */}
         <div className="text-center mb-10 animate-slide-up">
-          <div className="text-5xl mb-4">🏥</div>
+          <div className="flex justify-center mb-4"><Hospital size={48} className="text-black" /></div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-2"
-            style={{
-              background: "linear-gradient(135deg, #1e3c72, #2a5298)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="text-4xl md:text-5xl font-black mb-2 text-blue"
           >
             Classement des Patients
           </h1>
-          <p className="text-purple-dark/60 font-medium">
+          <p className="text-black font-medium">
             Les internements les plus longs
           </p>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-[#1e3c72] animate-pulse">
+            <div className="text-xl text-blue animate-pulse">
               Consultation des dossiers...
             </div>
           </div>
         ) : scores.length === 0 ? (
           <div className="card text-center py-12 animate-slide-up">
-            <div className="text-5xl mb-4">📋</div>
-            <h2 className="text-xl font-bold text-purple-dark mb-2">
+            <div className="flex justify-center mb-4"><ClipboardList size={48} className="text-black" /></div>
+            <h2 className="text-xl font-bold text-black mb-2">
               Aucun patient évalué
             </h2>
-            <p className="text-purple/50 mb-6">
+            <p className="text-blue mb-6">
               Soyez le premier à affronter le Dr. Moreau
             </p>
             <Link
               href="/evasion"
-              className="inline-block font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105"
-              style={{
-                background: "linear-gradient(135deg, #1e3c72, #2a5298)",
-              }}
+              className="inline-block font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 bg-blue"
             >
               Commencer l&apos;évaluation
             </Link>
@@ -87,15 +79,15 @@ export default function EvasionClassementPage() {
             {scores.map((player, index) => (
               <div
                 key={`${player.pseudo}-${player.date}`}
-                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
+                className={`flex items-center gap-4 p-4 rounded-2xl border transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {/* Rank */}
                 <div className="w-12 text-center shrink-0">
                   {index < 3 ? (
-                    <span className="text-2xl">{MEDAL_EMOJIS[index]}</span>
+                    <Medal size={24} className={MEDAL_COLORS[index]} />
                   ) : (
-                    <span className="text-lg font-black text-[#1e3c72]/40">
+                    <span className="text-lg font-black text-blue">
                       #{index + 1}
                     </span>
                   )}
@@ -103,10 +95,10 @@ export default function EvasionClassementPage() {
 
                 {/* Player info */}
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-purple-dark truncate">
+                  <div className="font-bold text-black truncate">
                     {player.pseudo}
                   </div>
-                  <div className="text-xs text-[#1e3c72]/40 font-medium">
+                  <div className="text-xs text-blue font-medium">
                     {player.title}
                   </div>
                 </div>
@@ -116,17 +108,17 @@ export default function EvasionClassementPage() {
                   <div
                     className={`text-2xl font-black ${
                       player.score <= 10
-                        ? "text-green-600"
+                        ? "text-blue"
                         : player.score <= 30
-                          ? "text-[#1e3c72]"
+                          ? "text-blue"
                           : player.score <= 50
-                            ? "text-orange"
-                            : "text-red-600"
+                            ? "text-yellow"
+                            : "text-red"
                     }`}
                   >
                     {player.score}
                   </div>
-                  <div className="text-xs text-[#1e3c72]/30 font-medium">
+                  <div className="text-xs text-blue font-medium">
                     jours
                   </div>
                 </div>

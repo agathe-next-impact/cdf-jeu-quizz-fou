@@ -105,7 +105,7 @@ export interface EvasionOutcome {
 export const evasionOutcomes: EvasionOutcome[] = [
   {
     maxDays: 7,
-    emoji: "🏆",
+    emoji: "trophy",
     title: "Libération immédiate !",
     subtitle: "Le Dr. Moreau est impressionné",
     description:
@@ -113,7 +113,7 @@ export const evasionOutcomes: EvasionOutcome[] = [
   },
   {
     maxDays: 20,
-    emoji: "👍",
+    emoji: "thumbs-up",
     title: "Sortie programmée",
     subtitle: "Signes encourageants",
     description:
@@ -121,7 +121,7 @@ export const evasionOutcomes: EvasionOutcome[] = [
   },
   {
     maxDays: 40,
-    emoji: "🏥",
+    emoji: "hospital",
     title: "Hospitalisation prolongée",
     subtitle: "Quelques préoccupations relevées",
     description:
@@ -129,7 +129,7 @@ export const evasionOutcomes: EvasionOutcome[] = [
   },
   {
     maxDays: 60,
-    emoji: "⚕️",
+    emoji: "stethoscope",
     title: "Soins intensifs requis",
     subtitle: "Drapeaux rouges importants",
     description:
@@ -137,7 +137,7 @@ export const evasionOutcomes: EvasionOutcome[] = [
   },
   {
     maxDays: Infinity,
-    emoji: "🔒",
+    emoji: "lock",
     title: "Internement à long terme",
     subtitle: "Trouble sévère diagnostiqué",
     description:

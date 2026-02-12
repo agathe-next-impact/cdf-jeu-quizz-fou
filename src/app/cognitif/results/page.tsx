@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Confetti from "@/components/Confetti";
 import RegisterInvite from "@/components/RegisterInvite";
+import GameIcon from "@/components/GameIcon";
+import { Check, X as XIcon } from "lucide-react";
 import {
   calculateIQ,
   getCognitifProfile,
@@ -113,7 +115,7 @@ export default function CognitifResultsPage() {
   if (loading || !result) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-[#2c3e50] animate-pulse">
+        <div className="text-xl text-black animate-pulse">
           Calcul de votre QI en cours...
         </div>
       </div>
@@ -131,29 +133,23 @@ export default function CognitifResultsPage() {
       <div className="max-w-lg w-full animate-slide-up">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="text-8xl mb-4 animate-bounce-in">
-            {profile.emoji}
+          <div className="mb-4 animate-bounce-in flex justify-center">
+            <GameIcon name={profile.emoji} size={80} />
           </div>
 
-          <div className="inline-block bg-[#2c3e50]/10 text-[#2c3e50] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+          <div className="inline-block text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
             Rapport Cognitif
           </div>
 
           <h1
-            className="text-3xl md:text-4xl font-black mb-1 leading-tight"
-            style={{
-              background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="text-3xl md:text-4xl font-black mb-1 leading-tight text-red"
           >
             {profile.title}
           </h1>
-          <p className="text-sm font-semibold text-[#2c3e50]/50 mb-2">
+          <p className="text-sm font-semibold text-black mb-2">
             {profile.subtitle}
           </p>
-          <p className="text-lg text-purple-dark/60 font-medium">
+          <p className="text-lg text-black font-medium">
             Cobaye : {result.pseudo}
           </p>
         </div>
@@ -163,47 +159,47 @@ export default function CognitifResultsPage() {
           <div
             className={`text-6xl font-black mb-1 ${
               iq >= 145
-                ? "text-[#e74c3c]"
+                ? "text-red"
                 : iq >= 130
-                  ? "text-green-600"
+                  ? "text-blue"
                   : iq >= 115
-                    ? "text-[#3498db]"
+                    ? "text-blue"
                     : iq >= 100
-                      ? "text-[#2c3e50]"
+                      ? "text-black"
                       : iq >= 85
-                        ? "text-orange"
-                        : "text-red-600"
+                        ? "text-yellow"
+                        : "text-red"
             }`}
           >
             QI {iq}
           </div>
-          <div className="text-sm text-[#2c3e50]/50 font-medium mb-2">
+          <div className="text-sm text-black font-medium mb-2">
             {rawScore}/{COGNITIF_MAX_RAW_SCORE} points bruts · {correctCount}/
             {questionResults.length} bonnes réponses
           </div>
 
           {/* IQ Scale */}
-          <div className="relative w-full bg-[#2c3e50]/10 rounded-full h-4 overflow-hidden mt-4">
+          <div className="relative w-full rounded-full h-4 overflow-hidden mt-4">
             <div
-              className="h-full rounded-full transition-all duration-1000 ease-out"
+              className={`h-full rounded-full transition-all duration-1000 ease-out ${
+                iq >= 145
+                  ? "bg-red"
+                  : iq >= 130
+                    ? "bg-blue"
+                    : iq >= 115
+                      ? "bg-blue"
+                      : iq >= 100
+                        ? "bg-black"
+                        : iq >= 85
+                          ? "bg-yellow"
+                          : "bg-red"
+              }`}
               style={{
                 width: `${((iq - 60) / 100) * 100}%`,
-                background:
-                  iq >= 145
-                    ? "linear-gradient(90deg, #e74c3c, #c0392b)"
-                    : iq >= 130
-                      ? "linear-gradient(90deg, #22c55e, #16a34a)"
-                      : iq >= 115
-                        ? "linear-gradient(90deg, #3498db, #2980b9)"
-                        : iq >= 100
-                          ? "linear-gradient(90deg, #2c3e50, #34495e)"
-                          : iq >= 85
-                            ? "linear-gradient(90deg, #f97316, #ea580c)"
-                            : "linear-gradient(90deg, #ef4444, #dc2626)",
               }}
             />
           </div>
-          <div className="flex justify-between text-[10px] text-[#2c3e50]/30 mt-1 px-1">
+          <div className="flex justify-between text-[10px] text-black mt-1 px-1">
             <span>60</span>
             <span>85</span>
             <span>100</span>
@@ -214,15 +210,15 @@ export default function CognitifResultsPage() {
         </div>
 
         {/* Profile description */}
-        <div className="card mb-6 border-2 border-[#2c3e50]/5">
-          <p className="text-sm text-purple-dark/70 leading-relaxed italic mb-4">
+        <div className="card mb-6 border border-black">
+          <p className="text-sm text-black leading-relaxed italic mb-4">
             &laquo; {profile.description} &raquo;
           </p>
-          <div className="border-t border-[#2c3e50]/10 pt-3">
-            <p className="text-xs font-bold text-[#e74c3c] uppercase mb-1">
+          <div className="border-t border-black pt-3">
+            <p className="text-xs font-bold text-red uppercase mb-1">
               Recommandation
             </p>
-            <p className="text-sm text-purple-dark/60 leading-relaxed">
+            <p className="text-sm text-black leading-relaxed">
               {profile.recommendation}
             </p>
           </div>
@@ -232,13 +228,7 @@ export default function CognitifResultsPage() {
         {questionResults.length > 0 && (
           <>
             <h2
-              className="text-xl font-black mb-4"
-              style={{
-                background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
-              }}
+              className="text-xl font-black mb-4 text-red"
             >
               Détail des réponses
             </h2>
@@ -247,36 +237,36 @@ export default function CognitifResultsPage() {
               {questionResults.map((qr, i) => (
                 <div
                   key={i}
-                  className={`card border-2 ${
+                  className={`card border ${
                     qr.correct
-                      ? "border-green-200/50 bg-green-50/30"
-                      : "border-red-200/50 bg-red-50/30"
+                      ? "border-blue"
+                      : "border-red"
                   }`}
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-bold text-[#2c3e50]/50">
+                    <span className="text-xs font-bold text-black">
                       Q{i + 1}
                     </span>
                     <span
                       className={`text-xs font-black px-2 py-0.5 rounded-full ${
                         qr.correct
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-600"
+                          ? "text-blue"
+                          : "text-red"
                       }`}
                     >
                       {qr.correct ? `+${qr.points} pts` : "0 pts"}
                     </span>
                   </div>
-                  <p className="text-xs text-purple-dark/60 leading-relaxed mb-2 line-clamp-2">
+                  <p className="text-xs text-black leading-relaxed mb-2 line-clamp-2">
                     {qr.question}
                   </p>
                   <div className="flex items-center gap-2">
                     <span className="text-sm">
-                      {qr.correct ? "✅" : "❌"}
+                      {qr.correct ? <Check size={16} className="text-green-600" /> : <XIcon size={16} className="text-red" />}
                     </span>
                     <span
                       className={`text-sm font-medium ${
-                        qr.correct ? "text-green-700" : "text-red-600"
+                        qr.correct ? "text-blue" : "text-red"
                       }`}
                     >
                       {qr.userAnswer}
@@ -300,10 +290,7 @@ export default function CognitifResultsPage() {
               sessionStorage.removeItem("cognitif-results");
               router.push("/cognitif/quiz");
             }}
-            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 hover:shadow-lg"
-            style={{
-              background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
-            }}
+            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 bg-red"
           >
             Nouveau test
           </button>
@@ -315,7 +302,7 @@ export default function CognitifResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-purple/30 italic text-center">
+        <p className="mt-8 text-xs text-blue italic text-center">
           Ce rapport a été généré par un algorithme qui confond encore corrélation
           et causalité. Aucune valeur scientifique ne peut lui être attribuée.
         </p>

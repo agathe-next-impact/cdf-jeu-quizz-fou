@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
+import { Key, Brain } from "lucide-react";
 
 export default function ConnexionPage() {
   const { login } = usePlayer();
@@ -70,11 +71,13 @@ export default function ConnexionPage() {
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12">
       <div className="animate-slide-up max-w-md w-full">
         <div className="text-center mb-8">
-          <div className="text-5xl mb-4">{showReset ? "🧠" : "🔑"}</div>
-          <h1 className="text-3xl font-black gradient-text mb-2">
+          <div className="flex justify-center mb-4">
+            {showReset ? <Brain size={48} className="text-black" /> : <Key size={48} className="text-black" />}
+          </div>
+          <h1 className="text-3xl font-black text-black mb-2">
             {showReset ? "Mot de passe oublié" : "Connexion"}
           </h1>
-          <p className="text-sm text-purple-dark/60">
+          <p className="text-sm text-black">
             {showReset
               ? "Renseigne ton pseudo et ton email pour réinitialiser"
               : "Retrouve ton profil et tes classements"}
@@ -86,35 +89,35 @@ export default function ConnexionPage() {
             <>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-purple-dark mb-1">Pseudo</label>
+                  <label className="block text-sm font-semibold text-black mb-1">Pseudo</label>
                   <input
                     type="text"
                     value={pseudo}
                     onChange={(e) => setPseudo(e.target.value)}
                     placeholder="Ton pseudo..."
                     maxLength={20}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none font-semibold transition-colors bg-cream placeholder:text-gray-400"
+                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-purple-dark mb-1">Mot de passe</label>
+                  <label className="block text-sm font-semibold text-black mb-1">Mot de passe</label>
                   <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Ton mot de passe"
-                    className="w-full px-4 py-3 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none font-semibold transition-colors bg-cream placeholder:text-gray-400"
+                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
 
                 {error && (
-                  <p className="text-pink text-sm font-medium text-center">{error}</p>
+                  <p className="text-red text-sm font-medium text-center">{error}</p>
                 )}
 
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="btn-primary w-full disabled:opacity-50"
+                  className="btn-primary w-full"
                 >
                   {submitting ? "Connexion..." : "Se connecter"}
                 </button>
@@ -128,13 +131,13 @@ export default function ConnexionPage() {
                     setResetError("");
                     setResetSuccess("");
                   }}
-                  className="text-sm text-purple/50 hover:text-purple font-medium transition-colors"
+                  className="text-sm text-blue hover:text-blue font-medium transition-colors"
                 >
                   Mot de passe oublié ?
                 </button>
-                <p className="text-sm text-purple/50">
+                <p className="text-sm text-blue">
                   Pas encore de compte ?{" "}
-                  <Link href="/inscription" className="text-purple font-semibold hover:underline">
+                  <Link href="/inscription" className="text-blue font-semibold hover:underline">
                     S&apos;inscrire
                   </Link>
                 </p>
@@ -144,48 +147,48 @@ export default function ConnexionPage() {
             <>
               <form onSubmit={handleReset} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-purple-dark mb-1">Pseudo</label>
+                  <label className="block text-sm font-semibold text-black mb-1">Pseudo</label>
                   <input
                     type="text"
                     value={resetPseudo}
                     onChange={(e) => setResetPseudo(e.target.value)}
                     placeholder="Ton pseudo..."
                     maxLength={20}
-                    className="w-full px-4 py-3 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none font-semibold transition-colors bg-cream placeholder:text-gray-400"
+                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-purple-dark mb-1">Email du compte</label>
+                  <label className="block text-sm font-semibold text-black mb-1">Email du compte</label>
                   <input
                     type="email"
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     placeholder="ton@email.com"
-                    className="w-full px-4 py-3 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none font-semibold transition-colors bg-cream placeholder:text-gray-400"
+                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-purple-dark mb-1">Nouveau mot de passe</label>
+                  <label className="block text-sm font-semibold text-black mb-1">Nouveau mot de passe</label>
                   <input
                     type="password"
                     value={resetNewPassword}
                     onChange={(e) => setResetNewPassword(e.target.value)}
                     placeholder="Nouveau mot de passe (4 car. min)"
-                    className="w-full px-4 py-3 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none font-semibold transition-colors bg-cream placeholder:text-gray-400"
+                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
 
                 {resetError && (
-                  <p className="text-pink text-sm font-medium text-center">{resetError}</p>
+                  <p className="text-red text-sm font-medium text-center">{resetError}</p>
                 )}
                 {resetSuccess && (
-                  <p className="text-green-600 text-sm font-medium text-center">{resetSuccess}</p>
+                  <p className="text-blue text-sm font-medium text-center">{resetSuccess}</p>
                 )}
 
                 <button
                   type="submit"
                   disabled={resetSubmitting}
-                  className="btn-primary w-full disabled:opacity-50"
+                  className="btn-primary w-full"
                 >
                   {resetSubmitting ? "Réinitialisation..." : "Réinitialiser le mot de passe"}
                 </button>
@@ -198,7 +201,7 @@ export default function ConnexionPage() {
                     setResetError("");
                     setResetSuccess("");
                   }}
-                  className="text-sm text-purple/50 hover:text-purple font-medium transition-colors"
+                  className="text-sm text-blue hover:text-blue font-medium transition-colors"
                 >
                   Retour à la connexion
                 </button>

@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:commedesfous.com)",
+      "Bash(npm ls:*)",
+      "Bash(npm install:*)",
+      "Bash(find:*)",
+      "Bash(python3:*)",
+      "Bash(while read file)",
+      "Bash(do grep -n \"[^[:ascii:]]\" \"$file\")",
+      "Bash(done)",
+      "Bash(npx next build:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(node -e:*)",
+      "Bash(node:*)",
+      "Bash(del:*)"
+    ]
+  }
+}

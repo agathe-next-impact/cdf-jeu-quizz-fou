@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Confetti from "@/components/Confetti";
 import RegisterInvite from "@/components/RegisterInvite";
+import GameIcon from "@/components/GameIcon";
 import {
   evaluationQuestions,
   getEvaluationProfile,
@@ -107,7 +108,7 @@ export default function EvaluationResultsPage() {
   if (loading || !result) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-[#667eea] animate-pulse">
+        <div className="text-xl text-blue animate-pulse">
           Rédaction du rapport psychiatrique...
         </div>
       </div>
@@ -119,10 +120,10 @@ export default function EvaluationResultsPage() {
 
   function getSeverityColor(sev: string): string {
     if (["CRITIQUE", "EXPLOSIF", "TOXIQUE", "DANGEREUX"].includes(sev))
-      return "bg-red-500";
+      return "bg-red";
     if (["ALARMANT", "GRAVE", "AIGU", "PATHOLOGIQUE"].includes(sev))
-      return "bg-orange-500";
-    return "bg-yellow-500";
+      return "bg-yellow";
+    return "bg-yellow";
   }
 
   return (
@@ -131,35 +132,29 @@ export default function EvaluationResultsPage() {
 
       <div className="max-w-lg w-full text-center animate-slide-up">
         {/* Emoji */}
-        <div className="text-8xl mb-6 animate-bounce-in">{profile.emoji}</div>
+        <div className="mb-6 animate-bounce-in flex justify-center"><GameIcon name={profile.emoji} size={80} /></div>
 
         {/* Title */}
-        <div className="inline-block bg-[#667eea]/10 text-[#667eea] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+        <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
           Rapport Psychiatrique Complet
         </div>
         <h1
-          className="text-3xl md:text-4xl font-black mb-1 leading-tight"
-          style={{
-            background: "linear-gradient(135deg, #667eea, #764ba2)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
+          className="text-3xl md:text-4xl font-black mb-1 leading-tight text-blue"
         >
           {profile.title}
         </h1>
-        <p className="text-sm font-semibold text-[#667eea]/50 mb-2">
+        <p className="text-sm font-semibold text-blue mb-2">
           {profile.subtitle}
         </p>
 
         {/* Pseudo */}
-        <p className="text-lg text-purple-dark/60 font-medium mb-6">
+        <p className="text-lg text-black font-medium mb-6">
           Patient : {result.pseudo}
         </p>
 
         {/* Description */}
-        <div className="card mb-6 border-2 border-[#667eea]/5">
-          <p className="text-sm text-purple-dark/70 leading-relaxed italic">
+        <div className="card mb-6 border border-blue">
+          <p className="text-sm text-black leading-relaxed italic">
             &laquo; {profile.description} &raquo;
           </p>
         </div>
@@ -167,43 +162,42 @@ export default function EvaluationResultsPage() {
         {/* Score card */}
         <div className="card mb-6">
           <div className="mb-6">
-            <div className="text-5xl font-black text-[#667eea] mb-1">
+            <div className="text-5xl font-black text-blue mb-1">
               {result.score}
             </div>
-            <div className="text-sm text-[#667eea]/50 font-medium">
+            <div className="text-sm text-blue font-medium">
               points sur {maxScore}
             </div>
           </div>
 
           {/* Score bar */}
-          <div className="w-full bg-[#667eea]/10 rounded-full h-4 overflow-hidden mb-4">
+          <div className="w-full rounded-full h-4 overflow-hidden mb-4">
             <div
-              className="h-full rounded-full transition-all duration-1000 ease-out"
+              className="h-full rounded-full transition-all duration-1000 ease-out bg-blue"
               style={{
                 width: `${percentage}%`,
-                background: "linear-gradient(90deg, #667eea, #764ba2, #e53e3e)",
               }}
             />
           </div>
-          <div className="text-sm font-bold text-[#667eea]">
+          <div className="text-sm font-bold text-blue">
             Indice de pathologie : {percentage}%
           </div>
         </div>
 
         {/* Psychiatric report — diagnoses list */}
         {diagnoses.length > 0 && (
-          <div className="card mb-6 border-2 border-red-200 bg-red-50/50 text-left">
-            <h2 className="text-lg font-black text-red-800 mb-4 text-center">
+          <div className="card mb-6 border border-red text-left">
+            <h2 className="text-lg font-black text-red mb-4 text-center">
               Troubles identifiés
             </h2>
             <div className="space-y-3">
               {diagnoses.map((d, i) => (
                 <div
                   key={i}
-                  className="bg-white/80 rounded-xl p-4 border border-red-100"
+                  className="rounded-xl p-4 border border-red"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-bold text-red-800">
+                    <span className="text-sm font-bold text-red">
                       {i + 1}. {d.diagnosis}
                     </span>
                     <span
@@ -212,17 +206,17 @@ export default function EvaluationResultsPage() {
                       {d.severity}
                     </span>
                   </div>
-                  <p className="text-xs text-red-600/70 leading-relaxed">
+                  <p className="text-xs text-red leading-relaxed">
                     {d.explanation}
                   </p>
                 </div>
               ))}
             </div>
-            <p className="text-center text-sm font-bold text-red-700 mt-4">
+            <p className="text-center text-sm font-bold text-red mt-4">
               CONCLUSION : Vous souffrez de {diagnoses.length} pathologies
               émotionnelles graves.
             </p>
-            <p className="text-center text-xs text-red-500/60 mt-2">
+            <p className="text-center text-xs text-red mt-2">
               Recommandation : Consultez immédiatement un professionnel
               imaginaire.
             </p>
@@ -241,10 +235,7 @@ export default function EvaluationResultsPage() {
               sessionStorage.removeItem("evaluation-diagnoses");
               router.push("/evaluation/quiz");
             }}
-            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 hover:shadow-lg"
-            style={{
-              background: "linear-gradient(135deg, #667eea, #764ba2)",
-            }}
+            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 bg-blue"
           >
             Nouvelle consultation
           </button>
@@ -256,7 +247,7 @@ export default function EvaluationResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-purple/30 italic">
+        <p className="mt-8 text-xs text-blue italic">
           * Ce test est une parodie satirique. Toute ressemblance avec de vrais
           diagnostics est volontairement ridicule. Partagez-le pour alarmer vos
           proches.

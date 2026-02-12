@@ -1,59 +1,60 @@
 import Link from "next/link";
+import { Hospital, Palette, Brain, DoorOpen, Target, Trophy, Tent, Drama, PartyPopper, type LucideIcon } from "lucide-react";
 
-const games = [
+const games: { slug: string; icon: LucideIcon; title: string; description: string; tags: string[]; color: string; border: string }[] = [
   {
     slug: "/dsm6",
-    emoji: "🏥",
+    icon: Hospital,
     title: "DSM-6 Version Beta",
     description: "Le manuel diagnostique qui n'existe pas encore. 15 questions pour obtenir votre profil clinique officieux.",
     tags: ["Diagnostic", "Solo", "Classement"],
-    color: "from-[#1a365d] to-[#e53e3e]",
-    border: "border-red-200 hover:border-red-400",
+    color: "bg-red",
+    border: "border-red hover:border-red",
   },
   {
     slug: "/rorschach",
-    emoji: "🫠",
+    icon: Palette,
     title: "Test de Rorschach",
     description: "10 taches d'encre, 3 choix, zéro chance d'être diagnostiqué(e) sain(e) d'esprit. Chaque réponse sera retenue contre vous.",
     tags: ["Psychologie", "Solo", "Classement"],
-    color: "from-[#1a1a2e] to-[#6b21a8]",
-    border: "border-purple/20 hover:border-purple/50",
+    color: "bg-blue",
+    border: "border-blue hover:border-blue",
   },
   {
     slug: "/evaluation",
-    emoji: "🧠",
+    icon: Brain,
     title: "Évaluation Émotionnelle",
     description: "5 émojis, 4 choix, un rapport psychiatrique complet. Chaque réponse révèle un trouble que vous ignoriez avoir.",
     tags: ["Psychiatrie", "Solo", "Classement"],
-    color: "from-[#667eea] to-[#764ba2]",
-    border: "border-[#667eea]/20 hover:border-[#667eea]/50",
+    color: "bg-blue",
+    border: "border-blue hover:border-blue",
   },
   {
     slug: "/evasion",
-    emoji: "🏥",
+    icon: DoorOpen,
     title: "Évasion Psychiatrique",
     description: "Un jeu dont vous êtes le héros. Convainquez le Dr. Moreau de votre stabilité mentale pour réduire vos jours d'internement.",
     tags: ["Aventure", "Solo", "Classement"],
-    color: "from-[#1e3c72] to-[#2a5298]",
-    border: "border-[#1e3c72]/20 hover:border-[#1e3c72]/50",
+    color: "bg-blue",
+    border: "border-blue hover:border-blue",
   },
   {
     slug: "/motricite",
-    emoji: "🎯",
+    icon: Target,
     title: "Test de Motricité Fine",
     description: "5 niveaux, des cibles qui bougent, rétrécissent et tremblent. Chaque clic raté est un neurone de moins.",
     tags: ["Motricité", "Solo", "Classement"],
-    color: "from-[#0d9488] to-[#14b8a6]",
-    border: "border-[#0d9488]/20 hover:border-[#0d9488]/50",
+    color: "bg-blue",
+    border: "border-blue hover:border-blue",
   },
   {
     slug: "/cognitif",
-    emoji: "🧠",
+    icon: Brain,
     title: "Test Cognitif Absurde",
     description: "8 questions de logique, 30 secondes chrono, un QI calculé avec une précision douteuse. Tapez vos réponses et découvrez votre diagnostic cérébral.",
     tags: ["Logique", "Solo", "Classement"],
-    color: "from-[#2c3e50] to-[#e74c3c]",
-    border: "border-[#2c3e50]/20 hover:border-[#2c3e50]/50",
+    color: "bg-red",
+    border: "border-black hover:border-black",
   },
 ];
 
@@ -61,17 +62,23 @@ export default function HomePage() {
   return (
     <div className="min-h-[calc(100vh-80px)] px-4 py-12 relative overflow-hidden">
       {/* Decorative floaters */}
-      <div className="absolute top-24 left-8 text-6xl animate-float opacity-10 select-none">🎪</div>
-      <div className="absolute top-40 right-12 text-5xl animate-float opacity-10 select-none" style={{ animationDelay: "1.2s" }}>🎭</div>
-      <div className="absolute bottom-16 left-16 text-5xl animate-float opacity-10 select-none" style={{ animationDelay: "2.4s" }}>🎉</div>
+      <div className="absolute top-24 left-8 animate-float select-none">
+        <Tent size={56} className="text-black/20" />
+      </div>
+      <div className="absolute top-40 right-12 animate-float select-none" style={{ animationDelay: "1.2s" }}>
+        <Drama size={48} className="text-black/20" />
+      </div>
+      <div className="absolute bottom-16 left-16 animate-float select-none" style={{ animationDelay: "2.4s" }}>
+        <PartyPopper size={48} className="text-black/20" />
+      </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Hero */}
         <div className="text-center mb-14 animate-slide-up">
-          <h1 className="text-5xl md:text-6xl font-black gradient-text leading-tight mb-4">
+          <h1 className="text-5xl md:text-6xl font-black text-black leading-tight mb-4">
             Comme des Fous
           </h1>
-          <p className="text-lg text-purple-dark/60 font-medium max-w-md mx-auto">
+          <p className="text-lg text-black font-medium max-w-md mx-auto">
             Choisis ton jeu, montre que tu es le plus fou et grimpe dans les classements !
           </p>
         </div>
@@ -80,9 +87,9 @@ export default function HomePage() {
         <div className="text-center mb-8 animate-slide-up" style={{ animationDelay: "0.05s" }}>
           <Link
             href="/hall-of-fame"
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-purple-600 text-white font-bold px-6 py-3 rounded-full hover:scale-105 transition-transform shadow-lg"
+            className="inline-flex items-center gap-2 bg-blue text-white font-bold px-6 py-3 rounded-full hover:scale-105 transition-transform"
           >
-            <span className="text-lg">🏆</span>
+            <Trophy size={20} />
             Hall of Fame — Top 10 des plus fous
           </Link>
         </div>
@@ -93,16 +100,18 @@ export default function HomePage() {
             <Link
               key={game.slug + i}
               href={game.slug}
-              className={`card border-2 ${game.border} relative group flex flex-col animate-slide-up`}
+              className={`card border ${game.border} relative group flex flex-col animate-slide-up`}
               style={{ animationDelay: `${i * 0.1}s` }}
             >
-              <div className="text-5xl mb-4">{game.emoji}</div>
+              <div className="mb-4">
+                <game.icon size={48} className="text-black" />
+              </div>
 
-              <h2 className="text-xl font-black text-purple-dark mb-2 group-hover:text-purple transition-colors">
+              <h2 className="text-xl font-black text-black mb-2 group-hover:text-blue transition-colors">
                 {game.title}
               </h2>
 
-              <p className="text-sm text-purple-dark/60 leading-relaxed mb-4 flex-1">
+              <p className="text-sm text-black leading-relaxed mb-4 flex-1">
                 {game.description}
               </p>
 
@@ -110,7 +119,7 @@ export default function HomePage() {
                 {game.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-purple/5 text-purple/70 text-xs font-semibold px-3 py-1 rounded-full"
+                    className="text-blue text-xs font-semibold px-3 py-1 rounded-full"
                   >
                     {tag}
                   </span>
@@ -118,7 +127,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-5">
-                <span className={`inline-block bg-gradient-to-r ${game.color} text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform`}>
+                <span className={`inline-block ${game.color} text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform`}>
                   Jouer
                 </span>
               </div>

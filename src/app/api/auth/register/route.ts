@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const playerAvatar = typeof avatar === "string" && avatar ? avatar : "🤪";
+    const playerAvatar = typeof avatar === "string" && avatar ? avatar : "laugh";
     const player = await createPlayer(pseudo.trim(), email.trim(), password, playerAvatar);
     return NextResponse.json(player, { status: 201 });
   } catch (err) {

@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
           id: "",
           pseudo,
           email: "",
-          avatar: "🤪",
+          avatar: "laugh",
           createdAt: new Date().toISOString(),
           madnessSince: "",
           bio: "",

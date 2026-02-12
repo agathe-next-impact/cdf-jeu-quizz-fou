@@ -110,7 +110,7 @@ export function calculateIQ(rawScore: number): number {
 export const cognitifProfiles: CognitifProfile[] = [
   {
     minIQ: 145,
-    emoji: "🧪",
+    emoji: "flask-conical",
     title: "Génie Transcendantal Non-Identifié",
     subtitle: "Probable anomalie génétique cérébrale",
     description:
@@ -120,7 +120,7 @@ export const cognitifProfiles: CognitifProfile[] = [
   },
   {
     minIQ: 130,
-    emoji: "📊",
+    emoji: "bar-chart-3",
     title: "Intelligence Supérieure Dysfonctionnelle",
     subtitle: "Surinvestissement cognitif pathologique",
     description:
@@ -130,7 +130,7 @@ export const cognitifProfiles: CognitifProfile[] = [
   },
   {
     minIQ: 115,
-    emoji: "📈",
+    emoji: "trending-up",
     title: "Au-dessus de la Moyenne (Dangereusement)",
     subtitle: "Zone de risque cognitif intermédiaire",
     description:
@@ -140,7 +140,7 @@ export const cognitifProfiles: CognitifProfile[] = [
   },
   {
     minIQ: 100,
-    emoji: "📉",
+    emoji: "trending-down",
     title: "Parfaitement Moyen (Cliniquement Banal)",
     subtitle: "Normalité statistique confirmée",
     description:
@@ -150,17 +150,17 @@ export const cognitifProfiles: CognitifProfile[] = [
   },
   {
     minIQ: 85,
-    emoji: "⚠️",
+    emoji: "alert-triangle",
     title: "Cognition Alternative Détectée",
     subtitle: "Votre cerveau emprunte des chemins... créatifs",
     description:
-      "Votre cerveau ne dysfonctionne pas — il fonctionne différemment. Là où la logique classique dit A→B→C, votre cerveau fait A→🦆→pizza→C. Ce n'est pas de la stupidité, c'est de la pensée latérale non-consensuelle. Votre cortex a simplement décidé que les mathématiques et la logique formelle sont des constructions sociales arbitraires.",
+      "Votre cerveau ne dysfonctionne pas — il fonctionne différemment. Là où la logique classique dit A→B→C, votre cerveau fait A→canard→pizza→C. Ce n'est pas de la stupidité, c'est de la pensée latérale non-consensuelle. Votre cortex a simplement décidé que les mathématiques et la logique formelle sont des constructions sociales arbitraires.",
     recommendation:
       "Rééducation logique progressive : commencez par compter vos doigts chaque matin (si le résultat est constant pendant 7 jours, passez à l'étape suivante). Évitez les décisions importantes avant 14h.",
   },
   {
     minIQ: 0,
-    emoji: "🚨",
+    emoji: "siren",
     title: "Libre Penseur Absolu",
     subtitle: "Affranchissement total des contraintes cognitives",
     description:

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
+import { Brain, FlaskConical, BarChart3, PenLine, Timer } from "lucide-react";
 
 export default function CognitifHome() {
   const { player } = usePlayer();
@@ -35,64 +36,58 @@ export default function CognitifHome() {
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12 relative overflow-hidden">
       {/* Decorative floaters */}
-      <div className="absolute top-32 left-10 text-6xl animate-float opacity-15 select-none">
-        🧠
+      <div className="absolute top-32 left-10 animate-float select-none">
+        <Brain size={56} className="text-black/20" />
       </div>
       <div
-        className="absolute top-48 right-10 text-5xl animate-float opacity-15 select-none"
+        className="absolute top-48 right-10 animate-float select-none"
         style={{ animationDelay: "1s" }}
       >
-        🧪
+        <FlaskConical size={48} className="text-black/20" />
       </div>
       <div
-        className="absolute bottom-20 left-20 text-5xl animate-float opacity-15 select-none"
+        className="absolute bottom-20 left-20 animate-float select-none"
         style={{ animationDelay: "2s" }}
       >
-        📊
+        <BarChart3 size={48} className="text-black/20" />
       </div>
 
       <div className="animate-slide-up max-w-lg w-full text-center relative z-10">
         {/* Title */}
         <div className="mb-8">
-          <div className="inline-block bg-[#2c3e50]/10 text-[#2c3e50] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
+          <div className="inline-block text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
             Évaluation cognitive non-homologuée
           </div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-3 leading-tight"
-            style={{
-              background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
+            className="text-4xl md:text-5xl font-black mb-3 leading-tight text-red"
           >
             Test Cognitif Absurde
           </h1>
-          <p className="text-base text-purple-dark/70 font-medium leading-relaxed">
+          <p className="text-base text-black font-medium leading-relaxed">
             8 questions de logique pour calculer votre QI (non-officiel)
           </p>
         </div>
 
         {/* Intro card */}
-        <div className="card max-w-md mx-auto border-2 border-[#2c3e50]/10 text-left mb-6">
-          <div className="text-4xl mb-4 text-center">🧠</div>
-          <p className="text-sm text-purple-dark/70 leading-relaxed mb-4">
+        <div className="card max-w-md mx-auto border border-black text-left mb-6">
+          <div className="flex justify-center mb-4"><Brain size={36} className="text-black" /></div>
+          <p className="text-sm text-black leading-relaxed mb-4">
             Ce test a été élaboré par un comité de neuroscientifiques
             autoproclamés après 72 heures sans dormir. Il mesure vos capacités
             de raisonnement logique, mathématique et latéral.
           </p>
-          <p className="text-sm text-purple-dark/70 leading-relaxed mb-4">
+          <p className="text-sm text-black leading-relaxed mb-4">
             Chaque question est chronométrée :{" "}
-            <span className="font-bold text-[#e74c3c]">30 secondes</span> pour
+            <span className="font-bold text-red">30 secondes</span> pour
             répondre. Pas de QCM — vous devez taper votre réponse.
           </p>
-          <p className="text-sm font-bold text-[#2c3e50] text-center">
+          <p className="text-sm font-bold text-black text-center">
             Votre QI sera calculé avec une précision toute relative.
           </p>
         </div>
 
         {/* Pseudo form */}
-        <div className="card max-w-md mx-auto border-2 border-[#2c3e50]/10">
+        <div className="card max-w-md mx-auto border border-black">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <input
@@ -104,26 +99,23 @@ export default function CognitifHome() {
                 }}
                 placeholder="Identifiant du cobaye..."
                 maxLength={20}
-                className="w-full px-5 py-3 rounded-full border-2 border-[#2c3e50]/20 focus:border-[#2c3e50] focus:outline-none text-center text-lg font-semibold transition-colors bg-cream placeholder:text-gray-400"
+                className="w-full px-5 py-3 rounded-full border border-black focus:border-black focus:outline-none text-center text-lg font-semibold transition-colors bg-white placeholder:text-black"
               />
               {error && (
-                <p className="text-pink text-sm mt-2 font-medium">{error}</p>
+                <p className="text-red text-sm mt-2 font-medium">{error}</p>
               )}
             </div>
             <button
               type="submit"
-              className="w-full font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 hover:shadow-lg"
-              style={{
-                background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
-              }}
+              className="w-full font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 bg-red"
             >
               Commencer le test
             </button>
           </form>
 
           {!player && (
-            <p className="text-xs text-purple/40 mt-3 text-center">
-              <Link href="/connexion" className="underline hover:text-purple">
+            <p className="text-xs text-blue mt-3 text-center">
+              <Link href="/connexion" className="underline hover:text-blue">
                 Connectez-vous
               </Link>{" "}
               pour sauvegarder vos résultats sur votre profil
@@ -134,26 +126,26 @@ export default function CognitifHome() {
         {/* Features */}
         <div className="mt-10 grid grid-cols-3 gap-4 text-center">
           <div className="animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            <div className="text-3xl mb-2">✍️</div>
-            <p className="text-xs font-semibold text-purple-dark/60">
+            <div className="flex justify-center mb-2"><PenLine size={28} className="text-black" /></div>
+            <p className="text-xs font-semibold text-black">
               8 questions libres
             </p>
           </div>
           <div className="animate-slide-up" style={{ animationDelay: "0.4s" }}>
-            <div className="text-3xl mb-2">⏱️</div>
-            <p className="text-xs font-semibold text-purple-dark/60">
+            <div className="flex justify-center mb-2"><Timer size={28} className="text-black" /></div>
+            <p className="text-xs font-semibold text-black">
               30s par question
             </p>
           </div>
           <div className="animate-slide-up" style={{ animationDelay: "0.6s" }}>
-            <div className="text-3xl mb-2">🧪</div>
-            <p className="text-xs font-semibold text-purple-dark/60">
+            <div className="flex justify-center mb-2"><FlaskConical size={28} className="text-black" /></div>
+            <p className="text-xs font-semibold text-black">
               QI calculé en direct
             </p>
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-purple/30 italic">
+        <p className="mt-8 text-xs text-blue italic">
           Avertissement : ce test n&apos;a aucune valeur scientifique. Votre vrai QI
           est probablement différent. Probablement.
         </p>

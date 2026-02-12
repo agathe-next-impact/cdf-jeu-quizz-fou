@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Confetti from "@/components/Confetti";
 import RegisterInvite from "@/components/RegisterInvite";
+import GameIcon from "@/components/GameIcon";
 import { getEvasionOutcome } from "@/data/evasion-questions";
 
 interface ScoreResult {
@@ -86,7 +87,7 @@ export default function EvasionResultsPage() {
   if (loading || !result) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-[#1e3c72] animate-pulse">
+        <div className="text-xl text-blue animate-pulse">
           Le Dr. Moreau rédige son rapport...
         </div>
       </div>
@@ -101,29 +102,23 @@ export default function EvasionResultsPage() {
 
       <div className="max-w-lg w-full text-center animate-slide-up">
         {/* Emoji */}
-        <div className="text-8xl mb-6 animate-bounce-in">{outcome.emoji}</div>
+        <div className="mb-6 animate-bounce-in flex justify-center"><GameIcon name={outcome.emoji} size={80} /></div>
 
         {/* Title */}
-        <div className="inline-block bg-[#1e3c72]/10 text-[#1e3c72] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+        <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
           Verdict du Dr. Moreau
         </div>
         <h1
-          className="text-3xl md:text-4xl font-black mb-1 leading-tight"
-          style={{
-            background: "linear-gradient(135deg, #1e3c72, #2a5298)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            backgroundClip: "text",
-          }}
+          className="text-3xl md:text-4xl font-black mb-1 leading-tight text-blue"
         >
           {outcome.title}
         </h1>
-        <p className="text-sm font-semibold text-[#1e3c72]/50 mb-2">
+        <p className="text-sm font-semibold text-blue mb-2">
           {outcome.subtitle}
         </p>
 
         {/* Pseudo */}
-        <p className="text-lg text-purple-dark/60 font-medium mb-6">
+        <p className="text-lg text-black font-medium mb-6">
           Patient : {result.pseudo}
         </p>
 
@@ -133,43 +128,43 @@ export default function EvasionResultsPage() {
             <div
               className={`text-6xl font-black mb-1 ${
                 result.score <= 10
-                  ? "text-green-600"
+                  ? "text-blue"
                   : result.score <= 30
-                    ? "text-[#1e3c72]"
+                    ? "text-blue"
                     : result.score <= 50
-                      ? "text-orange"
-                      : "text-red-600"
+                      ? "text-yellow"
+                      : "text-red"
               }`}
             >
               {result.score}
             </div>
-            <div className="text-sm text-[#1e3c72]/50 font-medium">
+            <div className="text-sm text-blue font-medium">
               jours avant la sortie
             </div>
           </div>
 
           {/* Visual bar */}
-          <div className="w-full bg-[#1e3c72]/10 rounded-full h-4 overflow-hidden mb-4">
+          <div className="w-full rounded-full h-4 overflow-hidden mb-4">
             <div
-              className="h-full rounded-full transition-all duration-1000 ease-out"
+              className={`h-full rounded-full transition-all duration-1000 ease-out ${
+                result.score <= 10
+                  ? "bg-blue"
+                  : result.score <= 30
+                    ? "bg-blue"
+                    : result.score <= 50
+                      ? "bg-yellow"
+                      : "bg-red"
+              }`}
               style={{
                 width: `${Math.min(100, (result.score / 80) * 100)}%`,
-                background:
-                  result.score <= 10
-                    ? "linear-gradient(90deg, #22c55e, #16a34a)"
-                    : result.score <= 30
-                      ? "linear-gradient(90deg, #1e3c72, #2a5298)"
-                      : result.score <= 50
-                        ? "linear-gradient(90deg, #f97316, #ea580c)"
-                        : "linear-gradient(90deg, #ef4444, #dc2626)",
               }}
             />
           </div>
         </div>
 
         {/* Description */}
-        <div className="card mb-6 border-2 border-[#1e3c72]/5">
-          <p className="text-sm text-purple-dark/70 leading-relaxed italic">
+        <div className="card mb-6 border border-blue">
+          <p className="text-sm text-black leading-relaxed italic">
             &laquo; {outcome.description} &raquo;
           </p>
         </div>
@@ -185,10 +180,7 @@ export default function EvasionResultsPage() {
               sessionStorage.removeItem("evasion-answers");
               router.push("/evasion/quiz");
             }}
-            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 hover:shadow-lg"
-            style={{
-              background: "linear-gradient(135deg, #1e3c72, #2a5298)",
-            }}
+            className="font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 bg-blue"
           >
             Nouvelle évaluation
           </button>
@@ -200,7 +192,7 @@ export default function EvasionResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-purple/30 italic">
+        <p className="mt-8 text-xs text-blue italic">
           Le Dr. Moreau vous souhaite un prompt rétablissement. Ou pas.
         </p>
       </div>

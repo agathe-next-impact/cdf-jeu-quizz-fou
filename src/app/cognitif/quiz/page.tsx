@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Check, X as XIcon, Lightbulb } from "lucide-react";
 import {
   cognitifQuestions,
   COGNITIF_TIME_PER_QUESTION,
@@ -139,42 +140,41 @@ export default function CognitifQuizPage() {
         {/* Progress bar */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-[#2c3e50]/50">
+            <span className="text-xs font-bold text-black">
               Question {currentIndex + 1}/{cognitifQuestions.length}
             </span>
             <span
               className={`text-sm font-black ${
                 timeLeft <= 10
-                  ? "text-[#e74c3c] animate-pulse"
-                  : "text-[#2c3e50]"
+                  ? "text-red animate-pulse"
+                  : "text-black"
               }`}
             >
               {timeLeft}s
             </span>
           </div>
-          <div className="w-full bg-[#2c3e50]/10 rounded-full h-3 overflow-hidden">
+          <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-red"
               style={{
                 width: `${progress}%`,
-                background: "linear-gradient(90deg, #2c3e50, #e74c3c)",
               }}
             />
           </div>
         </div>
 
         {/* Timer bar */}
-        <div className="w-full bg-[#2c3e50]/10 rounded-full h-1.5 mb-6 overflow-hidden">
+        <div className="w-full rounded-full h-1.5 mb-6 overflow-hidden">
           <div
-            className="h-full rounded-full transition-all duration-1000 linear"
+            className={`h-full rounded-full transition-all duration-1000 linear ${
+              timeLeft <= 10
+                ? "bg-red"
+                : timeLeft <= 20
+                  ? "bg-yellow"
+                  : "bg-blue"
+            }`}
             style={{
               width: `${(timeLeft / COGNITIF_TIME_PER_QUESTION) * 100}%`,
-              background:
-                timeLeft <= 10
-                  ? "linear-gradient(90deg, #e74c3c, #c0392b)"
-                  : timeLeft <= 20
-                    ? "linear-gradient(90deg, #f39c12, #e67e22)"
-                    : "linear-gradient(90deg, #3498db, #2980b9)",
             }}
           />
         </div>
@@ -182,18 +182,18 @@ export default function CognitifQuizPage() {
         {/* Feedback overlay */}
         {feedback && (
           <div
-            className={`card text-center mb-4 border-2 animate-slide-up ${
+            className={`card text-center mb-4 border animate-slide-up ${
               feedback.correct
-                ? "border-green-400 bg-green-50"
-                : "border-red-400 bg-red-50"
+                ? "border-blue"
+                : "border-red"
             }`}
           >
-            <div className="text-4xl mb-2">
-              {feedback.correct ? "✅" : "❌"}
+            <div className="text-4xl mb-2 flex justify-center">
+              {feedback.correct ? <Check size={40} className="text-green-600" /> : <XIcon size={40} className="text-red" />}
             </div>
             <p
               className={`font-bold ${
-                feedback.correct ? "text-green-700" : "text-red-700"
+                feedback.correct ? "text-blue" : "text-red"
               }`}
             >
               {feedback.correct
@@ -201,7 +201,7 @@ export default function CognitifQuizPage() {
                 : "Mauvaise réponse"}
             </p>
             {!feedback.correct && (
-              <p className="text-sm text-red-500 mt-1">
+              <p className="text-sm text-red mt-1">
                 Réponse attendue : {q.correctAnswer}
               </p>
             )}
@@ -210,17 +210,17 @@ export default function CognitifQuizPage() {
 
         {/* Question card */}
         {!feedback && (
-          <div className="card border-2 border-[#2c3e50]/10 mb-6 animate-slide-up">
+          <div className="card border border-black mb-6 animate-slide-up">
             <div className="flex items-center gap-2 mb-4">
-              <span className="bg-[#2c3e50]/10 text-[#2c3e50] text-xs font-black px-3 py-1 rounded-full">
+              <span className="text-black text-xs font-black px-3 py-1 rounded-full">
                 {q.points} pts
               </span>
-              <span className="text-xs text-[#2c3e50]/40 font-medium">
+              <span className="text-xs text-black font-medium">
                 Question {currentIndex + 1}
               </span>
             </div>
 
-            <p className="text-base font-semibold text-purple-dark leading-relaxed mb-6">
+            <p className="text-base font-semibold text-black leading-relaxed mb-6">
               {q.question}
             </p>
 
@@ -228,14 +228,14 @@ export default function CognitifQuizPage() {
             {!showHint ? (
               <button
                 onClick={() => setShowHint(true)}
-                className="text-xs text-[#3498db] hover:text-[#2980b9] font-semibold mb-4 transition-colors"
+                className="text-xs text-blue hover:text-blue font-semibold mb-4 transition-colors inline-flex items-center gap-1"
               >
-                💡 Afficher l&apos;indice
+                <Lightbulb size={14} /> Afficher l&apos;indice
               </button>
             ) : (
-              <div className="bg-[#3498db]/10 rounded-xl p-3 mb-4 animate-slide-up">
-                <p className="text-xs text-[#2980b9] italic">
-                  💡 {q.hint}
+              <div className="rounded-xl p-3 mb-4 animate-slide-up">
+                <p className="text-xs text-blue italic inline-flex items-center gap-1">
+                  <Lightbulb size={14} /> {q.hint}
                 </p>
               </div>
             )}
@@ -248,16 +248,13 @@ export default function CognitifQuizPage() {
                 value={answer}
                 onChange={(e) => setAnswer(e.target.value)}
                 placeholder="Tapez votre réponse..."
-                className="w-full px-4 py-3 rounded-xl border-2 border-[#2c3e50]/20 focus:border-[#e74c3c] focus:outline-none text-base font-medium transition-colors bg-cream placeholder:text-gray-400"
+                className="w-full px-4 py-3 rounded-xl border border-black focus:border-red focus:outline-none text-base font-medium transition-colors bg-white placeholder:text-black"
                 autoComplete="off"
               />
               <button
                 type="submit"
                 disabled={answer.trim().length === 0}
-                className="w-full font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 hover:shadow-lg disabled:opacity-40 disabled:hover:scale-100"
-                style={{
-                  background: "linear-gradient(135deg, #2c3e50, #e74c3c)",
-                }}
+                className="w-full font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 disabled:hover:scale-100 bg-red"
               >
                 Valider
               </button>
@@ -268,9 +265,9 @@ export default function CognitifQuizPage() {
         {/* Score so far */}
         {!feedback && results.length > 0 && (
           <div className="text-center">
-            <span className="text-xs text-[#2c3e50]/40 font-medium">
+            <span className="text-xs text-black font-medium">
               Score actuel :{" "}
-              <span className="font-bold text-[#2c3e50]">
+              <span className="font-bold text-black">
                 {results.reduce((s, r) => s + r.points, 0)} pts
               </span>
             </span>

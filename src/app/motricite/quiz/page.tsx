@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { Target, Meh, Skull } from "lucide-react";
 import {
   motriciteLevels,
   getLevelDiagnosis,
@@ -311,57 +312,46 @@ export default function MotriciteQuizPage() {
     return (
       <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12">
         <div className="max-w-md w-full text-center animate-slide-up">
-          <div className="text-6xl mb-6">🎯</div>
+          <div className="flex justify-center mb-6"><Target size={60} /></div>
 
-          <div className="inline-block bg-[#0d9488]/10 text-[#0d9488] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+          <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
             Niveau {level.id} / {motriciteLevels.length}
           </div>
 
-          <h1
-            className="text-3xl font-black mb-2"
-            style={{
-              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
+          <h1 className="text-3xl font-black mb-2 text-blue">
             {level.name}
           </h1>
 
-          <p className="text-sm text-purple-dark/70 mb-6 leading-relaxed">
+          <p className="text-sm text-black mb-6 leading-relaxed">
             {level.description}
           </p>
 
-          <div className="card mb-6 border-2 border-[#0d9488]/10">
+          <div className="card mb-6 border border-blue">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-black text-[#0d9488]">
+                <div className="text-2xl font-black text-blue">
                   {level.targetCount}
                 </div>
-                <div className="text-xs text-purple-dark/50">cibles</div>
+                <div className="text-xs text-black">cibles</div>
               </div>
               <div>
-                <div className="text-2xl font-black text-[#0d9488]">
+                <div className="text-2xl font-black text-blue">
                   {level.targetSize}px
                 </div>
-                <div className="text-xs text-purple-dark/50">taille</div>
+                <div className="text-xs text-black">taille</div>
               </div>
               <div>
-                <div className="text-2xl font-black text-[#0d9488]">
+                <div className="text-2xl font-black text-blue">
                   {level.duration}s
                 </div>
-                <div className="text-xs text-purple-dark/50">temps</div>
+                <div className="text-xs text-black">temps</div>
               </div>
             </div>
           </div>
 
           <button
             onClick={() => startLevel(currentLevel)}
-            className="font-bold text-white py-3 px-8 rounded-full transition-all hover:scale-105 hover:shadow-lg text-lg"
-            style={{
-              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-            }}
+            className="font-bold text-white py-3 px-8 rounded-full transition-all hover:scale-105 text-lg bg-blue"
           >
             Commencer
           </button>
@@ -379,23 +369,23 @@ export default function MotriciteQuizPage() {
       <div className="min-h-[calc(100vh-80px)] flex flex-col items-center px-4 py-6">
         {/* HUD */}
         <div className="w-full max-w-[640px] flex items-center justify-between mb-4">
-          <div className="text-sm font-bold text-purple-dark/60">
+          <div className="text-sm font-bold text-black">
             Niveau {level.id} — {level.name}
           </div>
           <div className="flex gap-4 items-center">
-            <div className="text-sm font-semibold text-[#0d9488]">
+            <div className="text-sm font-semibold text-blue">
               {hits}/{level.targetCount}
             </div>
             {misses > 0 && (
-              <div className="text-sm font-semibold text-red-400">
+              <div className="text-sm font-semibold text-red">
                 {misses} raté{misses > 1 ? "s" : ""}
               </div>
             )}
             <div
               className={`text-lg font-black px-3 py-1 rounded-full ${
                 timeLeft <= 5
-                  ? "bg-red-100 text-red-600 animate-pulse"
-                  : "bg-[#0d9488]/10 text-[#0d9488]"
+                  ? "text-red animate-pulse"
+                  : "text-blue"
               }`}
             >
               {timeLeft}s
@@ -407,13 +397,11 @@ export default function MotriciteQuizPage() {
         <div
           data-arena="true"
           onClick={handleArenaMiss}
-          className="relative border-2 border-[#0d9488]/20 rounded-2xl overflow-hidden cursor-crosshair select-none"
+          className="relative border border-blue rounded-2xl overflow-hidden cursor-crosshair select-none"
           style={{
             width: ARENA_W,
             maxWidth: "100%",
             height: ARENA_H,
-            background:
-              "radial-gradient(circle at 50% 50%, rgba(13,148,136,0.03), rgba(13,148,136,0.08))",
           }}
         >
           {targets.map((t) => {
@@ -426,19 +414,17 @@ export default function MotriciteQuizPage() {
                   e.stopPropagation();
                   handleTargetClick(t.id);
                 }}
-                className="absolute rounded-full transition-shadow hover:shadow-lg focus:outline-none"
+                className="absolute rounded-full focus:outline-none"
                 style={{
                   width: displaySize * 2,
                   height: displaySize * 2,
                   left: t.x + t.jitterX - displaySize,
                   top: t.y + t.jitterY - displaySize,
-                  background:
-                    "radial-gradient(circle at 35% 35%, #14b8a6, #0d9488, #065f5b)",
-                  boxShadow: "0 0 10px rgba(13,148,136,0.4)",
+                  backgroundColor: "var(--color-blue)",
                 }}
               >
                 <span
-                  className="absolute rounded-full bg-white/30"
+                  className="absolute rounded-full"
                   style={{
                     width: displaySize * 0.6,
                     height: displaySize * 0.6,
@@ -463,7 +449,7 @@ export default function MotriciteQuizPage() {
                   left: t.x - 10,
                   top: t.y - 10,
                   borderRadius: "50%",
-                  background: "rgba(13,148,136,0.4)",
+                  backgroundColor: "var(--color-blue)",
                 }}
               />
             ))}
@@ -471,7 +457,7 @@ export default function MotriciteQuizPage() {
 
         {/* Miss counter */}
         {misses > 0 && (
-          <div className="mt-3 text-sm font-medium text-red-400">
+          <div className="mt-3 text-sm font-medium text-red">
             {misses} clic{misses > 1 ? "s" : ""} raté{misses > 1 ? "s" : ""}
           </div>
         )}
@@ -491,23 +477,23 @@ export default function MotriciteQuizPage() {
     return (
       <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12">
         <div className="max-w-md w-full text-center animate-slide-up">
-          <div className="text-6xl mb-4">
+          <div className="flex justify-center mb-4">
             {lastResult.successRate >= 80
-              ? "🎯"
+              ? <Target size={60} />
               : lastResult.successRate >= 50
-                ? "😬"
-                : "💀"}
+                ? <Meh size={60} />
+                : <Skull size={60} />}
           </div>
 
-          <div className="inline-block bg-[#0d9488]/10 text-[#0d9488] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
+          <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
             Résultat Niveau {currentLevel + 1}
           </div>
 
-          <h2 className="text-2xl font-black text-purple-dark mb-1">
+          <h2 className="text-2xl font-black text-black mb-1">
             {lastResult.hits} / {lastResult.total} cibles touchées
           </h2>
           {lastResult.misses > 0 && (
-            <p className="text-sm font-medium text-red-400 mb-1">
+            <p className="text-sm font-medium text-red mb-1">
               {lastResult.misses} clic{lastResult.misses > 1 ? "s" : ""} raté{lastResult.misses > 1 ? "s" : ""}
             </p>
           )}
@@ -515,44 +501,41 @@ export default function MotriciteQuizPage() {
           <div
             className={`text-4xl font-black mb-4 ${
               lastResult.successRate >= 80
-                ? "text-green-600"
+                ? "text-blue"
                 : lastResult.successRate >= 50
-                  ? "text-orange"
-                  : "text-red-600"
+                  ? "text-yellow"
+                  : "text-red"
             }`}
           >
             {lastResult.successRate}%
           </div>
 
           {/* Diagnosis card */}
-          <div className="card border-2 border-[#0d9488]/10 text-left mb-6">
+          <div className="card border border-blue text-left mb-6">
             <div className="flex items-center gap-2 mb-2">
               <span
                 className={`text-xs font-black px-2 py-0.5 rounded-full uppercase ${
                   lastResult.successRate >= 80
-                    ? "bg-amber-100 text-amber-700"
+                    ? "text-yellow"
                     : lastResult.successRate >= 50
-                      ? "bg-orange/10 text-orange"
-                      : "bg-red-100 text-red-600"
+                      ? "text-yellow"
+                      : "text-red"
                 }`}
               >
                 {diag.severity}
               </span>
             </div>
-            <h3 className="font-bold text-purple-dark mb-2">
+            <h3 className="font-bold text-black mb-2">
               {diag.condition}
             </h3>
-            <p className="text-sm text-purple-dark/70 leading-relaxed italic">
+            <p className="text-sm text-black leading-relaxed italic">
               &laquo; {diag.explanation} &raquo;
             </p>
           </div>
 
           <button
             onClick={handleNextLevel}
-            className="font-bold text-white py-3 px-8 rounded-full transition-all hover:scale-105 hover:shadow-lg"
-            style={{
-              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-            }}
+            className="font-bold text-white py-3 px-8 rounded-full transition-all hover:scale-105 bg-blue"
           >
             {isLast ? "Voir le rapport complet" : "Niveau suivant"}
           </button>
@@ -566,7 +549,7 @@ export default function MotriciteQuizPage() {
   /* ---------------------------------------------------------------- */
   return (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-      <div className="text-xl text-[#0d9488] animate-pulse">
+      <div className="text-xl text-blue animate-pulse">
         Compilation du rapport neurologique...
       </div>
     </div>

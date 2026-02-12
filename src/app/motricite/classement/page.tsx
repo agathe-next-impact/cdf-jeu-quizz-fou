@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { Medal, Target, ClipboardList } from "lucide-react";
 
 interface PlayerScore {
   pseudo: string;
@@ -10,13 +11,13 @@ interface PlayerScore {
   date: string;
 }
 
-const MEDAL_EMOJIS = ["🥇", "🥈", "🥉"];
+const MEDAL_COLORS = ["text-yellow", "text-black/60", "text-yellow/70"];
 
 function getRowBg(index: number): string {
-  if (index === 0) return "bg-[#0d9488]/10 border-[#0d9488]/30";
-  if (index === 1) return "bg-[#0d9488]/5 border-[#0d9488]/20";
-  if (index === 2) return "bg-[#0d9488]/[0.03] border-[#0d9488]/10";
-  return "bg-white border-[#0d9488]/5";
+  if (index === 0) return "border-blue";
+  if (index === 1) return "border-blue";
+  if (index === 2) return "border-blue";
+  return "bg-white border-blue";
 }
 
 export default function MotriciteClassementPage() {
@@ -40,44 +41,33 @@ export default function MotriciteClassementPage() {
       <div className="max-w-2xl w-full">
         {/* Header */}
         <div className="text-center mb-10 animate-slide-up">
-          <div className="text-5xl mb-4">🎯</div>
-          <h1
-            className="text-4xl md:text-5xl font-black mb-2"
-            style={{
-              background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              backgroundClip: "text",
-            }}
-          >
+          <div className="flex justify-center mb-4"><Target size={48} className="text-black" /></div>
+          <h1 className="text-4xl md:text-5xl font-black mb-2 text-blue">
             Classement Motricité
           </h1>
-          <p className="text-purple-dark/60 font-medium">
+          <p className="text-black font-medium">
             Les systèmes nerveux les moins défaillants
           </p>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-[#0d9488] animate-pulse">
+            <div className="text-xl text-blue animate-pulse">
               Analyse des dossiers neurologiques...
             </div>
           </div>
         ) : scores.length === 0 ? (
           <div className="card text-center py-12 animate-slide-up">
-            <div className="text-5xl mb-4">📋</div>
-            <h2 className="text-xl font-bold text-purple-dark mb-2">
+            <div className="flex justify-center mb-4"><ClipboardList size={48} className="text-black" /></div>
+            <h2 className="text-xl font-bold text-black mb-2">
               Aucun patient testé
             </h2>
-            <p className="text-purple/50 mb-6">
+            <p className="text-blue mb-6">
               Soyez le premier à passer le test de motricité
             </p>
             <Link
               href="/motricite"
-              className="inline-block font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105"
-              style={{
-                background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-              }}
+              className="inline-block font-bold text-white py-3 px-6 rounded-full transition-all hover:scale-105 bg-blue"
             >
               Commencer le test
             </Link>
@@ -87,15 +77,15 @@ export default function MotriciteClassementPage() {
             {scores.map((player, index) => (
               <div
                 key={`${player.pseudo}-${player.date}`}
-                className={`flex items-center gap-4 p-4 rounded-2xl border-2 transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
+                className={`flex items-center gap-4 p-4 rounded-2xl border transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {/* Rank */}
                 <div className="w-12 text-center shrink-0">
                   {index < 3 ? (
-                    <span className="text-2xl">{MEDAL_EMOJIS[index]}</span>
+                    <Medal size={24} className={MEDAL_COLORS[index]} />
                   ) : (
-                    <span className="text-lg font-black text-[#0d9488]/40">
+                    <span className="text-lg font-black text-blue">
                       #{index + 1}
                     </span>
                   )}
@@ -103,10 +93,10 @@ export default function MotriciteClassementPage() {
 
                 {/* Player info */}
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-purple-dark truncate">
+                  <div className="font-bold text-black truncate">
                     {player.pseudo}
                   </div>
-                  <div className="text-xs text-[#0d9488]/40 font-medium">
+                  <div className="text-xs text-blue font-medium">
                     {player.title}
                   </div>
                 </div>
@@ -116,17 +106,17 @@ export default function MotriciteClassementPage() {
                   <div
                     className={`text-2xl font-black ${
                       player.score >= 90
-                        ? "text-green-600"
+                        ? "text-blue"
                         : player.score >= 70
-                          ? "text-[#0d9488]"
+                          ? "text-blue"
                           : player.score >= 50
-                            ? "text-orange"
-                            : "text-red-600"
+                            ? "text-yellow"
+                            : "text-red"
                     }`}
                   >
                     {player.score}%
                   </div>
-                  <div className="text-xs text-[#0d9488]/30 font-medium">
+                  <div className="text-xs text-blue font-medium">
                     précision
                   </div>
                 </div>

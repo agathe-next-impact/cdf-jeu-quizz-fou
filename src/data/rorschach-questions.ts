@@ -278,7 +278,7 @@ export interface RorschachProfile {
 export const rorschachProfiles: RorschachProfile[] = [
   {
     minPercent: 90,
-    emoji: "🧠",
+    emoji: "brain",
     title: "Psyché en État d'Urgence Absolue",
     subtitle: "Dossier classé ROUGE",
     description:
@@ -286,7 +286,7 @@ export const rorschachProfiles: RorschachProfile[] = [
   },
   {
     minPercent: 75,
-    emoji: "🌊",
+    emoji: "waves",
     title: "Abîme Psychologique Remarquable",
     subtitle: "Profondeur inquiétante",
     description:
@@ -294,7 +294,7 @@ export const rorschachProfiles: RorschachProfile[] = [
   },
   {
     minPercent: 60,
-    emoji: "🧪",
+    emoji: "flask-conical",
     title: "Complexe Multi-Pathologique",
     subtitle: "Au moins 7 névroses détectées",
     description:
@@ -302,7 +302,7 @@ export const rorschachProfiles: RorschachProfile[] = [
   },
   {
     minPercent: 45,
-    emoji: "🤔",
+    emoji: "circle-help",
     title: "Névrose Créative Avancée",
     subtitle: "Le Minotaure est perdu dans votre tête",
     description:
@@ -310,7 +310,7 @@ export const rorschachProfiles: RorschachProfile[] = [
   },
   {
     minPercent: 30,
-    emoji: "🔍",
+    emoji: "search",
     title: "Dérèglement Perceptif Confirmé",
     subtitle: "Perception altérée de la réalité",
     description:
@@ -318,7 +318,7 @@ export const rorschachProfiles: RorschachProfile[] = [
   },
   {
     minPercent: 15,
-    emoji: "🩺",
+    emoji: "stethoscope",
     title: "Refoulement Suspect",
     subtitle: "Trop calme pour être honnête",
     description:
@@ -326,7 +326,7 @@ export const rorschachProfiles: RorschachProfile[] = [
   },
   {
     minPercent: 0,
-    emoji: "🚨",
+    emoji: "siren",
     title: "Déni Clinique Total",
     subtitle: "ALERTE : CONSCIENCE DÉCONNECTÉE",
     description:

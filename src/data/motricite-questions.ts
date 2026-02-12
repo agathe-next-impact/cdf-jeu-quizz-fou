@@ -199,7 +199,7 @@ export interface MotriciteProfile {
 export const motriciteProfiles: MotriciteProfile[] = [
   {
     minPercent: 90,
-    emoji: "🤖",
+    emoji: "bot",
     title: "Syndrome du Cyborg Non-Diagnostiqué",
     subtitle: "Performance humainement impossible",
     description:
@@ -209,7 +209,7 @@ export const motriciteProfiles: MotriciteProfile[] = [
   },
   {
     minPercent: 70,
-    emoji: "📉",
+    emoji: "trending-down",
     title: "Déclin Neuromoteur Compensé",
     subtitle: "Le cerveau triche pour cacher ses failles",
     description:
@@ -219,7 +219,7 @@ export const motriciteProfiles: MotriciteProfile[] = [
   },
   {
     minPercent: 50,
-    emoji: "⚠️",
+    emoji: "alert-triangle",
     title: "Dysfonction Sensori-Motrice Progressive",
     subtitle: "La déconnexion œil-main s'accélère",
     description:
@@ -229,7 +229,7 @@ export const motriciteProfiles: MotriciteProfile[] = [
   },
   {
     minPercent: 0,
-    emoji: "🚨",
+    emoji: "siren",
     title: "Atrophie Neuronale Sévère Généralisée",
     subtitle: "Pronostic fonctionnel défavorable",
     description:

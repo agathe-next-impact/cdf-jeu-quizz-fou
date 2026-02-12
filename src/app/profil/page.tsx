@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
+import GameIcon from "@/components/GameIcon";
+import { Pencil, Gamepad2 } from "lucide-react";
 
 interface GameStats {
   game: string;
@@ -30,17 +32,17 @@ interface ProfileData {
 }
 
 const AVATARS = [
-  "🤪", "😎", "🧠", "👻", "🦊", "🐱", "🐸", "🎃",
-  "🤖", "👽", "🦄", "🐧", "🎭", "🔥", "💀", "🫠",
+  "laugh", "glasses", "brain", "ghost", "squirrel", "cat", "fish", "skull",
+  "bot", "orbit", "sparkles", "bird", "palette", "flame", "bone", "droplets",
 ];
 
 const GAME_EMOJIS: Record<string, string> = {
-  "DSM-6 Version Beta": "🏥",
-  "Test de Rorschach": "🫠",
-  "Évaluation Émotionnelle": "🧠",
-  "Évasion Psychiatrique": "🏥",
-  "Test de Motricité Fine": "🎯",
-  "Test Cognitif Absurde": "🧠",
+  "DSM-6 Version Beta": "hospital",
+  "Test de Rorschach": "palette",
+  "Évaluation Émotionnelle": "brain",
+  "Évasion Psychiatrique": "door-open",
+  "Test de Motricité Fine": "target",
+  "Test Cognitif Absurde": "brain",
 };
 
 export default function ProfilPage() {
@@ -93,8 +95,8 @@ export default function ProfilPage() {
           },
           games: [],
           globalScore: 0,
-          badge: { name: "Patient Admis", emoji: "🏥", minScore: 0, color: "text-gray-400" },
-          nextBadge: { name: "Cas Intéressant", emoji: "🔬", minScore: 50, color: "text-blue-400" },
+          badge: { name: "Patient Admis", emoji: "hospital", minScore: 0, color: "text-black" },
+          nextBadge: { name: "Cas Intéressant", emoji: "microscope", minScore: 50, color: "text-blue" },
         });
         setLoading(false);
       });
@@ -171,7 +173,7 @@ export default function ProfilPage() {
   if (authLoading || loading || !profile) {
     return (
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
-        <div className="text-xl text-purple animate-pulse">Chargement du profil...</div>
+        <div className="text-xl text-blue animate-pulse">Chargement du profil...</div>
       </div>
     );
   }
@@ -191,13 +193,13 @@ export default function ProfilPage() {
           <div className="relative inline-block mx-auto mb-4">
             <button
               onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-              className="w-20 h-20 rounded-full gradient-bg flex items-center justify-center text-4xl mx-auto hover:scale-105 transition-transform"
+              className="w-20 h-20 rounded-full bg-black flex items-center justify-center text-4xl mx-auto hover:scale-105 transition-transform"
               title="Changer d'avatar"
             >
-              {profile.player.avatar || profile.player.pseudo.charAt(0).toUpperCase()}
+              <GameIcon name={profile.player.avatar || profile.player.pseudo.charAt(0).toUpperCase()} size={36} />
             </button>
-            <span className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs shadow border border-purple/20">
-              ✏️
+            <span className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full flex items-center justify-center text-xs border border-blue">
+              <Pencil size={12} />
             </span>
           </div>
           {showAvatarPicker && (
@@ -214,52 +216,52 @@ export default function ProfilPage() {
                   }}
                   className={`text-2xl w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                     profile.player.avatar === a
-                      ? "bg-purple/20 ring-2 ring-purple scale-110"
-                      : "bg-purple/5 hover:bg-purple/10"
+                      ? "ring-2 ring-blue scale-110"
+                      : ""
                   }`}
                 >
-                  {a}
+                  <GameIcon name={a} size={22} />
                 </button>
               ))}
             </div>
           )}
-          <h1 className="text-3xl font-black gradient-text mb-1">
+          <h1 className="text-3xl font-black text-black mb-1">
             {profile.player.pseudo}
           </h1>
-          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple/10 mb-2 ${profile.badge.color}`}>
-            <span className="text-base">{profile.badge.emoji}</span>
+          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-2 ${profile.badge.color}`}>
+            <span className="text-base"><GameIcon name={profile.badge.emoji} size={18} /></span>
             <span className="text-sm font-bold">{profile.badge.name}</span>
           </div>
-          <p className="text-sm text-purple/50 mb-4">
+          <p className="text-sm text-blue mb-4">
             Membre depuis le {memberSince}
           </p>
           <div className="flex justify-center gap-6">
             <div className="text-center">
-              <div className="text-2xl font-black text-purple">{profile.globalScore}<span className="text-sm font-bold text-purple/40">/100</span></div>
-              <div className="text-xs text-purple/50 font-medium">score global</div>
+              <div className="text-2xl font-black text-blue">{profile.globalScore}<span className="text-sm font-bold text-blue">/100</span></div>
+              <div className="text-xs text-blue font-medium">score global</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-black text-purple">{profile.games.length}</div>
-              <div className="text-xs text-purple/50 font-medium">
+              <div className="text-2xl font-black text-blue">{profile.games.length}</div>
+              <div className="text-xs text-blue font-medium">
                 {profile.games.length === 1 ? "jeu" : "jeux"}
               </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-black text-purple">{totalPlays}</div>
-              <div className="text-xs text-purple/50 font-medium">
+              <div className="text-2xl font-black text-blue">{totalPlays}</div>
+              <div className="text-xs text-blue font-medium">
                 {totalPlays === 1 ? "partie" : "parties"}
               </div>
             </div>
           </div>
           {profile.nextBadge && (
             <div className="mt-4">
-              <div className="flex items-center justify-center gap-2 text-xs text-purple/40 mb-1.5">
-                <span>Prochain badge : {profile.nextBadge.emoji} {profile.nextBadge.name}</span>
+              <div className="flex items-center justify-center gap-2 text-xs text-blue mb-1.5">
+                <span className="inline-flex items-center gap-1">Prochain badge : <GameIcon name={profile.nextBadge.emoji} size={14} /> {profile.nextBadge.name}</span>
                 <span className="font-bold">{profile.nextBadge.minScore - profile.globalScore} points restants</span>
               </div>
-              <div className="w-full max-w-xs mx-auto h-2 bg-purple/10 rounded-full overflow-hidden">
+              <div className="w-full max-w-xs mx-auto h-2 rounded-full overflow-hidden">
                 <div
-                  className="h-full gradient-bg rounded-full transition-all duration-500"
+                  className="h-full bg-black rounded-full transition-all duration-500"
                   style={{
                     width: `${Math.min(100, ((profile.globalScore - profile.badge.minScore) / (profile.nextBadge.minScore - profile.badge.minScore)) * 100)}%`,
                   }}
@@ -271,12 +273,12 @@ export default function ProfilPage() {
 
         {/* Editable profile fields */}
         <div className="card mb-8 animate-slide-up" style={{ animationDelay: "0.05s" }}>
-          <h2 className="text-lg font-black text-purple-dark mb-4">Mon dossier patient</h2>
+          <h2 className="text-lg font-black text-black mb-4">Mon dossier patient</h2>
 
           {/* Bio / Citation */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+              <label className="text-xs font-bold text-blue uppercase tracking-wide">
                 Citation / Mini-bio
               </label>
               {!editingBio && (
@@ -285,7 +287,7 @@ export default function ProfilPage() {
                     setBioValue(profile.player.bio || "");
                     setEditingBio(true);
                   }}
-                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                  className="text-xs text-blue hover:text-blue transition-colors"
                 >
                   Modifier
                 </button>
@@ -298,15 +300,15 @@ export default function ProfilPage() {
                   onChange={(e) => setBioValue(e.target.value)}
                   maxLength={160}
                   rows={2}
-                  placeholder="Une citation, une id&eacute;e folle, ta devise..."
-                  className="w-full px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm resize-none transition-colors"
+                  placeholder="Une citation, une idée folle, ta devise..."
+                  className="w-full px-3 py-2 rounded-xl border border-blue focus:border-blue focus:outline-none text-black text-sm resize-none transition-colors"
                 />
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-xs text-purple/30">{bioValue.length}/160</span>
+                  <span className="text-xs text-blue">{bioValue.length}/160</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setEditingBio(false)}
-                      className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                      className="text-xs font-semibold text-blue hover:text-blue px-3 py-1 transition-colors"
                       disabled={saving}
                     >
                       Annuler
@@ -314,7 +316,7 @@ export default function ProfilPage() {
                     <button
                       onClick={saveBio}
                       disabled={saving}
-                      className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                      className="text-xs font-bold text-white bg-blue hover:bg-black px-3 py-1 rounded-lg transition-colors"
                     >
                       {saving ? "..." : "Enregistrer"}
                     </button>
@@ -322,7 +324,7 @@ export default function ProfilPage() {
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-purple-dark/70 italic">
+              <p className="text-sm text-black italic">
                 {profile.player.bio || "Aucune citation pour l\u2019instant..."}
               </p>
             )}
@@ -331,7 +333,7 @@ export default function ProfilPage() {
           {/* Autodiagnostic */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+              <label className="text-xs font-bold text-blue uppercase tracking-wide">
                 Autodiagnostic
               </label>
               {!editingDiag && (
@@ -340,7 +342,7 @@ export default function ProfilPage() {
                     setDiagValue(profile.player.autodiagnostic || "");
                     setEditingDiag(true);
                   }}
-                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                  className="text-xs text-blue hover:text-blue transition-colors"
                 >
                   Modifier
                 </button>
@@ -354,14 +356,14 @@ export default function ProfilPage() {
                   maxLength={200}
                   rows={2}
                   placeholder="Ton autodiagnostic totalement fiable..."
-                  className="w-full px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm resize-none transition-colors"
+                  className="w-full px-3 py-2 rounded-xl border border-blue focus:border-blue focus:outline-none text-black text-sm resize-none transition-colors"
                 />
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-xs text-purple/30">{diagValue.length}/200</span>
+                  <span className="text-xs text-blue">{diagValue.length}/200</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setEditingDiag(false)}
-                      className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                      className="text-xs font-semibold text-blue hover:text-blue px-3 py-1 transition-colors"
                       disabled={saving}
                     >
                       Annuler
@@ -369,7 +371,7 @@ export default function ProfilPage() {
                     <button
                       onClick={saveDiag}
                       disabled={saving}
-                      className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                      className="text-xs font-bold text-white bg-blue hover:bg-black px-3 py-1 rounded-lg transition-colors"
                     >
                       {saving ? "..." : "Enregistrer"}
                     </button>
@@ -377,17 +379,17 @@ export default function ProfilPage() {
                 </div>
               </div>
             ) : (
-              <p className="text-sm text-purple-dark/70 italic">
-                {profile.player.autodiagnostic || "Aucun diagnostic pos\u00e9 pour l\u2019instant..."}
+              <p className="text-sm text-black italic">
+                {profile.player.autodiagnostic || "Aucun diagnostic posé pour l\u2019instant..."}
               </p>
             )}
           </div>
 
-          {/* Date de d&eacute;but de folie */}
+          {/* Date de début de folie */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
-                D&eacute;but de la folie
+              <label className="text-xs font-bold text-blue uppercase tracking-wide">
+                Début de la folie
               </label>
               {!editingMadness && (
                 <button
@@ -395,7 +397,7 @@ export default function ProfilPage() {
                     setMadnessValue(profile.player.madnessSince || "");
                     setEditingMadness(true);
                   }}
-                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                  className="text-xs text-blue hover:text-blue transition-colors"
                 >
                   Modifier
                 </button>
@@ -408,11 +410,11 @@ export default function ProfilPage() {
                   value={madnessValue}
                   onChange={(e) => setMadnessValue(e.target.value)}
                   max={new Date().toISOString().split("T")[0]}
-                  className="flex-1 px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm transition-colors"
+                  className="flex-1 px-3 py-2 rounded-xl border border-blue focus:border-blue focus:outline-none text-black text-sm transition-colors"
                 />
                 <button
                   onClick={() => setEditingMadness(false)}
-                  className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                  className="text-xs font-semibold text-blue hover:text-blue px-3 py-1 transition-colors"
                   disabled={saving}
                 >
                   Annuler
@@ -420,13 +422,13 @@ export default function ProfilPage() {
                 <button
                   onClick={saveMadness}
                   disabled={saving}
-                  className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                  className="text-xs font-bold text-white bg-blue hover:bg-black px-3 py-1 rounded-lg transition-colors"
                 >
                   {saving ? "..." : "OK"}
                 </button>
               </div>
             ) : (
-              <p className="text-sm text-purple-dark/70">
+              <p className="text-sm text-black">
                 {profile.player.madnessSince
                   ? new Date(profile.player.madnessSince + "T00:00:00").toLocaleDateString("fr-FR", {
                       year: "numeric",
@@ -440,15 +442,15 @@ export default function ProfilPage() {
         </div>
 
         {/* Game stats */}
-        <h2 className="text-xl font-black text-purple-dark mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
+        <h2 className="text-xl font-black text-black mb-4 animate-slide-up" style={{ animationDelay: "0.1s" }}>
           Mes classements
         </h2>
 
         {profile.games.length === 0 ? (
           <div className="card text-center py-10 animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            <div className="text-5xl mb-4">🎮</div>
-            <p className="text-purple-dark/60 font-medium mb-4">
-              Tu n&apos;as pas encore jou&eacute; !
+            <div className="text-5xl mb-4"><Gamepad2 size={48} className="text-black" /></div>
+            <p className="text-black font-medium mb-4">
+              Tu n&apos;as pas encore joué !
             </p>
             <Link href="/" className="btn-primary inline-block">
               Choisir un jeu
@@ -460,25 +462,25 @@ export default function ProfilPage() {
               <Link
                 key={game.slug}
                 href={game.slug}
-                className="card border-2 border-purple/10 hover:border-purple/30 flex items-center gap-4 animate-slide-up group"
+                className="card border border-blue hover:border-blue flex items-center gap-4 animate-slide-up group"
                 style={{ animationDelay: `${(i + 1) * 0.1}s` }}
               >
-                <div className="text-4xl">{GAME_EMOJIS[game.game] ?? "🎮"}</div>
+                <div className="text-4xl"><GameIcon name={GAME_EMOJIS[game.game] ?? "gamepad-2"} size={36} /></div>
                 <div className="flex-1 min-w-0">
-                  <div className="font-bold text-purple-dark group-hover:text-purple transition-colors">
+                  <div className="font-bold text-black group-hover:text-blue transition-colors">
                     {game.game}
                   </div>
-                  <div className="text-xs text-purple/40 font-medium">
+                  <div className="text-xs text-blue font-medium">
                     {game.bestTitle}
                   </div>
-                  <div className="text-xs text-purple/30 mt-1">
-                    {game.totalPlays} {game.totalPlays === 1 ? "partie" : "parties"} &middot; Derni&egrave;re le{" "}
+                  <div className="text-xs text-blue mt-1">
+                    {game.totalPlays} {game.totalPlays === 1 ? "partie" : "parties"} &middot; Dernière le{" "}
                     {new Date(game.lastPlayed).toLocaleDateString("fr-FR")}
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-2xl font-black text-purple">{game.bestScore}</div>
-                  <div className="text-xs text-purple/30 font-medium">meilleur score</div>
+                  <div className="text-2xl font-black text-blue">{game.bestScore}</div>
+                  <div className="text-xs text-blue font-medium">meilleur score</div>
                 </div>
               </Link>
             ))}
@@ -495,9 +497,9 @@ export default function ProfilPage() {
               logout();
               router.push("/");
             }}
-            className="text-sm font-semibold text-purple/50 hover:text-purple px-4 py-2 transition-colors"
+            className="text-sm font-semibold text-blue hover:text-blue px-4 py-2 transition-colors"
           >
-            Se d&eacute;connecter
+            Se déconnecter
           </button>
         </div>
 
@@ -507,18 +509,18 @@ export default function ProfilPage() {
             <div className="text-center">
               <button
                 onClick={() => setShowDeleteConfirm(true)}
-                className="text-xs text-red-400/60 hover:text-red-500 font-medium transition-colors"
+                className="text-xs text-red hover:text-red font-medium transition-colors"
               >
                 Supprimer mon compte
               </button>
             </div>
           ) : (
-            <div className="card border-2 border-red-200 bg-red-50/50">
-              <h3 className="text-sm font-bold text-red-600 mb-2">
+            <div className="card border border-red">
+              <h3 className="text-sm font-bold text-red mb-2">
                 Supprimer le compte
               </h3>
-              <p className="text-xs text-red-500/70 mb-4">
-                Cette action est irr&eacute;versible. Ton compte et tes donn&eacute;es de profil seront supprim&eacute;s.
+              <p className="text-xs text-red mb-4">
+                Cette action est irréversible. Ton compte et tes données de profil seront supprimés.
               </p>
               <div className="mb-3">
                 <input
@@ -526,11 +528,11 @@ export default function ProfilPage() {
                   value={deletePassword}
                   onChange={(e) => setDeletePassword(e.target.value)}
                   placeholder="Confirme avec ton mot de passe"
-                  className="w-full px-3 py-2 rounded-xl border-2 border-red-200 focus:border-red-400 focus:outline-none bg-white text-purple-dark text-sm transition-colors"
+                  className="w-full px-3 py-2 rounded-xl border border-red focus:border-red focus:outline-none bg-white text-black text-sm transition-colors"
                 />
               </div>
               {deleteError && (
-                <p className="text-red-500 text-xs font-medium mb-3">{deleteError}</p>
+                <p className="text-red text-xs font-medium mb-3">{deleteError}</p>
               )}
               <div className="flex gap-2 justify-end">
                 <button
@@ -539,14 +541,14 @@ export default function ProfilPage() {
                     setDeletePassword("");
                     setDeleteError("");
                   }}
-                  className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1.5 transition-colors"
+                  className="text-xs font-semibold text-blue hover:text-blue px-3 py-1.5 transition-colors"
                 >
                   Annuler
                 </button>
                 <button
                   onClick={handleDeleteAccount}
                   disabled={deleting || !deletePassword}
-                  className="text-xs font-bold text-white bg-red-500 hover:bg-red-600 px-4 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                  className="text-xs font-bold text-white bg-red hover:bg-red px-4 py-1.5 rounded-lg transition-colors"
                 >
                   {deleting ? "Suppression..." : "Supprimer définitivement"}
                 </button>

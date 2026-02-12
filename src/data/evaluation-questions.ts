@@ -16,7 +16,7 @@ export interface EvaluationQuestion {
 export const evaluationQuestions: EvaluationQuestion[] = [
   {
     id: 1,
-    emoji: "😊",
+    emoji: "smile",
     question: "Que ressentez-vous en voyant cette émotion ?",
     answers: [
       {
@@ -55,7 +55,7 @@ export const evaluationQuestions: EvaluationQuestion[] = [
   },
   {
     id: 2,
-    emoji: "😢",
+    emoji: "frown",
     question: "Comment interprétez-vous cette expression ?",
     answers: [
       {
@@ -94,7 +94,7 @@ export const evaluationQuestions: EvaluationQuestion[] = [
   },
   {
     id: 3,
-    emoji: "😡",
+    emoji: "angry",
     question: "Que vous inspire cette émotion ?",
     answers: [
       {
@@ -133,7 +133,7 @@ export const evaluationQuestions: EvaluationQuestion[] = [
   },
   {
     id: 4,
-    emoji: "😐",
+    emoji: "meh",
     question: "Cette expression neutre vous évoque quoi ?",
     answers: [
       {
@@ -172,7 +172,7 @@ export const evaluationQuestions: EvaluationQuestion[] = [
   },
   {
     id: 5,
-    emoji: "🤔",
+    emoji: "circle-help",
     question: "Comment décririez-vous cette émotion ?",
     answers: [
       {
@@ -225,7 +225,7 @@ export interface EvaluationProfile {
 export const evaluationProfiles: EvaluationProfile[] = [
   {
     minPercent: 90,
-    emoji: "🚨",
+    emoji: "siren",
     title: "Internement Recommandé",
     subtitle: "Dossier classé « Urgence Absolue »",
     description:
@@ -233,7 +233,7 @@ export const evaluationProfiles: EvaluationProfile[] = [
   },
   {
     minPercent: 75,
-    emoji: "🏥",
+    emoji: "hospital",
     title: "Sujet à Risque Majeur",
     subtitle: "Surveillance psychiatrique 24/7 requise",
     description:
@@ -241,7 +241,7 @@ export const evaluationProfiles: EvaluationProfile[] = [
   },
   {
     minPercent: 60,
-    emoji: "🧪",
+    emoji: "flask-conical",
     title: "Personnalité Cliniquement Fascinante",
     subtitle: "Plusieurs syndromes en compétition",
     description:
@@ -249,7 +249,7 @@ export const evaluationProfiles: EvaluationProfile[] = [
   },
   {
     minPercent: 45,
-    emoji: "📋",
+    emoji: "clipboard-list",
     title: "Déviance Émotionnelle Confirmée",
     subtitle: "Rapport en cours de rédaction",
     description:
@@ -257,7 +257,7 @@ export const evaluationProfiles: EvaluationProfile[] = [
   },
   {
     minPercent: 30,
-    emoji: "🔬",
+    emoji: "microscope",
     title: "Légèrement Perturbé(e)",
     subtitle: "Sous observation passive",
     description:
@@ -265,7 +265,7 @@ export const evaluationProfiles: EvaluationProfile[] = [
   },
   {
     minPercent: 15,
-    emoji: "📎",
+    emoji: "paperclip",
     title: "Suspicieusement Équilibré(e)",
     subtitle: "Le calme avant la tempête ?",
     description:
@@ -273,7 +273,7 @@ export const evaluationProfiles: EvaluationProfile[] = [
   },
   {
     minPercent: 0,
-    emoji: "✅",
+    emoji: "check",
     title: "Dangereusement Sain(e) d'Esprit",
     subtitle: "ALERTE : Anomalie détectée",
     description:
