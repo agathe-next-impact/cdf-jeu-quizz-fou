@@ -22,7 +22,7 @@ interface BadgeData {
 }
 
 interface ProfileData {
-  player: { id: string; pseudo: string; email: string; avatar: string; createdAt: string };
+  player: { id: string; pseudo: string; email: string; avatar: string; createdAt: string; madnessSince: string; bio: string };
   games: GameStats[];
   globalScore: number;
   badge: BadgeData;
@@ -44,11 +44,16 @@ const GAME_EMOJIS: Record<string, string> = {
 };
 
 export default function ProfilPage() {
-  const { player, loading: authLoading, logout, updateAvatar, updateBadge } = usePlayer();
+  const { player, loading: authLoading, logout, updateAvatar, updateProfile, updateBadge } = usePlayer();
   const router = useRouter();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [editingBio, setEditingBio] = useState(false);
+  const [editingMadness, setEditingMadness] = useState(false);
+  const [bioValue, setBioValue] = useState("");
+  const [madnessValue, setMadnessValue] = useState("");
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -73,6 +78,30 @@ export default function ProfilPage() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile?.badge?.name]);
+
+  const saveBio = async () => {
+    setSaving(true);
+    const err = await updateProfile({ bio: bioValue });
+    if (!err) {
+      setProfile((prev) =>
+        prev ? { ...prev, player: { ...prev.player, bio: bioValue } } : prev
+      );
+      setEditingBio(false);
+    }
+    setSaving(false);
+  };
+
+  const saveMadness = async () => {
+    setSaving(true);
+    const err = await updateProfile({ madnessSince: madnessValue });
+    if (!err) {
+      setProfile((prev) =>
+        prev ? { ...prev, player: { ...prev.player, madnessSince: madnessValue } } : prev
+      );
+      setEditingMadness(false);
+    }
+    setSaving(false);
+  };
 
   if (authLoading || loading || !profile) {
     return (
@@ -173,6 +202,121 @@ export default function ProfilPage() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Editable profile fields */}
+        <div className="card mb-8 animate-slide-up" style={{ animationDelay: "0.05s" }}>
+          <h2 className="text-lg font-black text-purple-dark mb-4">Mon dossier patient</h2>
+
+          {/* Bio / Citation */}
+          <div className="mb-5">
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+                Citation / Mini-bio
+              </label>
+              {!editingBio && (
+                <button
+                  onClick={() => {
+                    setBioValue(profile.player.bio || "");
+                    setEditingBio(true);
+                  }}
+                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                >
+                  Modifier
+                </button>
+              )}
+            </div>
+            {editingBio ? (
+              <div>
+                <textarea
+                  value={bioValue}
+                  onChange={(e) => setBioValue(e.target.value)}
+                  maxLength={160}
+                  rows={2}
+                  placeholder="Une citation, une id&eacute;e folle, ta devise..."
+                  className="w-full px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm resize-none transition-colors"
+                />
+                <div className="flex items-center justify-between mt-1.5">
+                  <span className="text-xs text-purple/30">{bioValue.length}/160</span>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setEditingBio(false)}
+                      className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                      disabled={saving}
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={saveBio}
+                      disabled={saving}
+                      className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                    >
+                      {saving ? "..." : "Enregistrer"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm text-purple-dark/70 italic">
+                {profile.player.bio || "Aucune citation pour l\u2019instant..."}
+              </p>
+            )}
+          </div>
+
+          {/* Date de d&eacute;but de folie */}
+          <div>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="text-xs font-bold text-purple/50 uppercase tracking-wide">
+                D&eacute;but de la folie
+              </label>
+              {!editingMadness && (
+                <button
+                  onClick={() => {
+                    setMadnessValue(profile.player.madnessSince || "");
+                    setEditingMadness(true);
+                  }}
+                  className="text-xs text-purple/40 hover:text-purple transition-colors"
+                >
+                  Modifier
+                </button>
+              )}
+            </div>
+            {editingMadness ? (
+              <div className="flex items-center gap-2">
+                <input
+                  type="date"
+                  value={madnessValue}
+                  onChange={(e) => setMadnessValue(e.target.value)}
+                  max={new Date().toISOString().split("T")[0]}
+                  className="flex-1 px-3 py-2 rounded-xl border-2 border-purple/20 focus:border-purple focus:outline-none bg-purple/5 text-purple-dark text-sm transition-colors"
+                />
+                <button
+                  onClick={() => setEditingMadness(false)}
+                  className="text-xs font-semibold text-purple/40 hover:text-purple px-3 py-1 transition-colors"
+                  disabled={saving}
+                >
+                  Annuler
+                </button>
+                <button
+                  onClick={saveMadness}
+                  disabled={saving}
+                  className="text-xs font-bold text-white bg-purple hover:bg-purple-dark px-3 py-1 rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {saving ? "..." : "OK"}
+                </button>
+              </div>
+            ) : (
+              <p className="text-sm text-purple-dark/70">
+                {profile.player.madnessSince
+                  ? new Date(profile.player.madnessSince + "T00:00:00").toLocaleDateString("fr-FR", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })
+                  : "Date inconnue"}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Game stats */}

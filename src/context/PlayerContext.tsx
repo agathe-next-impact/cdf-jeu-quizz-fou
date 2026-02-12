@@ -10,6 +10,8 @@ interface Player {
   badgeEmoji?: string;
   badgeName?: string;
   createdAt: string;
+  madnessSince?: string;
+  bio?: string;
 }
 
 interface PlayerContextType {
@@ -18,6 +20,7 @@ interface PlayerContextType {
   login: (pseudo: string, password: string) => Promise<string | null>;
   register: (pseudo: string, email: string, password: string, avatar?: string) => Promise<string | null>;
   updateAvatar: (avatar: string) => Promise<string | null>;
+  updateProfile: (fields: { madnessSince?: string; bio?: string }) => Promise<string | null>;
   updateBadge: (emoji: string, name: string) => void;
   logout: () => void;
 }
@@ -28,6 +31,7 @@ const PlayerContext = createContext<PlayerContextType>({
   login: async () => "Non initialisé",
   register: async () => "Non initialisé",
   updateAvatar: async () => "Non initialisé",
+  updateProfile: async () => "Non initialisé",
   updateBadge: () => {},
   logout: () => {},
 });
@@ -107,6 +111,27 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     }
   }, [player]);
 
+  const updateProfile = useCallback(async (fields: { madnessSince?: string; bio?: string }): Promise<string | null> => {
+    if (!player) return "Non connecté";
+    try {
+      const res = await fetch("/api/auth/profile-update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pseudo: player.pseudo, ...fields }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        return data.error || "Erreur de mise à jour";
+      }
+      const updated = { ...player, ...fields };
+      setPlayer(updated);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return null;
+    } catch {
+      return "Erreur réseau";
+    }
+  }, [player]);
+
   const updateBadge = useCallback((emoji: string, name: string) => {
     if (!player) return;
     const updated = { ...player, badgeEmoji: emoji, badgeName: name };
@@ -120,7 +145,7 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <PlayerContext.Provider value={{ player, loading, login, register, updateAvatar, updateBadge, logout }}>
+    <PlayerContext.Provider value={{ player, loading, login, register, updateAvatar, updateProfile, updateBadge, logout }}>
       {children}
     </PlayerContext.Provider>
   );
