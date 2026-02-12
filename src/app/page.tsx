@@ -56,6 +56,15 @@ const games = [
     border: "border-[#0d9488]/20 hover:border-[#0d9488]/50",
   },
   {
+    slug: "/cognitif",
+    emoji: "🧠",
+    title: "Test Cognitif Absurde",
+    description: "8 questions de logique, 30 secondes chrono, un QI calculé avec une précision douteuse. Tapez vos réponses et découvrez votre diagnostic cérébral.",
+    tags: ["Logique", "Solo", "Classement"],
+    color: "from-[#2c3e50] to-[#e74c3c]",
+    border: "border-[#2c3e50]/20 hover:border-[#2c3e50]/50",
+  },
+  {
     slug: "#",
     emoji: "🎨",
     title: "Devine le Dessin",

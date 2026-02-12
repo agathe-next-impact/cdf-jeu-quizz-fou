@@ -197,6 +197,7 @@ export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
     { name: "Évaluation Émotionnelle", slug: "/evaluation", restBase: "evaluation-scores", apiPath: "/api/evaluation-scores" },
     { name: "Évasion Psychiatrique", slug: "/evasion", restBase: "evasion-scores", apiPath: "/api/evasion-scores" },
     { name: "Test de Motricité Fine", slug: "/motricite", restBase: "motricite-scores", apiPath: "/api/motricite-scores" },
+    { name: "Test Cognitif Absurde", slug: "/cognitif", restBase: "cognitif-scores", apiPath: "/api/cognitif-scores" },
   ];
 
   const stats: GameStats[] = [];
@@ -259,6 +260,10 @@ async function getScoresForGame(restBase: string): Promise<ScoreEntry[]> {
   if (restBase === "motricite-scores") {
     const { getMotriciteScores } = await import("@/data/motricite-scores");
     return getMotriciteScores();
+  }
+  if (restBase === "cognitif-scores") {
+    const { getCognitifScores } = await import("@/data/cognitif-scores");
+    return getCognitifScores();
   }
   return [];
 }

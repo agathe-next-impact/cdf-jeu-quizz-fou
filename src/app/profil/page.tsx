@@ -26,6 +26,7 @@ const GAME_EMOJIS: Record<string, string> = {
   "Évaluation Émotionnelle": "🧠",
   "Évasion Psychiatrique": "🏥",
   "Test de Motricité Fine": "🎯",
+  "Test Cognitif Absurde": "🧠",
 };
 
 export default function ProfilPage() {
