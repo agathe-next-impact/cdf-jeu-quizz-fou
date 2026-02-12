@@ -126,7 +126,7 @@ async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
     return null;
   }
   const posts: WPPlayerPost[] = await res.json();
-  const match = posts.find((p) => p.acf?.player_pseudo === pseudo);
+  const match = posts.find((p) => p.acf?.player_pseudo?.toLowerCase() === pseudo.toLowerCase());
   if (!match) return null;
   return wpPostToPlayer(match);
 }

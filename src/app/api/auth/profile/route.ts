@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { findPlayerByPseudo, toPublicPlayer, getPlayerStats } from "@/data/players";
+import { findPlayerByPseudo, toPublicPlayer, getPlayerStats, type PublicPlayer } from "@/data/players";
 import { getBadgeForScore, getNextBadge } from "@/data/badges";
 
 export const dynamic = "force-dynamic";
@@ -13,17 +13,29 @@ export async function GET(request: NextRequest) {
 
   try {
     const player = await findPlayerByPseudo(pseudo);
-    if (!player) {
-      return NextResponse.json({ error: "Joueur introuvable" }, { status: 404 });
-    }
 
+    // Always fetch game stats, even if player record isn't found in WP
+    // (scores are stored separately from the player account)
     const games = await getPlayerStats(pseudo);
     const globalScore = games.reduce((sum, g) => sum + g.bestScore, 0);
     const badge = getBadgeForScore(globalScore);
     const nextBadge = getNextBadge(globalScore);
 
+    const publicPlayer: PublicPlayer = player
+      ? toPublicPlayer(player)
+      : {
+          id: "",
+          pseudo,
+          email: "",
+          avatar: "🤪",
+          createdAt: new Date().toISOString(),
+          madnessSince: "",
+          bio: "",
+          autodiagnostic: "",
+        };
+
     return NextResponse.json({
-      player: toPublicPlayer(player),
+      player: publicPlayer,
       games,
       globalScore,
       badge,
