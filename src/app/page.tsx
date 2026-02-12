@@ -55,26 +55,6 @@ const games = [
     color: "from-[#2c3e50] to-[#e74c3c]",
     border: "border-[#2c3e50]/20 hover:border-[#2c3e50]/50",
   },
-  {
-    slug: "#",
-    emoji: "🎨",
-    title: "Devine le Dessin",
-    description: "Dessine, devine et fais rire tout le monde. Le plus fou gagne !",
-    tags: ["Dessin", "Multijoueur"],
-    color: "from-pink-dark to-pink",
-    border: "border-pink/20 hover:border-pink/50",
-    soon: true,
-  },
-  {
-    slug: "#",
-    emoji: "⚡",
-    title: "Le Vrai ou Faux Express",
-    description: "30 secondes pour répondre à un max de questions. Vrai ou faux, à toi de trancher !",
-    tags: ["Rapidité", "Solo", "Chrono"],
-    color: "from-orange to-yellow",
-    border: "border-orange/20 hover:border-orange/50",
-    soon: true,
-  },
 ];
 
 export default function HomePage() {
