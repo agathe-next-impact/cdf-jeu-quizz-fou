@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Comme des Fous - Scores & Joueurs
  * Description: Custom Post Types et champs ACF pour stocker les scores des jeux et les profils joueurs.
- * Version: 9.1.0
+ * Version: 9.2.0
  * Requires PHP: 7.4
  *
  * Instructions :
@@ -384,13 +384,21 @@ add_action( 'rest_api_init', function () {
 			'get_callback' => function ( $post ) {
 				return get_fields( $post['id'] ) ?: [];
 			},
-			'schema'       => null,
+			'update_callback' => function ( $value, $post ) {
+				if ( ! is_array( $value ) || ! function_exists( 'update_field' ) ) {
+					return;
+				}
+				foreach ( $value as $field_name => $field_value ) {
+					update_field( $field_name, $field_value, $post->ID );
+				}
+			},
+			'schema' => null,
 		] );
 	}
 } );
 
 /* ================================================================== */
-/*  4. Permissions : autoriser la création via API authentifiée         */
+/*  4. Permissions : autoriser la création/suppression via API auth.     */
 /* ================================================================== */
 add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 	$allowed = [
@@ -401,6 +409,7 @@ add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 		'edit_motricite_scores', 'publish_motricite_scores', 'edit_published_motricite_scores',
 		'edit_cognitif_scores', 'publish_cognitif_scores', 'edit_published_cognitif_scores',
 		'edit_cdf_players', 'publish_cdf_players', 'edit_published_cdf_players',
+		'delete_cdf_players', 'delete_published_cdf_players',
 	];
 	if ( in_array( $cap, $allowed, true ) ) {
 		return [ 'read' ];
