@@ -62,7 +62,7 @@ export async function wpGetScores(
   const url = `${WP_URL}/wp-json/wp/v2/${restBase}?per_page=${limit}&orderby=date&order=desc&_fields=id,acf`;
 
   const res = await fetch(url, {
-    headers: { Accept: "application/json" },
+    headers: { Accept: "application/json", Authorization: authHeader() },
     next: { revalidate: 0 },
   });
 
@@ -74,6 +74,7 @@ export async function wpGetScores(
   const posts: WPScorePost[] = await res.json();
 
   return posts
+    .filter((p) => p.acf)
     .map((p) => ({
       pseudo: p.acf.player_pseudo ?? "",
       score: Number(p.acf.player_score) || 0,

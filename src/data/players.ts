@@ -341,12 +341,15 @@ export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
   for (const game of GAME_LIST) {
     let allScores: ScoreEntry[];
 
-    if (isWordPressConfigured()) {
-      allScores = await wpGetScores(game.restBase);
-    } else {
-      // In dev fallback, fetch from own API
-      // We import the score modules directly
-      allScores = await getScoresForGame(game.restBase);
+    try {
+      if (isWordPressConfigured()) {
+        allScores = await wpGetScores(game.restBase);
+      } else {
+        allScores = await getScoresForGame(game.restBase);
+      }
+    } catch (err) {
+      console.error(`getPlayerStats: failed to fetch ${game.restBase}:`, err);
+      continue;
     }
 
     const playerScores = allScores.filter(
