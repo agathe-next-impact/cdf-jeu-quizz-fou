@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Comme des Fous - Scores & Joueurs
  * Description: Custom Post Types et champs ACF pour stocker les scores des jeux et les profils joueurs.
- * Version: 6.0.0
+ * Version: 7.0.0
  * Requires PHP: 7.4
  *
  * Instructions :
@@ -173,6 +173,21 @@ add_action( 'init', function () {
 		'supports'     => [ 'title' ],
 	] );
 
+	// Motricité Fine scores
+	register_post_type( 'motricite_score', [
+		'labels'       => [
+			'name'          => 'Scores Motricité',
+			'singular_name' => 'Score Motricité',
+		],
+		'public'       => false,
+		'show_ui'      => true,
+		'show_in_menu' => true,
+		'show_in_rest' => true,
+		'rest_base'    => 'motricite-scores',
+		'menu_icon'    => 'dashicons-games',
+		'supports'     => [ 'title' ],
+	] );
+
 	// Player profiles
 	register_post_type( 'cdf_player', [
 		'labels'       => [
@@ -264,6 +279,20 @@ add_action( 'acf/init', function () {
 		'show_in_rest' => true,
 	] );
 
+	// Motricité Fine
+	$motricite_fields = array_map( function ( $f ) {
+		$f['key'] = str_replace( 'field_', 'field_motricite_', $f['key'] );
+		return $f;
+	}, $fields );
+
+	acf_add_local_field_group( [
+		'key'          => 'group_motricite_score',
+		'title'        => 'Données du Score — Motricité Fine',
+		'fields'       => $motricite_fields,
+		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'motricite_score' ] ] ],
+		'show_in_rest' => true,
+	] );
+
 	// Player profiles
 	acf_add_local_field_group( [
 		'key'          => 'group_cdf_player',
@@ -278,7 +307,7 @@ add_action( 'acf/init', function () {
 /*  3. Exposer les champs ACF dans la REST API                         */
 /* ================================================================== */
 add_action( 'rest_api_init', function () {
-	foreach ( [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'cdf_player' ] as $cpt ) {
+	foreach ( [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cdf_player' ] as $cpt ) {
 		register_rest_field( $cpt, 'acf', [
 			'get_callback' => function ( $post ) {
 				return get_fields( $post['id'] ) ?: [];
@@ -298,6 +327,7 @@ add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 		'edit_rorschach_scores', 'publish_rorschach_scores', 'edit_published_rorschach_scores',
 		'edit_evaluation_scores', 'publish_evaluation_scores', 'edit_published_evaluation_scores',
 		'edit_evasion_scores', 'publish_evasion_scores', 'edit_published_evasion_scores',
+		'edit_motricite_scores', 'publish_motricite_scores', 'edit_published_motricite_scores',
 		'edit_cdf_players', 'publish_cdf_players', 'edit_published_cdf_players',
 	];
 	if ( in_array( $cap, $allowed, true ) ) {
@@ -312,7 +342,7 @@ add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 add_action( 'acf/save_post', function ( $post_id ) {
 	$type = get_post_type( $post_id );
 
-	if ( in_array( $type, [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score' ], true ) ) {
+	if ( in_array( $type, [ 'quiz_score', 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score' ], true ) ) {
 		$pseudo = get_field( 'player_pseudo', $post_id );
 		$score  = get_field( 'player_score', $post_id );
 		if ( $pseudo ) {

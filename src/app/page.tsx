@@ -47,6 +47,15 @@ const games = [
     border: "border-[#1e3c72]/20 hover:border-[#1e3c72]/50",
   },
   {
+    slug: "/motricite",
+    emoji: "🎯",
+    title: "Test de Motricité Fine",
+    description: "5 niveaux, des cibles qui bougent, rétrécissent et tremblent. Chaque clic raté est un neurone de moins.",
+    tags: ["Motricité", "Solo", "Classement"],
+    color: "from-[#0d9488] to-[#14b8a6]",
+    border: "border-[#0d9488]/20 hover:border-[#0d9488]/50",
+  },
+  {
     slug: "#",
     emoji: "🎨",
     title: "Devine le Dessin",
