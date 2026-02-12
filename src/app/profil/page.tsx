@@ -23,6 +23,7 @@ const GAME_EMOJIS: Record<string, string> = {
   "Le Quizz Fou": "🤪",
   "DSM-6 Version Beta": "🏥",
   "Test de Rorschach": "🫠",
+  "Évaluation Émotionnelle": "🧠",
 };
 
 export default function ProfilPage() {

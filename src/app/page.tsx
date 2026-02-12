@@ -29,6 +29,15 @@ const games = [
     border: "border-purple/20 hover:border-purple/50",
   },
   {
+    slug: "/evaluation",
+    emoji: "🧠",
+    title: "Évaluation Émotionnelle",
+    description: "5 émojis, 4 choix, un rapport psychiatrique complet. Chaque réponse révèle un trouble que vous ignoriez avoir.",
+    tags: ["Psychiatrie", "Solo", "Classement"],
+    color: "from-[#667eea] to-[#764ba2]",
+    border: "border-[#667eea]/20 hover:border-[#667eea]/50",
+  },
+  {
     slug: "#",
     emoji: "🎨",
     title: "Devine le Dessin",
