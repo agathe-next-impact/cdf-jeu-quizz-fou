@@ -82,19 +82,9 @@ export default function HomePage() {
             <Link
               key={game.slug + i}
               href={game.slug}
-              aria-disabled={game.soon}
-              className={`card border-2 ${game.border} relative group flex flex-col animate-slide-up ${
-                game.soon ? "opacity-70 pointer-events-none" : ""
-              }`}
+              className={`card border-2 ${game.border} relative group flex flex-col animate-slide-up`}
               style={{ animationDelay: `${i * 0.1}s` }}
-              tabIndex={game.soon ? -1 : undefined}
             >
-              {game.soon && (
-                <span className="absolute top-4 right-4 bg-purple/10 text-purple text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Bientôt
-                </span>
-              )}
-
               <div className="text-5xl mb-4">{game.emoji}</div>
 
               <h2 className="text-xl font-black text-purple-dark mb-2 group-hover:text-purple transition-colors">
@@ -116,13 +106,11 @@ export default function HomePage() {
                 ))}
               </div>
 
-              {!game.soon && (
-                <div className="mt-5">
-                  <span className={`inline-block bg-gradient-to-r ${game.color} text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform`}>
-                    Jouer
-                  </span>
-                </div>
-              )}
+              <div className="mt-5">
+                <span className={`inline-block bg-gradient-to-r ${game.color} text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform`}>
+                  Jouer
+                </span>
+              </div>
             </Link>
           ))}
         </div>
