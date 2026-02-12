@@ -38,6 +38,15 @@ const games = [
     border: "border-[#667eea]/20 hover:border-[#667eea]/50",
   },
   {
+    slug: "/evasion",
+    emoji: "🏥",
+    title: "Évasion Psychiatrique",
+    description: "Un jeu dont vous êtes le héros. Convainquez le Dr. Moreau de votre stabilité mentale pour réduire vos jours d'internement.",
+    tags: ["Aventure", "Solo", "Classement"],
+    color: "from-[#1e3c72] to-[#2a5298]",
+    border: "border-[#1e3c72]/20 hover:border-[#1e3c72]/50",
+  },
+  {
     slug: "#",
     emoji: "🎨",
     title: "Devine le Dessin",

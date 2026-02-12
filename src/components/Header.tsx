@@ -11,7 +11,8 @@ export default function Header() {
   const isDSM6 = pathname.startsWith("/dsm6");
   const isRorschach = pathname.startsWith("/rorschach");
   const isEvaluation = pathname.startsWith("/evaluation");
-  const isGame = isQuizFou || isDSM6 || isRorschach || isEvaluation;
+  const isEvasion = pathname.startsWith("/evasion");
+  const isGame = isQuizFou || isDSM6 || isRorschach || isEvaluation || isEvasion;
 
   const subtitle = isQuizFou
     ? "Le Quizz le plus fou !"
@@ -21,7 +22,9 @@ export default function Header() {
         ? "Test de Rorschach"
         : isEvaluation
           ? "Évaluation Émotionnelle"
-          : "Les jeux les plus fous !";
+          : isEvasion
+            ? "Évasion Psychiatrique"
+            : "Les jeux les plus fous !";
 
   return (
     <header className="gradient-bg text-white py-4 px-6 shadow-lg">
@@ -61,6 +64,14 @@ export default function Header() {
           {isEvaluation && (
             <Link
               href="/evaluation/classement"
+              className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
+            >
+              Classement
+            </Link>
+          )}
+          {isEvasion && (
+            <Link
+              href="/evasion/classement"
               className="text-sm font-semibold bg-white/15 hover:bg-white/25 px-4 py-2 rounded-full transition-all"
             >
               Classement

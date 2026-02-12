@@ -24,6 +24,7 @@ const GAME_EMOJIS: Record<string, string> = {
   "DSM-6 Version Beta": "🏥",
   "Test de Rorschach": "🫠",
   "Évaluation Émotionnelle": "🧠",
+  "Évasion Psychiatrique": "🏥",
 };
 
 export default function ProfilPage() {

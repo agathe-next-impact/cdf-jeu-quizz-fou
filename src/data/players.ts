@@ -195,6 +195,7 @@ export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
     { name: "DSM-6 Version Beta", slug: "/dsm6", restBase: "dsm6-scores", apiPath: "/api/dsm6-scores" },
     { name: "Test de Rorschach", slug: "/rorschach", restBase: "rorschach-scores", apiPath: "/api/rorschach-scores" },
     { name: "Évaluation Émotionnelle", slug: "/evaluation", restBase: "evaluation-scores", apiPath: "/api/evaluation-scores" },
+    { name: "Évasion Psychiatrique", slug: "/evasion", restBase: "evasion-scores", apiPath: "/api/evasion-scores" },
   ];
 
   const stats: GameStats[] = [];
@@ -249,6 +250,10 @@ async function getScoresForGame(restBase: string): Promise<ScoreEntry[]> {
   if (restBase === "evaluation-scores") {
     const { getEvaluationScores } = await import("@/data/evaluation-scores");
     return getEvaluationScores();
+  }
+  if (restBase === "evasion-scores") {
+    const { getEvasionScores } = await import("@/data/evasion-scores");
+    return getEvasionScores();
   }
   return [];
 }
