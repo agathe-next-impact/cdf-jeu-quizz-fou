@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Comme des Fous - Scores & Joueurs
  * Description: Custom Post Types et champs ACF pour stocker les scores des jeux et les profils joueurs.
- * Version: 9.2.0
+ * Version: 9.3.0
  * Requires PHP: 7.4
  *
  * Instructions :
@@ -403,11 +403,17 @@ add_action( 'rest_api_init', function () {
 add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 	$allowed = [
 		'edit_dsm6_scores', 'publish_dsm6_scores', 'edit_published_dsm6_scores',
+		'delete_dsm6_scores', 'delete_published_dsm6_scores',
 		'edit_rorschach_scores', 'publish_rorschach_scores', 'edit_published_rorschach_scores',
+		'delete_rorschach_scores', 'delete_published_rorschach_scores',
 		'edit_evaluation_scores', 'publish_evaluation_scores', 'edit_published_evaluation_scores',
+		'delete_evaluation_scores', 'delete_published_evaluation_scores',
 		'edit_evasion_scores', 'publish_evasion_scores', 'edit_published_evasion_scores',
+		'delete_evasion_scores', 'delete_published_evasion_scores',
 		'edit_motricite_scores', 'publish_motricite_scores', 'edit_published_motricite_scores',
+		'delete_motricite_scores', 'delete_published_motricite_scores',
 		'edit_cognitif_scores', 'publish_cognitif_scores', 'edit_published_cognitif_scores',
+		'delete_cognitif_scores', 'delete_published_cognitif_scores',
 		'edit_cdf_players', 'publish_cdf_players', 'edit_published_cdf_players',
 		'delete_cdf_players', 'delete_published_cdf_players',
 	];

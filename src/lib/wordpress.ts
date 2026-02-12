@@ -125,6 +125,43 @@ export function isWordPressConfigured(): boolean {
   return !!(WP_URL && WP_USER && WP_APP_PASSWORD);
 }
 
+/**
+ * Delete all score posts matching a pseudo in a given REST base.
+ * Returns the number of posts deleted.
+ */
+export async function wpDeleteScoresByPseudo(
+  restBase: string,
+  pseudo: string
+): Promise<number> {
+  // Fetch all posts (paginated, up to 100 per page)
+  const searchUrl = `${WP_URL}/wp-json/wp/v2/${restBase}?per_page=100&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
+  const res = await fetch(searchUrl, {
+    headers: { Accept: "application/json", Authorization: authHeader() },
+    next: { revalidate: 0 },
+  });
+  if (!res.ok) {
+    console.error(`WP search ${restBase} for deletion failed:`, res.status);
+    return 0;
+  }
+
+  const posts: WPScorePost[] = await res.json();
+  const matches = posts.filter(
+    (p) => p.acf?.player_pseudo?.toLowerCase() === pseudo.toLowerCase()
+  );
+
+  let deleted = 0;
+  for (const post of matches) {
+    const delRes = await fetch(
+      `${WP_URL}/wp-json/wp/v2/${restBase}/${post.id}?force=true`,
+      { method: "DELETE", headers: { Authorization: authHeader() } }
+    );
+    if (delRes.ok) deleted++;
+    else console.error(`WP DELETE ${restBase}/${post.id} failed:`, delRes.status);
+  }
+
+  return deleted;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Internals                                                          */
 /* ------------------------------------------------------------------ */

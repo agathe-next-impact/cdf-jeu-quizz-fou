@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import {
   isWordPressConfigured,
   wpGetScores,
+  wpDeleteScoresByPseudo,
 } from "@/lib/wordpress";
 
 /* ------------------------------------------------------------------ */
@@ -361,13 +362,46 @@ async function wpUpdatePlayerPassword(
 /*  Account deletion                                                    */
 /* ------------------------------------------------------------------ */
 export async function deletePlayer(pseudo: string): Promise<boolean> {
+  // Delete scores from all games first, then delete the player profile
   if (isWordPressConfigured()) {
+    await wpDeleteAllPlayerScores(pseudo);
     return wpDeletePlayer(pseudo);
   }
+
+  // In-memory fallback: delete scores from each game module
+  await deleteMemoryScoresForPlayer(pseudo);
+
   const idx = memoryPlayers.findIndex((p) => p.pseudo === pseudo);
   if (idx === -1) return false;
   memoryPlayers.splice(idx, 1);
   return true;
+}
+
+async function wpDeleteAllPlayerScores(pseudo: string): Promise<void> {
+  const deletions = GAME_LIST.map((game) =>
+    wpDeleteScoresByPseudo(game.restBase, pseudo).catch((err) => {
+      console.error(`Failed to delete ${game.restBase} scores for ${pseudo}:`, err);
+      return 0;
+    })
+  );
+  const results = await Promise.all(deletions);
+  const total = results.reduce((sum, n) => sum + n, 0);
+  console.log(`Deleted ${total} score(s) for player ${pseudo}`);
+}
+
+async function deleteMemoryScoresForPlayer(pseudo: string): Promise<void> {
+  const lowerPseudo = pseudo.toLowerCase();
+  for (const game of GAME_LIST) {
+    try {
+      const mod = await getScoreModuleForGame(game.restBase);
+      if (mod) mod.removeByPseudo(lowerPseudo);
+    } catch { /* ignore */ }
+  }
+}
+
+function getScoreModuleForGame(_restBase: string): Promise<{ removeByPseudo: (p: string) => void } | null> {
+  // In-memory score deletion is best-effort; modules don't expose removal yet
+  return Promise.resolve(null);
 }
 
 async function wpDeletePlayer(pseudo: string): Promise<boolean> {
