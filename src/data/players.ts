@@ -434,6 +434,33 @@ export const GAME_LIST = [
   { name: "Test Cognitif Absurde", slug: "/cognitif", restBase: "cognitif-scores", apiPath: "/api/cognitif-scores" },
 ];
 
+/** Maximum possible score per game — used to normalize all games to a 0-100 scale */
+export const GAME_MAX_SCORES: Record<string, number> = {
+  "dsm6-scores": 450,        // 15 questions × 30 pts
+  "rorschach-scores": 300,    // 10 questions × 30 pts
+  "evaluation-scores": 150,   // 5 questions × 30 pts
+  "evasion-scores": 30,       // 30 jours max
+  "motricite-scores": 100,    // pourcentage 0-100
+  "cognitif-scores": 160,     // QI max
+};
+
+/**
+ * Compute a normalized global score (0–100) where each game contributes equally.
+ * Each game's best score is converted to a percentage of its max, then averaged.
+ */
+export function computeNormalizedGlobalScore(games: GameStats[]): number {
+  if (games.length === 0) return 0;
+
+  let totalPct = 0;
+  for (const game of games) {
+    const gameEntry = GAME_LIST.find((g) => g.name === game.game);
+    const maxScore = gameEntry ? (GAME_MAX_SCORES[gameEntry.restBase] ?? 100) : 100;
+    totalPct += Math.min(100, (game.bestScore / maxScore) * 100);
+  }
+
+  return Math.round(totalPct / games.length);
+}
+
 export async function getPlayerStats(pseudo: string): Promise<GameStats[]> {
   const stats: GameStats[] = [];
 
@@ -540,14 +567,21 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
     }
   }
 
-  // Build results with avatar lookup
+  // Build results with normalized scoring and avatar lookup
   const results: GlobalPlayerScore[] = [];
 
   for (const [, data] of playerMap) {
-    let globalScore = 0;
-    for (const score of data.bestScores.values()) {
-      globalScore += score;
+    // Normalize each game's best score to 0-100, then average
+    let totalPct = 0;
+    for (const [gi, score] of data.bestScores.entries()) {
+      const restBase = GAME_LIST[gi]?.restBase;
+      const maxScore = restBase ? (GAME_MAX_SCORES[restBase] ?? 100) : 100;
+      totalPct += Math.min(100, (score / maxScore) * 100);
     }
+    const globalScore = data.bestScores.size > 0
+      ? Math.round(totalPct / data.bestScores.size)
+      : 0;
+
     results.push({
       pseudo: "",    // filled below
       avatar: "🤪",

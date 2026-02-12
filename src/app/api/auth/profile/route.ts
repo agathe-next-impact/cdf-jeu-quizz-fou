@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { findPlayerByPseudo, toPublicPlayer, getPlayerStats, type PublicPlayer } from "@/data/players";
+import { findPlayerByPseudo, toPublicPlayer, getPlayerStats, computeNormalizedGlobalScore, type PublicPlayer } from "@/data/players";
 import { getBadgeForScore, getNextBadge } from "@/data/badges";
 
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     // Always fetch game stats, even if player record isn't found in WP
     // (scores are stored separately from the player account)
     const games = await getPlayerStats(pseudo);
-    const globalScore = games.reduce((sum, g) => sum + g.bestScore, 0);
+    const globalScore = computeNormalizedGlobalScore(games);
     const badge = getBadgeForScore(globalScore);
     const nextBadge = getNextBadge(globalScore);
 

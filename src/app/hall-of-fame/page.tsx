@@ -152,9 +152,8 @@ export default function HallOfFamePage() {
                       {/* Score */}
                       <div className="text-right shrink-0">
                         <div className="text-2xl font-black text-purple">
-                          {entry.globalScore}
+                          {entry.globalScore}<span className="text-sm font-bold text-purple/30">/100</span>
                         </div>
-                        <div className="text-xs text-purple/30 font-medium">pts</div>
                       </div>
                     </div>
                   ))}

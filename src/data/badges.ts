@@ -5,17 +5,18 @@ export interface Badge {
   color: string;
 }
 
+/** Thresholds are on a 0–100 normalized scale (average % across played games) */
 export const BADGES: Badge[] = [
-  { name: "Patient Admis",          emoji: "🏥", minScore: 0,    color: "text-gray-400" },
-  { name: "Cas Intéressant",        emoji: "🔬", minScore: 50,   color: "text-blue-400" },
-  { name: "Sujet Instable",         emoji: "⚡", minScore: 100,  color: "text-green-500" },
-  { name: "Cobaye Prometteur",      emoji: "🧪", minScore: 200,  color: "text-teal-500" },
-  { name: "Esprit Dérangé",         emoji: "🌀", minScore: 350,  color: "text-purple-500" },
-  { name: "Cerveau Hyperactif",     emoji: "🧠", minScore: 500,  color: "text-pink-500" },
-  { name: "Aliéné Confirmé",        emoji: "🔥", minScore: 750,  color: "text-orange-500" },
-  { name: "Génie Incompris",        emoji: "💎", minScore: 1000, color: "text-cyan-400" },
-  { name: "Légende de l'Asile",     emoji: "👑", minScore: 1500, color: "text-yellow-500" },
-  { name: "Dieu de la Folie",       emoji: "⭐", minScore: 2000, color: "text-amber-400" },
+  { name: "Patient Admis",          emoji: "🏥", minScore: 0,   color: "text-gray-400" },
+  { name: "Cas Intéressant",        emoji: "🔬", minScore: 10,  color: "text-blue-400" },
+  { name: "Sujet Instable",         emoji: "⚡", minScore: 20,  color: "text-green-500" },
+  { name: "Cobaye Prometteur",      emoji: "🧪", minScore: 35,  color: "text-teal-500" },
+  { name: "Esprit Dérangé",         emoji: "🌀", minScore: 50,  color: "text-purple-500" },
+  { name: "Cerveau Hyperactif",     emoji: "🧠", minScore: 65,  color: "text-pink-500" },
+  { name: "Aliéné Confirmé",        emoji: "🔥", minScore: 75,  color: "text-orange-500" },
+  { name: "Génie Incompris",        emoji: "💎", minScore: 85,  color: "text-cyan-400" },
+  { name: "Légende de l'Asile",     emoji: "👑", minScore: 92,  color: "text-yellow-500" },
+  { name: "Dieu de la Folie",       emoji: "⭐", minScore: 98,  color: "text-amber-400" },
 ];
 
 export function getBadgeForScore(globalScore: number): Badge {

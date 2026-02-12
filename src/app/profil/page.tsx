@@ -235,7 +235,7 @@ export default function ProfilPage() {
           </p>
           <div className="flex justify-center gap-6">
             <div className="text-center">
-              <div className="text-2xl font-black text-purple">{profile.globalScore}</div>
+              <div className="text-2xl font-black text-purple">{profile.globalScore}<span className="text-sm font-bold text-purple/40">/100</span></div>
               <div className="text-xs text-purple/50 font-medium">score global</div>
             </div>
             <div className="text-center">
@@ -255,7 +255,7 @@ export default function ProfilPage() {
             <div className="mt-4">
               <div className="flex items-center justify-center gap-2 text-xs text-purple/40 mb-1.5">
                 <span>Prochain badge : {profile.nextBadge.emoji} {profile.nextBadge.name}</span>
-                <span className="font-bold">{profile.nextBadge.minScore - profile.globalScore} pts restants</span>
+                <span className="font-bold">{profile.nextBadge.minScore - profile.globalScore} points restants</span>
               </div>
               <div className="w-full max-w-xs mx-auto h-2 bg-purple/10 rounded-full overflow-hidden">
                 <div
