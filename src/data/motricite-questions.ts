@@ -66,111 +66,111 @@ export const motriciteLevels: MotriciteLevel[] = [
   },
 ];
 
-/* Per-level diagnoses: [goodPerf, midPerf, badPerf] */
+/* Per-level diagnoses: [goodPerf ≥80%, midPerf ≥50%, badPerf <50%] */
 export const levelDiagnoses: MotriciteDiagnosis[][] = [
-  // Level 1
+  // Level 1 — Cibles statiques
   [
     {
-      condition: "Syndrome de Tremblement Essentiel Précoce",
-      severity: "LÉGER",
+      condition: "Hyperprécision Compulsive sur Cibles Statiques",
+      severity: "SUSPECT",
       explanation:
-        "Même avec des cibles statiques de taille normale, vous avez manqué des clics. Cela révèle une instabilité de la main caractéristique d'un tremblement neurologique naissant.",
+        "Réussir des cibles statiques aussi facilement est anormalement banal. Votre cerveau sur-alloue ses ressources pour une tâche triviale — c'est le signe d'un cortex moteur qui ne sait pas doser son effort. Vous écrasez une mouche avec un marteau neuronal.",
     },
     {
-      condition: "Déficit d'Attention Visuo-Motrice",
+      condition: "Déficit d'Attention Visuo-Motrice sur Cibles Fixes",
       severity: "MODÉRÉ",
       explanation:
-        "Votre temps de réaction anormalement lent suggère une déconnexion entre perception visuelle et réponse motrice. Votre cerveau traite les informations avec un délai pathologique.",
+        "Des cibles immobiles, de taille normale, et vous en ratez la moitié. Votre cerveau met un temps pathologique à convertir l'information visuelle « cible ici » en action « cliquer là ». La boucle sensori-motrice tourne au ralenti.",
     },
     {
-      condition: "Coordination Œil-Main Déficiente",
+      condition: "Incapacité de Coordination Basique Œil-Main",
       severity: "PRÉOCCUPANT",
       explanation:
-        "Un niveau aussi simple ne devrait poser aucun problème à un système nerveux sain. Votre performance indique une dégradation de la boucle sensori-motrice.",
+        "Un enfant de 4 ans réussirait ce niveau. Des cibles fixes, grosses, immobiles — et vous échouez. Cela indique une rupture fondamentale dans la chaîne de commande entre cortex visuel et muscles de la main.",
     },
   ],
-  // Level 2
+  // Level 2 — Cibles rétrécissantes
   [
     {
-      condition: "Presbyopie Motrice Compensatoire",
-      severity: "MODÉRÉ",
+      condition: "Syndrome du Tireur d'Élite Obsessionnel",
+      severity: "INQUIÉTANT",
       explanation:
-        "Votre difficulté avec les petites cibles révèle une incapacité à ajuster la précision du mouvement. C'est typique d'une dégénérescence cérébelleuse précoce.",
+        "Toucher des cibles qui rétrécissent avec cette précision révèle une focalisation anormale. Votre cortex préfrontal monopolise toute l'attention disponible sur un point microscopique — un comportement typique des personnalités obsessionnelles-compulsives à tendance maniaque.",
     },
     {
-      condition: "Dysmétrie Digitale Sévère",
+      condition: "Dysmétrie Digitale sur Cibles Rétrécissantes",
       severity: "GRAVE",
       explanation:
-        "Vos clics ratés sur des cibles rétrécies démontrent une perte de calibration fine. Votre cerveau ne peut plus estimer correctement les distances microscopiques.",
+        "Quand la cible diminue, votre doigt ne suit plus. Votre cervelet échoue à recalibrer la trajectoire en temps réel. Chaque pixel perdu est un neurone qui a abandonné la partie.",
     },
     {
       condition: "Atrophie des Fibres Motrices Fines",
       severity: "CRITIQUE",
       explanation:
-        "L'incapacité à viser des cibles de 15 pixels suggère une dégénérescence des neurones responsables de la motricité fine. C'est inquiétant pour quelqu'un de votre âge.",
+        "L'incapacité à viser des cibles qui rétrécissent confirme une dégénérescence des neurones responsables de la motricité fine. Vos doigts sont désormais aussi précis qu'une pelleteuse.",
     },
   ],
-  // Level 3
+  // Level 3 — Cibles mobiles
   [
     {
-      condition: "Déficit de Poursuite Visuelle Dynamique",
-      severity: "SÉRIEUX",
+      condition: "Instinct Prédateur Hyperactif",
+      severity: "ANORMAL",
       explanation:
-        "Votre incapacité à suivre des cibles en mouvement révèle un dysfonctionnement du cortex pariétal postérieur. Vous ne pouvez plus prédire les trajectoires.",
+        "Votre capacité à traquer des cibles en mouvement est cliniquement anormale. Votre cortex pariétal postérieur fonctionne en mode « prédateur » : il anticipe les trajectoires avec une précision quasi-animale. Ce n'est pas un compliment — c'est une régression évolutive.",
     },
     {
-      condition: "Apraxie Idéomotrice Émergente",
+      condition: "Apraxie Idéomotrice sur Cibles Mobiles",
       severity: "ALARMANT",
       explanation:
-        "Les clics ratés sur des cibles mobiles indiquent une désynchronisation entre intention et exécution motrice. C'est un signe précoce de troubles neurodégénératifs.",
+        "Vos mains veulent aller là où la cible était, pas là où elle va. C'est une désynchronisation classique entre l'intention motrice et l'exécution — votre cerveau a toujours un temps de retard sur la réalité.",
     },
     {
-      condition: "Syndrome de Latence Motrice Pathologique",
-      severity: "INQUIÉTANT",
-      explanation:
-        "Votre temps de réaction face au mouvement est anormalement élevé. Cela suggère une myélinisation déficiente des voies nerveuses motrices.",
-    },
-  ],
-  // Level 4
-  [
-    {
-      condition: "Parkinson Précoce Non-Diagnostiqué",
-      severity: "GRAVE",
-      explanation:
-        "Votre difficulté avec des cibles tremblantes est ironiquement révélatrice : vous partagez leur instabilité. Vos micro-tremblements interfèrent avec la précision requise.",
-    },
-    {
-      condition: "Ataxie Cérébelleuse Compensée",
+      condition: "Syndrome de Latence Motrice face au Mouvement",
       severity: "SÉVÈRE",
       explanation:
-        "Face à des stimuli instables, votre système moteur s'effondre. Cela révèle une fragilité cérébelleuse que vous compensez habituellement dans la vie quotidienne.",
-    },
-    {
-      condition: "Syndrome de Tremblement d'Action Invalidant",
-      severity: "HANDICAPANT",
-      explanation:
-        "Les cibles jittery amplifient vos propres tremblements. C'est un phénomène de résonance pathologique entre votre instabilité motrice et le stimulus.",
+        "Votre temps de réaction face à des stimuli mobiles est celui d'un paresseux sous sédatif. La myélinisation de vos voies nerveuses motrices est probablement aussi fine qu'une feuille de papier.",
     },
   ],
-  // Level 5
+  // Level 4 — Cibles tremblantes
   [
     {
-      condition: "Défaillance Neuromotrice Globale",
-      severity: "CATASTROPHIQUE",
+      condition: "Stabilité de Main Pathologiquement Excessive",
+      severity: "TROUBLANT",
       explanation:
-        "L'échec à ce niveau confirme une dégradation multi-systémique : vision, coordination, précision et stabilité sont toutes compromises. C'est un tableau clinique complet.",
+        "Toucher des cibles tremblantes avec cette précision signifie que votre main ne tremble absolument pas. Or, un micro-tremblement physiologique est NORMAL chez l'être humain. Son absence totale est un signe de rigidité musculaire anormale — caractéristique d'un tonus de type parkinsonien inversé.",
     },
     {
-      condition: "Syndrome de Déclin Cognitivo-Moteur Avancé",
+      condition: "Résonance Pathologique Main-Cible Tremblante",
+      severity: "SÉVÈRE",
+      explanation:
+        "Face à des cibles instables, votre propre instabilité entre en résonance avec celle du stimulus. Vos micro-tremblements et ceux de la cible se combinent en un chaos moteur ingérable pour votre cervelet.",
+    },
+    {
+      condition: "Syndrome de Tremblement d'Action Amplifié",
+      severity: "HANDICAPANT",
+      explanation:
+        "Les cibles tremblantes révèlent ce que la vie quotidienne masquait : vos mains tremblent. Beaucoup. Le stimulus instable agit comme un amplificateur de votre propre dysfonction motrice.",
+    },
+  ],
+  // Level 5 — Tout combiné
+  [
+    {
+      condition: "Suspicion Forte d'Assistance Robotique",
+      severity: "IMPOSSIBLE",
+      explanation:
+        "Aucun système nerveux humain ne peut traiter simultanément des cibles minuscules, mobiles ET tremblantes avec ce taux de réussite. Soit vous êtes un cyborg, soit vous avez triché, soit votre cortex moteur a muté au-delà de la norme biologique. Dans les trois cas, c'est pathologique.",
+    },
+    {
+      condition: "Surcharge Cognitivo-Motrice Multi-Variables",
       severity: "TERMINAL",
       explanation:
-        "L'impossibilité de gérer la complexité de ce niveau révèle que votre cerveau ne peut plus intégrer plusieurs variables motrices simultanément. C'est caractéristique d'une démence débutante.",
+        "Quand tout bouge, tremble et rétrécit en même temps, votre cerveau ne peut plus prioriser. C'est un effondrement de la capacité d'intégration multi-sensorielle — votre CPU neuronal a atteint 100% et commence à supprimer des processus vitaux.",
     },
     {
-      condition: "Dystonie Focale avec Tremblements Mixtes",
+      condition: "Dystonie Focale avec Effondrement Multi-Systémique",
       severity: "IRRÉVERSIBLE",
       explanation:
-        "Face à la difficulté ultime, tous vos déficits se manifestent en cascade. Vos mains ne vous obéissent plus, signe d'une perte de contrôle moteur volontaire.",
+        "Face à la difficulté ultime, tous vos déficits se manifestent simultanément en cascade. Précision, vitesse, stabilité et anticipation — tout est hors-service. Vos mains ne sont plus que des décorateurs de bureau.",
     },
   ],
 ];
@@ -199,43 +199,43 @@ export interface MotriciteProfile {
 export const motriciteProfiles: MotriciteProfile[] = [
   {
     minPercent: 90,
-    emoji: "🎯",
-    title: "Perfectionnisme Moteur Compulsif",
-    subtitle: "Score anormalement élevé",
+    emoji: "🤖",
+    title: "Syndrome du Cyborg Non-Diagnostiqué",
+    subtitle: "Performance humainement impossible",
     description:
-      "Votre score anormalement élevé révèle une obsession pathologique pour la performance. Vous avez probablement sacrifié votre vie sociale pour développer ces compétences inutiles de clic.",
+      "Votre précision dépasse les capacités biologiques normales. Soit vos neurones moteurs ont subi une mutation génétique, soit vous êtes secrètement un robot. Dans les deux cas, votre obsession compulsive pour la performance cache un trouble profond : l'incapacité pathologique à accepter l'échec. Vous avez probablement sacrifié votre vie sociale pour développer cette compétence parfaitement inutile.",
     recommendation:
-      "Thérapie cognitive-comportementale pour apprendre à accepter l'imperfection. Limitez votre temps d'écran à 10 minutes par jour.",
+      "Test de Turing obligatoire pour confirmer que vous êtes bien humain. En attendant, thérapie cognitive-comportementale pour apprendre à accepter l'imperfection. Interdiction de jouer aux jeux de précision pendant 6 mois.",
   },
   {
     minPercent: 70,
     emoji: "📉",
-    title: "Déclin Neuromoteur Modéré",
-    subtitle: "Compensation cognitive détectée",
+    title: "Déclin Neuromoteur Compensé",
+    subtitle: "Le cerveau triche pour cacher ses failles",
     description:
-      "Votre performance moyenne masque une lutte constante. Vous compensez vos déficits moteurs par une concentration excessive, ce qui est épuisant mentalement.",
+      "Votre score correct est un leurre. Votre cerveau mobilise des ressources cognitives disproportionnées pour compenser vos déficits moteurs réels. Vous sur-concentrez, vous sur-anticipez, vous sur-corrigez. Ce mécanisme de compensation est épuisant et ne tiendra pas dans le temps.",
     recommendation:
-      "Envisagez une rééducation motrice intensive. Évitez les tâches nécessitant de la précision fine (chirurgie, horlogerie, déminage).",
+      "Rééducation motrice progressive. Évitez les tâches nécessitant de la précision fine (chirurgie, horlogerie, déminage). Envisagez un métier compatible avec vos capacités, comme gardien de phare.",
   },
   {
     minPercent: 50,
     emoji: "⚠️",
     title: "Dysfonction Sensori-Motrice Progressive",
-    subtitle: "Signes clairs de dégradation",
+    subtitle: "La déconnexion œil-main s'accélère",
     description:
-      "Votre système nerveux montre des signes clairs de dégradation. La déconnexion entre vos yeux et vos mains s'aggrave. Dans 5 ans, vous aurez du mal à tenir une tasse de café.",
+      "Votre système nerveux montre des signes clairs de dégradation. Vos yeux voient la cible, votre cerveau la localise, mais vos doigts arrivent systématiquement trop tard ou à côté. Cette déconnexion ne fera qu'empirer. Dans 5 ans, vous aurez du mal à tenir une tasse de café sans la renverser.",
     recommendation:
-      "Consultation urgente en neurologie. Commencez à pratiquer des activités motrices simples comme la pâte à modeler ou les puzzles pour enfants.",
+      "Consultation urgente en neurologie. Commencez immédiatement des exercices de motricité adaptés : pâte à modeler, puzzles pour enfants, coloriage sans dépasser.",
   },
   {
     minPercent: 0,
     emoji: "🚨",
-    title: "Atrophie Neuronale Sévère",
-    subtitle: "Pronostic défavorable",
+    title: "Atrophie Neuronale Sévère Généralisée",
+    subtitle: "Pronostic fonctionnel défavorable",
     description:
-      "Vos performances sont comparables à celles d'une personne ayant subi un AVC mineur. Chaque clic raté est le cri d'un neurone mourant. Votre cervelet est probablement en train de se liquéfier.",
+      "Vos performances sont statistiquement comparables à celles d'un patient en état de conscience minimale. Chaque clic raté est le dernier soupir d'un neurone moteur. Votre cervelet — cette petite structure censée coordonner vos mouvements — est probablement en train de se liquéfier lentement.",
     recommendation:
-      "Arrêtez immédiatement toute activité nécessitant de la coordination. Consultez d'urgence un neurologue, un ergothérapeute ET un prêtre.",
+      "Cessez immédiatement toute activité nécessitant de la coordination. Consultez d'urgence un neurologue, un ergothérapeute, un kinésithérapeute ET un prêtre. Envisagez de dicter vos emails plutôt que de les taper.",
   },
 ];
 
