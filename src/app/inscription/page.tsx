@@ -62,8 +62,8 @@ export default function InscriptionPage() {
                     onClick={() => setAvatar(a)}
                     className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
                       avatar === a
-                        ? "ring-2 ring-blue scale-110"
-                        : ""
+                        ? "ring-2 ring-yellow scale-110 text-yellow"
+                        : "text-black"
                     }`}
                   >
                     <GameIcon name={a} size={22} />
@@ -79,7 +79,7 @@ export default function InscriptionPage() {
                 onChange={(e) => setPseudo(e.target.value)}
                 placeholder="Ton pseudo unique..."
                 maxLength={20}
-                className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
               />
             </div>
             <div>
@@ -89,7 +89,7 @@ export default function InscriptionPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ton@email.com"
-                className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
               />
             </div>
             <div>
@@ -99,7 +99,7 @@ export default function InscriptionPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="4 caractères minimum"
-                className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
               />
             </div>
 
@@ -116,9 +116,9 @@ export default function InscriptionPage() {
             </button>
           </form>
 
-          <p className="text-center text-sm text-blue mt-4">
+          <p className="text-center text-sm text-black mt-4">
             Déjà inscrit ?{" "}
-            <Link href="/connexion" className="text-blue font-semibold hover:underline">
+            <Link href="/connexion" className="text-black font-semibold hover:underline">
               Se connecter
             </Link>
           </p>

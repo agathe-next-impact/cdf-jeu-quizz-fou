@@ -83,7 +83,7 @@ export default function HallOfFamePage() {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-blue animate-pulse">
+            <div className="text-xl text-black animate-pulse">
               Consultation des archives...
             </div>
           </div>
@@ -93,7 +93,7 @@ export default function HallOfFamePage() {
             <h2 className="text-xl font-bold text-black mb-2">
               L&apos;asile est vide
             </h2>
-            <p className="text-blue mb-6">
+            <p className="text-black mb-6">
               Aucun patient n&apos;a encore joué. Sois le premier !
             </p>
             <Link href="/" className="btn-primary inline-block">
@@ -120,7 +120,7 @@ export default function HallOfFamePage() {
                         {index < 3 ? (
                           <Medal size={24} className={MEDAL_COLORS[index]} />
                         ) : (
-                          <span className="text-lg font-black text-blue">
+                          <span className="text-lg font-black text-black">
                             #{index + 1}
                           </span>
                         )}
@@ -140,15 +140,15 @@ export default function HallOfFamePage() {
                           <span><GameIcon name={entry.badge.emoji} size={16} /></span>
                           <span>{entry.badge.name}</span>
                         </div>
-                        <div className="text-xs text-blue mt-0.5">
+                        <div className="text-xs text-black mt-0.5">
                           {entry.gamesPlayed} {entry.gamesPlayed === 1 ? "jeu" : "jeux"}
                         </div>
                       </div>
 
                       {/* Score */}
                       <div className="text-right shrink-0">
-                        <div className="text-2xl font-black text-blue">
-                          {entry.globalScore}<span className="text-sm font-bold text-blue">/100</span>
+                        <div className="text-2xl font-black text-black">
+                          {entry.globalScore}<span className="text-sm font-bold text-black">/100</span>
                         </div>
                       </div>
                     </div>
@@ -178,7 +178,7 @@ export default function HallOfFamePage() {
                     </div>
 
                     {game.entries.length === 0 ? (
-                      <p className="text-sm text-blue italic">
+                      <p className="text-sm text-black italic">
                         Aucun score enregistré
                       </p>
                     ) : (
@@ -193,7 +193,7 @@ export default function HallOfFamePage() {
                               {index < 3 ? (
                                 <Medal size={20} className={MEDAL_COLORS[index]} />
                               ) : (
-                                <span className="text-sm font-black text-blue">
+                                <span className="text-sm font-black text-black">
                                   #{index + 1}
                                 </span>
                               )}
@@ -204,17 +204,17 @@ export default function HallOfFamePage() {
                               <div className="font-bold text-sm text-black truncate">
                                 {entry.pseudo}
                               </div>
-                              <div className="text-xs text-blue truncate">
+                              <div className="text-xs text-black truncate">
                                 {entry.title}
                               </div>
                             </div>
 
                             {/* Score */}
                             <div className="text-right shrink-0">
-                              <div className="text-lg font-black text-blue">
+                              <div className="text-lg font-black text-black">
                                 {entry.score}
                               </div>
-                              <div className="text-[10px] text-blue font-medium">pts</div>
+                              <div className="text-[10px] text-black font-medium">pts</div>
                             </div>
                           </div>
                         ))}

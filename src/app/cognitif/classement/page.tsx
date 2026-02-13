@@ -64,7 +64,7 @@ export default function CognitifClassementPage() {
             <h2 className="text-xl font-bold text-black mb-2">
               Aucun cobaye testé
             </h2>
-            <p className="text-blue mb-6">
+            <p className="text-black mb-6">
               Soyez le premier à mesurer votre QI absurde
             </p>
             <Link

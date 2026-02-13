@@ -79,7 +79,7 @@ h1 {
 .animate-confetti { animation: confetti-fall 3s linear forwards; }
 
 .btn-primary {
-  background: var(--color-black);   
+  background: var(--color-red);   
   color: var(--color-white);
   padding: 14px 32px;
   font-weight: 700;

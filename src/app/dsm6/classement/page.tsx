@@ -52,7 +52,7 @@ export default function DSM6ClassementPage() {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-blue animate-pulse">
+            <div className="text-xl text-black animate-pulse">
               Consultation des dossiers...
             </div>
           </div>
@@ -62,7 +62,7 @@ export default function DSM6ClassementPage() {
             <h2 className="text-xl font-bold text-black mb-2">
               Aucun patient enregistré
             </h2>
-            <p className="text-blue mb-6">
+            <p className="text-black mb-6">
               Soyez le premier cas clinique du registre
             </p>
             <Link href="/dsm6" className="btn-primary inline-block">
@@ -82,7 +82,7 @@ export default function DSM6ClassementPage() {
                   {index < 3 ? (
                     <Medal size={24} className={MEDAL_COLORS[index]} />
                   ) : (
-                    <span className="text-lg font-black text-blue">
+                    <span className="text-lg font-black text-black">
                       #{index + 1}
                     </span>
                   )}
@@ -93,17 +93,17 @@ export default function DSM6ClassementPage() {
                   <div className="font-bold text-black truncate">
                     {player.pseudo}
                   </div>
-                  <div className="text-xs text-blue font-medium">
+                  <div className="text-xs text-black font-medium">
                     {player.title}
                   </div>
                 </div>
 
                 {/* Score */}
                 <div className="text-right shrink-0">
-                  <div className="text-2xl font-black text-blue">
+                  <div className="text-2xl font-black text-black">
                     {player.score}
                   </div>
-                  <div className="text-xs text-blue font-medium">pts</div>
+                  <div className="text-xs text-black font-medium">pts</div>
                 </div>
               </div>
             ))}

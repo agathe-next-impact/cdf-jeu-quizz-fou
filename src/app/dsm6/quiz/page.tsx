@@ -135,7 +135,7 @@ export default function DSM6QuizPage() {
                 className={`${bgClass} rounded-2xl px-6 py-4 text-left transition-all duration-300 cursor-pointer disabled:cursor-default flex items-center gap-4 animate-slide-up`}
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <span className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-blue text-sm shrink-0">
+                <span className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-red text-sm shrink-0">
                   {String.fromCharCode(65 + index)}
                 </span>
                 <span className="font-semibold text-black flex-1">

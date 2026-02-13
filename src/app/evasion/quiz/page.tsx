@@ -184,7 +184,7 @@ export default function EvasionQuizPage() {
                 style={{ animationDelay: `${index * 0.08}s` }}
               >
                 <span
-                  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-white text-sm shrink-0 bg-blue"
+                  className="w-10 h-10 rounded-full flex items-center justify-center font-bold text-red text-sm shrink-0"
                 >
                   {String.fromCharCode(65 + index)}
                 </span>

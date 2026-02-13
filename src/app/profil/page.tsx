@@ -232,30 +232,30 @@ export default function ProfilPage() {
             <span className="text-base"><GameIcon name={profile.badge.emoji} size={18} /></span>
             <span className="text-sm font-bold">{profile.badge.name}</span>
           </div>
-          <p className="text-sm text-blue mb-4">
+          <p className="text-sm text-black mb-4">
             Membre depuis le {memberSince}
           </p>
           <div className="flex justify-center gap-6">
             <div className="text-center">
-              <div className="text-2xl font-black text-blue">{profile.globalScore}<span className="text-sm font-bold text-blue">/100</span></div>
-              <div className="text-xs text-blue font-medium">score global</div>
+              <div className="text-2xl font-black text-black">{profile.globalScore}<span className="text-sm font-bold text-black">/100</span></div>
+              <div className="text-xs text-black font-medium">score global</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-black text-blue">{profile.games.length}</div>
-              <div className="text-xs text-blue font-medium">
+              <div className="text-2xl font-black text-black">{profile.games.length}</div>
+              <div className="text-xs text-black font-medium">
                 {profile.games.length === 1 ? "jeu" : "jeux"}
               </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-black text-blue">{totalPlays}</div>
-              <div className="text-xs text-blue font-medium">
+              <div className="text-2xl font-black text-black">{totalPlays}</div>
+              <div className="text-xs text-black font-medium">
                 {totalPlays === 1 ? "partie" : "parties"}
               </div>
             </div>
           </div>
           {profile.nextBadge && (
             <div className="mt-4">
-              <div className="flex items-center justify-center gap-2 text-xs text-blue mb-1.5">
+              <div className="flex items-center justify-center gap-2 text-xs text-black mb-1.5">
                 <span className="inline-flex items-center gap-1">Prochain badge : <GameIcon name={profile.nextBadge.emoji} size={14} /> {profile.nextBadge.name}</span>
                 <span className="font-bold">{profile.nextBadge.minScore - profile.globalScore} points restants</span>
               </div>
@@ -497,7 +497,7 @@ export default function ProfilPage() {
               logout();
               router.push("/");
             }}
-            className="text-sm font-semibold text-blue hover:text-blue px-4 py-2 transition-colors"
+            className="text-sm font-semibold text-black hover:text-black px-4 py-2 transition-colors"
           >
             Se déconnecter
           </button>

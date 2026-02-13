@@ -96,7 +96,7 @@ export default function ConnexionPage() {
                     onChange={(e) => setPseudo(e.target.value)}
                     placeholder="Ton pseudo..."
                     maxLength={20}
-                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                    className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
                 <div>
@@ -106,7 +106,7 @@ export default function ConnexionPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Ton mot de passe"
-                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                    className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
 
@@ -131,13 +131,13 @@ export default function ConnexionPage() {
                     setResetError("");
                     setResetSuccess("");
                   }}
-                  className="text-sm text-blue hover:text-blue font-medium transition-colors"
+                  className="text-sm text-black hover:text-black font-medium transition-colors"
                 >
                   Mot de passe oublié ?
                 </button>
-                <p className="text-sm text-blue">
+                <p className="text-sm text-black">
                   Pas encore de compte ?{" "}
-                  <Link href="/inscription" className="text-blue font-semibold hover:underline">
+                  <Link href="/inscription" className="text-black font-semibold hover:underline">
                     S&apos;inscrire
                   </Link>
                 </p>
@@ -154,7 +154,7 @@ export default function ConnexionPage() {
                     onChange={(e) => setResetPseudo(e.target.value)}
                     placeholder="Ton pseudo..."
                     maxLength={20}
-                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                    className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
                 <div>
@@ -164,7 +164,7 @@ export default function ConnexionPage() {
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     placeholder="ton@email.com"
-                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                    className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
                 <div>
@@ -174,7 +174,7 @@ export default function ConnexionPage() {
                     value={resetNewPassword}
                     onChange={(e) => setResetNewPassword(e.target.value)}
                     placeholder="Nouveau mot de passe (4 car. min)"
-                    className="w-full px-4 py-3 rounded-xl border border-blue focus:border-blue focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
+                    className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
 
@@ -201,7 +201,7 @@ export default function ConnexionPage() {
                     setResetError("");
                     setResetSuccess("");
                   }}
-                  className="text-sm text-blue hover:text-blue font-medium transition-colors"
+                  className="text-sm text-black hover:text-black font-medium transition-colors"
                 >
                   Retour à la connexion
                 </button>

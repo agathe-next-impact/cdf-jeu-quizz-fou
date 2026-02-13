@@ -107,7 +107,7 @@ export default function HomePage() {
                 <game.icon size={48} className="text-black" />
               </div>
 
-              <h2 className="text-xl font-black text-black mb-2 group-hover:text-blue transition-colors">
+              <h2 className="text-xl font-black text-black mb-2 group-hover:text-red transition-colors">
                 {game.title}
               </h2>
 
@@ -119,7 +119,7 @@ export default function HomePage() {
                 {game.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-blue text-xs font-semibold px-3 py-1 rounded-full"
+                    className="text-black border border-black text-xs font-normal px-3 py-1 rounded-full"
                   >
                     {tag}
                   </span>
@@ -127,7 +127,7 @@ export default function HomePage() {
               </div>
 
               <div className="mt-5">
-                <span className={`inline-block ${game.color} text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform`}>
+                <span className="inline-block bg-red text-white text-sm font-bold px-6 py-2 rounded-full group-hover:scale-105 transition-transform">
                   Jouer
                 </span>
               </div>

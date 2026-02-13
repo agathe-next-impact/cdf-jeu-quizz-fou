@@ -78,7 +78,7 @@ export default function Header() {
           ? "bg-blue"
           : "bg-white";
 
-  const heroText = isActiveColor ? "text-white" : "text-black";
+  const heroText = isActiveColor && !isOnHallOfFame ? "text-white" : "text-black";
 
   return (
     <header className="bg-white text-black">
@@ -88,7 +88,7 @@ export default function Header() {
           href="/"
           className="w-full px-2 md:px-4 md:pl-4 font-normal text-black tracking-tight transition-colors flex items-center h-full border-l border-black/20"
         >
-          <span className="block md:hidden">CdF</span>
+          <span className="block md:hidden font-bold">CdF</span>
           <span className="hidden md:block">Comme des Fous</span>
         </Link>
 
@@ -97,7 +97,7 @@ export default function Header() {
             href={classementHref}
             className={`${linkClass} ${isOnClassement ? "bg-blue text-white" : "text-black"}`}
           >
-            <span className="block md:hidden">Class.</span>
+            <span className="block md:hidden text-xs">Class.</span>
             <span className="hidden md:block">Classement</span>
           </Link>
         )}
@@ -107,17 +107,16 @@ export default function Header() {
             href="/"
             className={`${linkClass} text-black`}
           >
-            <span className="block md:hidden">Jeux</span>
+            <span className="block md:hidden text-xs">Jeux</span>
             <span className="hidden md:block">Tous les jeux</span>
           </Link>
         ) : (
           <Link
             href="/hall-of-fame"
-            className={`${linkClass} ${isOnHallOfFame ? "bg-yellow text-white" : "text-black"}`}
+            className={`${linkClass} ${isOnHallOfFame ? "bg-yellow text-black" : "text-black"}`}
           >
             <Trophy size={14} className="mr-1.5 hidden md:block" />
-            <span className="block md:hidden">Hall</span>
-            <span className="hidden md:block">Hall of Fame</span>
+            <span>Hall of Fame</span>
           </Link>
         )}
 
@@ -129,7 +128,7 @@ export default function Header() {
             <span className="w-5 h-5 flex items-center justify-center shrink-0">
               <GameIcon name={player.avatar || player.pseudo.charAt(0).toUpperCase()} size={16} />
             </span>
-            <span className="hidden sm:inline truncate">{player.pseudo}</span>
+            <span className="truncate max-w-[80px] sm:max-w-none text-xs sm:text-sm">{player.pseudo}</span>
             {player.badgeEmoji && (
               <span className="hidden md:inline shrink-0" title={player.badgeName}>
                 <GameIcon name={player.badgeEmoji} size={12} />
@@ -141,7 +140,7 @@ export default function Header() {
             href="/connexion"
             className={`${linkClass} ${isOnConnexion ? "bg-blue text-white" : "text-black"}`}
           >
-            Connexion
+            <span className="text-xs sm:text-sm">Connexion</span>
           </Link>
         )}
 

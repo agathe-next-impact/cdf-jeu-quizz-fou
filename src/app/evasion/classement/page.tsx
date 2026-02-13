@@ -54,7 +54,7 @@ export default function EvasionClassementPage() {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-blue animate-pulse">
+            <div className="text-xl text-black animate-pulse">
               Consultation des dossiers...
             </div>
           </div>
@@ -64,7 +64,7 @@ export default function EvasionClassementPage() {
             <h2 className="text-xl font-bold text-black mb-2">
               Aucun patient évalué
             </h2>
-            <p className="text-blue mb-6">
+            <p className="text-black mb-6">
               Soyez le premier à affronter le Dr. Moreau
             </p>
             <Link
@@ -87,7 +87,7 @@ export default function EvasionClassementPage() {
                   {index < 3 ? (
                     <Medal size={24} className={MEDAL_COLORS[index]} />
                   ) : (
-                    <span className="text-lg font-black text-blue">
+                    <span className="text-lg font-black text-black">
                       #{index + 1}
                     </span>
                   )}
@@ -98,7 +98,7 @@ export default function EvasionClassementPage() {
                   <div className="font-bold text-black truncate">
                     {player.pseudo}
                   </div>
-                  <div className="text-xs text-blue font-medium">
+                  <div className="text-xs text-black font-medium">
                     {player.title}
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export default function EvasionClassementPage() {
                   >
                     {player.score}
                   </div>
-                  <div className="text-xs text-blue font-medium">
+                  <div className="text-xs text-black font-medium">
                     jours
                   </div>
                 </div>

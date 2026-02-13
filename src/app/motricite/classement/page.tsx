@@ -52,7 +52,7 @@ export default function MotriciteClassementPage() {
 
         {loading ? (
           <div className="text-center py-12">
-            <div className="text-xl text-blue animate-pulse">
+            <div className="text-xl text-black animate-pulse">
               Analyse des dossiers neurologiques...
             </div>
           </div>
@@ -62,7 +62,7 @@ export default function MotriciteClassementPage() {
             <h2 className="text-xl font-bold text-black mb-2">
               Aucun patient testé
             </h2>
-            <p className="text-blue mb-6">
+            <p className="text-black mb-6">
               Soyez le premier à passer le test de motricité
             </p>
             <Link
@@ -85,7 +85,7 @@ export default function MotriciteClassementPage() {
                   {index < 3 ? (
                     <Medal size={24} className={MEDAL_COLORS[index]} />
                   ) : (
-                    <span className="text-lg font-black text-blue">
+                    <span className="text-lg font-black text-black">
                       #{index + 1}
                     </span>
                   )}
@@ -96,7 +96,7 @@ export default function MotriciteClassementPage() {
                   <div className="font-bold text-black truncate">
                     {player.pseudo}
                   </div>
-                  <div className="text-xs text-blue font-medium">
+                  <div className="text-xs text-black font-medium">
                     {player.title}
                   </div>
                 </div>
@@ -116,7 +116,7 @@ export default function MotriciteClassementPage() {
                   >
                     {player.score}%
                   </div>
-                  <div className="text-xs text-blue font-medium">
+                  <div className="text-xs text-black font-medium">
                     précision
                   </div>
                 </div>
