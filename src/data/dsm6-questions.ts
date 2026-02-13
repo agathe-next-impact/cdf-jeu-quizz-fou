@@ -11,197 +11,195 @@ export interface DSM6Question {
 }
 
 export const dsm6Questions: DSM6Question[] = [
-  // SECTION A — Troubles de la Vie Moderne
+  // SECTION A — Syndrome d'Hyperactivité Réfrigératoire Compulsive (SHRC)
   {
     id: 1,
-    section: "Troubles de la Vie Moderne",
+    section: "Syndrome d'Hyperactivité Réfrigératoire Compulsive (SHRC)",
     question:
-      "Vous ouvrez le frigo sans avoir faim, le refermez, puis le rouvrez 11 secondes plus tard en espérant que de nouvelles options soient apparues.",
+      "Quand vous ouvrez le frigo sans objectif précis, combien de temps s'écoule avant que vous ne retourniez vérifier si quelque chose de nouveau est miraculeusement apparu ?",
     answers: [
-      { text: "Jamais", points: 0 },
-      { text: "Parfois", points: 10 },
-      { text: "Souvent", points: 20 },
-      { text: "C'est littéralement mon cardio", points: 30 },
+      { text: "Entre 30 secondes et 2 minutes maximum", points: 30 },
+      { text: "Je n'ouvre jamais le frigo sans raison valable", points: 0 },
+      { text: "Je garde la porte ouverte entre deux vérifications", points: 20 },
+      { text: "Environ 2-3 heures plus tard, par curiosité", points: 10 },
     ],
   },
   {
     id: 2,
-    section: "Troubles de la Vie Moderne",
+    section: "Syndrome d'Hyperactivité Réfrigératoire Compulsive (SHRC)",
     question:
-      "Vous avez déjà dit \"je pars dans 5 minutes\" alors que vous n'aviez même pas encore trouvé vos chaussures.",
+      "Vous dites « J'arrive dans 2 minutes ! ». Dans quel état de préparation vous trouvez-vous réellement à ce moment-là ?",
     answers: [
-      { text: "Jamais, je suis toujours prêt(e)", points: 0 },
-      { text: "1 à 2 fois par semaine", points: 10 },
-      { text: "Quotidiennement", points: 20 },
-      { text: "Je le dis en pyjama les clés introuvables", points: 30 },
+      { text: "Au lit, en train de scroller sur mon téléphone", points: 10 },
+      { text: "Sous la douche, shampooing dans les cheveux", points: 30 },
+      { text: "Complètement habillé(e), clés en main, prêt(e) à partir", points: 0 },
+      { text: "En train de chercher désespérément un vêtement acceptable", points: 20 },
     ],
   },
   {
     id: 3,
-    section: "Troubles de la Vie Moderne",
+    section: "Syndrome d'Hyperactivité Réfrigératoire Compulsive (SHRC)",
     question:
-      "Vous tapez un long message, vous le relisez, vous l'effacez entièrement et vous répondez \"ok\".",
+      "Après avoir écrit un long message émotionnel, que faites-vous généralement ?",
     answers: [
-      { text: "Jamais, je dis ce que je pense", points: 0 },
-      { text: "Ça m'arrive parfois", points: 10 },
-      { text: "J'en souffre depuis plusieurs années", points: 20 },
-      { text: "Mon thérapeute est au courant", points: 30 },
+      { text: "Je le raccourcis drastiquement avant envoi", points: 20 },
+      { text: "Je le relis plusieurs fois puis l'envoie finalement", points: 10 },
+      { text: "Je le supprime et envoie juste un émoji ou « ok »", points: 30 },
+      { text: "Je l'envoie tel quel, j'assume pleinement", points: 0 },
     ],
   },
 
-  // SECTION B — Troubles Relationnels Sévères
+  // SECTION B — Trouble Panique Relationnel à Déclenchement Textuel (TPRDT)
   {
     id: 4,
-    section: "Troubles Relationnels Sévères",
+    section: "Trouble Panique Relationnel à Déclenchement Textuel (TPRDT)",
     question:
-      "Quand quelqu'un dit \"faut qu'on parle\", votre espérance de vie perçue chute de combien d'années ?",
+      "Quand vous recevez « On peut se parler ? », quelle est votre première réaction physique ?",
     answers: [
-      { text: "Aucune, je suis serein(e)", points: 0 },
-      { text: "5 ans", points: 10 },
-      { text: "10 à 25 ans", points: 20 },
-      { text: "J'ai déjà rédigé mon testament", points: 30 },
+      { text: "Panique totale, j'envisage de fuir le pays", points: 30 },
+      { text: "Léger stress mais rien de dramatique", points: 10 },
+      { text: "Je reste parfaitement calme et serein(e)", points: 0 },
+      { text: "Mon cœur commence à battre sérieusement vite", points: 20 },
     ],
   },
   {
     id: 5,
-    section: "Troubles Relationnels Sévères",
+    section: "Trouble Panique Relationnel à Déclenchement Textuel (TPRDT)",
     question:
-      "Vous avez déjà fait semblant de ne pas voir une connaissance au supermarché en feignant un intérêt passionné pour une étiquette de conserve de petits pois.",
+      "Au supermarché, vous croisez une connaissance. Quelle stratégie d'évitement adoptez-vous ?",
     answers: [
-      { text: "Non, je dis toujours bonjour", points: 0 },
-      { text: "Oui, une ou deux fois", points: 10 },
-      { text: "J'ai changé de rayon en courant", points: 20 },
-      { text: "J'ai quitté le magasin sans mes courses", points: 30 },
+      { text: "Je change d'allée rapidement en faisant mine d'avoir oublié quelque chose", points: 10 },
+      { text: "Aucune, je vais spontanément lui dire bonjour", points: 0 },
+      { text: "Je quitte le magasin discrètement par une autre sortie", points: 30 },
+      { text: "Je fais semblant de lire intensément une étiquette", points: 20 },
     ],
   },
   {
     id: 6,
-    section: "Troubles Relationnels Sévères",
+    section: "Trouble Panique Relationnel à Déclenchement Textuel (TPRDT)",
     question:
-      "Combien de fois avez-vous ri à une blague que vous n'avez pas comprise pour éviter un silence gênant ?",
+      "À quelle fréquence riez-vous à une blague que vous n'avez pas comprise pour éviter un malaise ?",
     answers: [
-      { text: "Jamais, je demande qu'on m'explique", points: 0 },
-      { text: "Quelques fois dans ma vie", points: 10 },
-      { text: "Aujourd'hui seulement, déjà 3 fois", points: 20 },
-      { text: "Je ris en permanence par précaution", points: 30 },
+      { text: "Assez souvent, plusieurs fois par semaine", points: 20 },
+      { text: "C'est devenu un réflexe automatique permanent", points: 30 },
+      { text: "Jamais, je demande toujours qu'on m'explique", points: 0 },
+      { text: "Rarement, mais ça m'est déjà arrivé quelques fois", points: 10 },
     ],
   },
 
-  // SECTION C — Dysrégulation Technologique
+  // SECTION C — Démence Numérique Précoce avec Amnésie Intentionnelle (DNPAI)
   {
     id: 7,
-    section: "Dysrégulation Technologique",
+    section: "Démence Numérique Précoce avec Amnésie Intentionnelle (DNPAI)",
     question:
-      "Vous déverrouillez votre téléphone, oubliez pourquoi, le reverrouillez, puis le redéverrouillez immédiatement.",
+      "Combien de fois par jour déverrouillez-vous votre téléphone sans vous souvenir pourquoi ?",
     answers: [
-      { text: "Jamais", points: 0 },
-      { text: "Parfois (moins de 3 fois/jour)", points: 10 },
-      { text: "C'est un cycle sans fin", points: 20 },
-      { text: "Mon téléphone a déposé une main courante", points: 30 },
+      { text: "2 ou 3 fois maximum dans la journée", points: 10 },
+      { text: "C'est un cycle infernal, je ne peux plus m'arrêter", points: 30 },
+      { text: "Une dizaine de fois environ", points: 20 },
+      { text: "Ça ne m'arrive jamais, je suis très concentré(e)", points: 0 },
     ],
   },
   {
     id: 8,
-    section: "Dysrégulation Technologique",
+    section: "Démence Numérique Précoce avec Amnésie Intentionnelle (DNPAI)",
     question:
-      "Vous avez déjà cherché vos lunettes alors qu'elles étaient sur votre tête. Variante : cherché votre téléphone avec la lampe torche de votre téléphone.",
+      "Avez-vous déjà cherché quelque chose que vous aviez déjà sur vous ?",
     answers: [
-      { text: "Jamais, je suis organisé(e)", points: 0 },
-      { text: "Une seule des deux variantes", points: 10 },
-      { text: "Les deux, hélas", points: 20 },
-      { text: "Je coche la case \"cas clinique\"", points: 30 },
+      { text: "J'ai utilisé la lampe de mon téléphone pour chercher mon téléphone", points: 20 },
+      { text: "J'ai cherché mes clés alors que je conduisais ma voiture", points: 30 },
+      { text: "J'ai cherché mes lunettes alors qu'elles étaient sur ma tête", points: 10 },
+      { text: "Non, je suis toujours conscient(e) de mes affaires", points: 0 },
     ],
   },
   {
     id: 9,
-    section: "Dysrégulation Technologique",
+    section: "Démence Numérique Précoce avec Amnésie Intentionnelle (DNPAI)",
     question:
-      "Vous regardez l'heure sur votre téléphone, rangez le téléphone, puis réalisez que vous n'avez aucune idée de l'heure qu'il est.",
+      "Après avoir consulté l'heure, combien de temps vous faut-il pour réaliser que vous ne savez plus quelle heure il est ?",
     answers: [
-      { text: "Jamais", points: 0 },
-      { text: "Parfois", points: 10 },
-      { text: "C'est pour ça que j'ai acheté une montre", points: 20 },
-      { text: "Pareil avec la montre", points: 30 },
+      { text: "Quelques minutes plus tard environ", points: 10 },
+      { text: "Immédiatement, je dois reconsulter dans la seconde", points: 30 },
+      { text: "Ça ne m'arrive jamais, je retiens toujours", points: 0 },
+      { text: "Assez rapidement, en moins d'une minute", points: 20 },
     ],
   },
 
-  // SECTION D — Trouble du Sommeil Paradoxal Volontaire
+  // SECTION D — Insomnie Volontaire avec Déni Chronique (IVDC)
   {
     id: 10,
-    section: "Trouble du Sommeil",
+    section: "Insomnie Volontaire avec Déni Chronique (IVDC)",
     question:
-      "L'écart entre le moment où vous dites \"bon allez, au lit\" et celui où vous vous couchez réellement est de :",
+      "Quand vous annoncez « Bon, je vais me coucher », combien de temps mettez-vous réellement à vous coucher ?",
     answers: [
-      { text: "Moins de 15 minutes", points: 0 },
-      { text: "30 minutes à 1 heure", points: 10 },
-      { text: "1 à 2 heures (Syndrome de la Dernière Vidéo YouTube)", points: 20 },
-      { text: "Je dis ça à 22h et je me couche à 2h", points: 30 },
+      { text: "Entre 1h et 2h généralement", points: 20 },
+      { text: "Plus de 3 heures, je me perds dans un trou noir digital", points: 30 },
+      { text: "Environ 30-45 minutes", points: 10 },
+      { text: "Moins de 15 minutes, je suis discipliné(e)", points: 0 },
     ],
   },
   {
     id: 11,
-    section: "Trouble du Sommeil",
+    section: "Insomnie Volontaire avec Déni Chronique (IVDC)",
     question:
-      "Vous avez mis un réveil à 6h en vous disant \"demain je change de vie\". Combien d'alarmes avez-vous actuellement programmées ?",
+      "Combien d'alarmes avez-vous programmées pour vous réveiller le matin ?",
     answers: [
-      { text: "1 seule, je me lève du premier coup", points: 0 },
-      { text: "3 à 5 alarmes", points: 10 },
-      { text: "6 à 9 alarmes", points: 20 },
-      { text: "Plus de 9 (une hospitalisation peut être envisagée)", points: 30 },
+      { text: "Entre 6 et 9 alarmes", points: 20 },
+      { text: "3 à 5 alarmes espacées", points: 10 },
+      { text: "Une seule, je me lève immédiatement", points: 0 },
+      { text: "Plus de 10, et ça ne suffit toujours pas", points: 30 },
     ],
   },
 
-  // SECTION E — Trouble Alimentaire de Type « Bof »
+  // SECTION E — Apathie Nutritionnelle avec Créativité Culinaire Pathologique (ANCCP)
   {
     id: 12,
-    section: "Trouble Alimentaire de Type Bof",
-    question: "\"Qu'est-ce qu'on mange ce soir ?\" provoque chez vous :",
+    section: "Apathie Nutritionnelle avec Créativité Culinaire Pathologique (ANCCP)",
+    question:
+      "Quelle est votre réaction quand on vous demande « Qu'est-ce qu'on mange ce soir ? » ?",
     answers: [
-      { text: "De l'enthousiasme", points: 0 },
-      { text: "De l'anxiété", points: 10 },
-      { text: "Une crise existentielle", points: 20 },
-      { text: "Un Uber Eats", points: 30 },
+      { text: "Un léger stress mais je trouve rapidement une idée", points: 10 },
+      { text: "Je commande directement sur une appli de livraison", points: 30 },
+      { text: "Une vraie crise d'angoisse et une remise en question existentielle", points: 20 },
+      { text: "De l'enthousiasme, j'adore planifier les repas", points: 0 },
     ],
   },
   {
     id: 13,
-    section: "Trouble Alimentaire de Type Bof",
+    section: "Apathie Nutritionnelle avec Créativité Culinaire Pathologique (ANCCP)",
     question:
-      "Vous avez déjà mangé un repas composé exclusivement d'ingrédients qui ne vont pas ensemble en déclarant \"c'est de la fusion\".",
+      "À quelle fréquence assemblez-vous des « repas » avec des ingrédients totalement incompatibles ?",
     answers: [
-      { text: "Jamais, je cuisine correctement", points: 0 },
-      { text: "Une ou deux fois par nécessité", points: 10 },
-      { text: "Régulièrement et sans honte", points: 20 },
-      { text: "Mon dernier plat ferait pleurer Gordon Ramsay", points: 30 },
+      { text: "Constamment, mes créations culinaires sont des crimes gastronomiques", points: 30 },
+      { text: "Jamais, je respecte les règles de base de la cuisine", points: 0 },
+      { text: "Exceptionnellement, quand je n'ai vraiment rien d'autre", points: 10 },
+      { text: "Régulièrement, c'est devenu ma spécialité douteuse", points: 20 },
     ],
   },
 
-  // SECTION F — Méta-Troubles
+  // SECTION F — Trouble Méta-Cognitif d'Auto-Reconnaissance Pathologique (TMCARP)
   {
     id: 14,
-    section: "Méta-Troubles",
+    section: "Trouble Méta-Cognitif d'Auto-Reconnaissance Pathologique (TMCARP)",
     question:
-      "En lisant ce questionnaire, dans combien de questions vous êtes-vous reconnu(e) ?",
+      "Dans combien de questions de ce test vous êtes-vous personnellement reconnu(e) jusqu'à présent ?",
     answers: [
-      { text: "Aucune, je suis parfaitement sain(e)", points: 0 },
-      { text: "3 ou 4, ça arrive à tout le monde", points: 10 },
-      { text: "Plus de 8, c'est un portrait robot", points: 20 },
-      { text: "Toutes. Qui m'espionne ?", points: 30 },
+      { text: "La moitié ou plus, c'est assez précis", points: 20 },
+      { text: "3 ou 4 questions environ", points: 10 },
+      { text: "Quasiment toutes, c'est troublant", points: 30 },
+      { text: "Aucune, ce test ne me concerne pas du tout", points: 0 },
     ],
   },
   {
     id: 15,
-    section: "Méta-Troubles",
+    section: "Trouble Méta-Cognitif d'Auto-Reconnaissance Pathologique (TMCARP)",
     question:
-      "Avez-vous envie d'envoyer ce questionnaire à quelqu'un en disant \"c'est tellement toi\" ?",
+      "Avez-vous envie de partager ce test en taguant quelqu'un avec « mdr c'est toi » ?",
     answers: [
-      { text: "Non, ça ne m'intéresse pas", points: 0 },
-      { text: "Oui, à une personne précise", points: 10 },
-      { text: "Oui, à au moins 5 personnes", points: 20 },
-      {
-        text: "Je souffre du Trouble Compulsif du Partage de Contenu Relatable (TCPCR)",
-        points: 30,
-      },
+      { text: "Absolument, j'ai déjà 5-6 personnes en tête minimum", points: 20 },
+      { text: "Non, ça ne m'intéresse pas vraiment", points: 0 },
+      { text: "Oui, je pense à une personne en particulier", points: 10 },
+      { text: "Je suis déjà en train de créer un groupe dédié pour le partager", points: 30 },
     ],
   },
 ];
@@ -218,58 +216,58 @@ export const dsm6Profiles: DSM6Profile[] = [
   {
     minPercent: 90,
     emoji: "hospital",
-    title: "Cas Clinique Certifié",
-    subtitle: "Page 4 782 du DSM-6",
+    title: "Patient Zéro du DSM-7",
+    subtitle: "Cas d'École Polyvalent - Annexe XII, Appendice ω",
     description:
-      "Le comité éditorial recommande une observation en milieu naturel. Vous n'êtes pas malade, la société n'est juste pas prête pour vous.",
+      "Félicitations ! Vous présentez une comorbidité spectaculaire de 14 troubles simultanés. Le Comité International de Psychiatrie Moderne souhaite vous mettre sous cloche pour observation permanente. Vous n'êtes pas malade, vous êtes une œuvre d'art pathologique.",
   },
   {
     minPercent: 75,
     emoji: "flask-conical",
-    title: "Spécimen Remarquable",
-    subtitle: "Étude de cas en cours",
+    title: "Spécimen de Laboratoire Classe A",
+    subtitle: "Référence bibliographique n°4829-B",
     description:
-      "Votre dossier a été transmis au département de recherche. Pas d'inquiétude, c'est pour la science.",
+      "Votre profil psychologique a été publié dans 3 revues scientifiques (anonymisé, bien sûr). Des étudiants en psychiatrie vous étudient lors de séminaires avancés. La science vous remercie pour votre contribution involontaire.",
   },
   {
     minPercent: 60,
     emoji: "clipboard-list",
-    title: "Pathologie Avancée",
-    subtitle: "Plusieurs syndromes détectés",
+    title: "Syndrome de Cumul Pathologique Avancé",
+    subtitle: "Polytroubles Certifiés - Dossier Épais",
     description:
-      "Vous cumulez le Syndrome de la Dernière Vidéo YouTube et le Trouble du Frigo Vide. Ça commence à faire un beau CV.",
+      "Vous collectionnez les dysfonctionnements comme certains collectionnent les timbres : avec passion et sans discernement. Le SHRC, le TPRDT et le IVDC forment désormais votre Sainte Trinité personnelle. Impressionnant, vraiment.",
   },
   {
     minPercent: 45,
     emoji: "microscope",
-    title: "Déviance Modérée",
-    subtitle: "Sous observation",
+    title: "Déviance Comportementale Modérée",
+    subtitle: "Sous Surveillance Clinique Légère",
     description:
-      "Vous présentez des signes encourageants de dysfonctionnement social. Continuez comme ça, vous avez du potentiel.",
+      "Vous êtes dans cette zone grise fascinante entre « fonctionnel » et « préoccupant ». Continuez sur cette trajectoire et vous pourriez bientôt accéder au niveau supérieur. Le potentiel est là, il suffit de le cultiver.",
   },
   {
     minPercent: 30,
     emoji: "paperclip",
-    title: "Légèrement Dysfonctionnel(le)",
-    subtitle: "Dans la norme... presque",
+    title: "Dysfonctionnement Léger Acceptable",
+    subtitle: "Dans les Normes Statistiques de l'Absurdité Moderne",
     description:
-      "Quelques symptômes bénins mais rien d'alarmant. Le frigo et le téléphone commencent à vous connaître.",
+      "Quelques symptômes bénins mais rien qui justifie une intervention d'urgence. Vous êtes juste légèrement détraqué(e), comme 73% de la population. Bienvenue dans le club des presque-normaux.",
   },
   {
     minPercent: 15,
     emoji: "check",
-    title: "Suspicieusement Normal(e)",
-    subtitle: "Le comité a des doutes",
+    title: "Normalité Suspecte Niveau 2",
+    subtitle: "Alerte Jaune - Déni Probable Détecté",
     description:
-      "Vous prétendez aller bien ? C'est exactement ce que dirait quelqu'un de très atteint. On vous surveille.",
+      "Vous prétendez aller « bien » ? Statistiquement impossible. Soit vous mentez honteusement, soit vous souffrez du Syndrome de Déni Massif Non Diagnostiqué (SDMND). Le Comité garde un œil sur vous. Un œil inquiet.",
   },
   {
     minPercent: 0,
     emoji: "siren",
-    title: "Dangereusement Sain(e) d'Esprit",
-    subtitle: "ALERTE ROUGE",
+    title: "ANOMALIE CRITIQUE - Santé Mentale Parfaite Impossible",
+    subtitle: "🚨 PROTOCOLE ROUGE ACTIVÉ 🚨",
     description:
-      "Ne vous reconnaître dans aucune question est le symptôme le plus grave du DSM-6. Consultez immédiatement.",
+      "ATTENTION : Ne présenter AUCUN symptôme est le signe pathologique le plus alarmant du DSM-6. Vous êtes soit un extra-terrestre infiltré, soit en déni terminal phase 4. Consultation psychiatrique d'urgence recommandée dans les 24 heures. Nous prévenons vos proches.",
   },
 ];
 

@@ -55,7 +55,7 @@ export default function DSM6Home() {
         </div>
 
         {/* Card */}
-        <div className="card max-w-md mx-auto border border-blue">
+        <div className="card max-w-md mx-auto border border-black">
           <div className="flex justify-center mb-4"><Hospital size={36} className="text-black" /></div>
           <h2 className="text-xl font-bold mb-2 text-black">
             Consultation gratuite
@@ -75,7 +75,7 @@ export default function DSM6Home() {
                 }}
                 placeholder="Identifiant patient..."
                 maxLength={20}
-                className="w-full px-5 py-3 rounded-full border border-blue focus:border-blue focus:outline-none text-center text-lg font-semibold transition-colors bg-white placeholder:text-black"
+                className="w-full px-5 py-3 rounded-full border border-black focus:border-black focus:outline-none text-center text-lg font-semibold transition-colors bg-white placeholder:text-black"
               />
               {error && (
                 <p className="text-red text-sm mt-2 font-medium">{error}</p>

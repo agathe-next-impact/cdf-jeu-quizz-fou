@@ -69,7 +69,7 @@ export default function EvasionHome() {
         </div>
 
         {/* Story intro card */}
-        <div className="card max-w-md mx-auto border border-blue text-left mb-6">
+        <div className="card max-w-md mx-auto border border-black text-left mb-6">
           <div className="flex justify-center mb-4"><Hospital size={36} className="text-black" /></div>
           <p className="text-sm text-black leading-relaxed mb-4">
             Vous vous réveillez dans une chambre blanche aseptisée de
@@ -89,7 +89,7 @@ export default function EvasionHome() {
         </div>
 
         {/* Pseudo form */}
-        <div className="card max-w-md mx-auto border border-blue">
+        <div className="card max-w-md mx-auto border border-black">
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <input
@@ -101,7 +101,7 @@ export default function EvasionHome() {
                 }}
                 placeholder="Nom du patient..."
                 maxLength={20}
-                className="w-full px-5 py-3 rounded-full border border-blue focus:border-blue focus:outline-none text-center text-lg font-semibold transition-colors bg-white placeholder:text-black"
+                className="w-full px-5 py-3 rounded-full border border-black focus:border-black focus:outline-none text-center text-lg font-semibold transition-colors bg-white placeholder:text-black"
               />
               {error && (
                 <p className="text-red text-sm mt-2 font-medium">{error}</p>

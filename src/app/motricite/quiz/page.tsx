@@ -12,19 +12,16 @@ import {
 /* ------------------------------------------------------------------ */
 /*  Target type                                                        */
 /* ------------------------------------------------------------------ */
-interface Target {
+interface TargetObj {
   id: number;
   x: number;
   y: number;
   size: number;
   hit: boolean;
-  /** Moving targets: velocity */
   vx: number;
   vy: number;
-  /** Jittery targets: offset */
   jitterX: number;
   jitterY: number;
-  /** Shrinking targets: remaining ratio (1 → 0) */
   shrinkRatio: number;
 }
 
@@ -47,11 +44,12 @@ interface LevelResult {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Constants                                                          */
+/*  Logical arena — all game physics run in this coordinate space      */
 /* ------------------------------------------------------------------ */
 const ARENA_W = 600;
 const ARENA_H = 400;
 const TICK_MS = 16; // ~60fps
+const MIN_TAP_SIZE = 22; // minimum touch target radius in logical px
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -63,20 +61,38 @@ export default function MotriciteQuizPage() {
   /* Game state */
   const [phase, setPhase] = useState<Phase>("level-intro");
   const [currentLevel, setCurrentLevel] = useState(0);
-  const [targets, setTargets] = useState<Target[]>([]);
+  const [targets, setTargets] = useState<TargetObj[]>([]);
   const [hits, setHits] = useState(0);
   const [misses, setMisses] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
   const [levelResults, setLevelResults] = useState<LevelResult[]>([]);
 
+  /* Responsive arena scaling */
+  const arenaContainerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+
   /* Refs for animation loop */
-  const targetsRef = useRef<Target[]>([]);
+  const targetsRef = useRef<TargetObj[]>([]);
   const tickRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hitsRef = useRef(0);
   const missesRef = useRef(0);
   const levelRef = useRef<MotriciteLevel>(motriciteLevels[0]);
   const startTimeRef = useRef(0);
+
+  /* ---------------------------------------------------------------- */
+  /*  Responsive: measure container and compute scale                  */
+  /* ---------------------------------------------------------------- */
+  useEffect(() => {
+    function measure() {
+      if (!arenaContainerRef.current) return;
+      const maxW = arenaContainerRef.current.clientWidth;
+      setScale(Math.min(1, maxW / ARENA_W));
+    }
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [phase]);
 
   /* ---------------------------------------------------------------- */
   /*  Bootstrap                                                        */
@@ -103,8 +119,8 @@ export default function MotriciteQuizPage() {
   /* ---------------------------------------------------------------- */
   /*  Spawn targets for a level                                        */
   /* ---------------------------------------------------------------- */
-  const spawnTargets = useCallback((level: MotriciteLevel): Target[] => {
-    const tgts: Target[] = [];
+  const spawnTargets = useCallback((level: MotriciteLevel): TargetObj[] => {
+    const tgts: TargetObj[] = [];
     for (let i = 0; i < level.targetCount; i++) {
       const size = level.targetSize;
       tgts.push({
@@ -214,21 +230,18 @@ export default function MotriciteQuizPage() {
         timerRef.current = null;
       }
 
-      const level = motriciteLevels[levelIndex];
       const h = hitsRef.current;
       const m = missesRef.current;
       const totalClicks = h + m;
-      // Score = accuracy percentage: hits / total clicks (penalizes misses)
-      // If no clicks at all, score is 0
       const successRate = totalClicks > 0 ? Math.round((h / totalClicks) * 100) : 0;
       const diagnosis = getLevelDiagnosis(levelIndex, successRate);
 
       const result: LevelResult = {
         levelIndex,
-        levelName: level.name,
+        levelName: motriciteLevels[levelIndex].name,
         hits: h,
         misses: m,
-        total: level.targetCount,
+        total: motriciteLevels[levelIndex].targetCount,
         successRate,
         diagnosis,
       };
@@ -240,7 +253,7 @@ export default function MotriciteQuizPage() {
   );
 
   /* ---------------------------------------------------------------- */
-  /*  Handle target click                                              */
+  /*  Handle target click / tap                                        */
   /* ---------------------------------------------------------------- */
   function handleTargetClick(targetId: number) {
     if (phase !== "playing") return;
@@ -255,18 +268,16 @@ export default function MotriciteQuizPage() {
     hitsRef.current += 1;
     setHits(hitsRef.current);
 
-    // Check if all targets hit
     if (cur.every((t) => t.hit)) {
       endLevel(currentLevel);
     }
   }
 
   /* ---------------------------------------------------------------- */
-  /*  Handle arena miss-click                                          */
+  /*  Handle arena miss (mouse + touch)                                */
   /* ---------------------------------------------------------------- */
-  function handleArenaMiss(e: React.MouseEvent<HTMLDivElement>) {
+  function handleArenaMiss(e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) {
     if (phase !== "playing") return;
-    // Only count as miss if clicked on the arena background, not a target
     if ((e.target as HTMLElement).dataset.arena === "true") {
       missesRef.current += 1;
       setMisses(missesRef.current);
@@ -279,9 +290,7 @@ export default function MotriciteQuizPage() {
   function handleNextLevel() {
     const next = currentLevel + 1;
     if (next >= motriciteLevels.length) {
-      // Calculate overall score and go to results
       const allResults = [...levelResults];
-      // The latest result was just pushed by endLevel
       const avgSuccess =
         allResults.length > 0
           ? Math.round(
@@ -304,9 +313,9 @@ export default function MotriciteQuizPage() {
     }
   }
 
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   /*  Render: Level Intro                                              */
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   if (phase === "level-intro") {
     const level = motriciteLevels[currentLevel];
     return (
@@ -326,7 +335,7 @@ export default function MotriciteQuizPage() {
             {level.description}
           </p>
 
-          <div className="card mb-6 border border-blue">
+          <div className="card mb-6 border border-black">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <div className="text-2xl font-black text-blue">
@@ -360,29 +369,32 @@ export default function MotriciteQuizPage() {
     );
   }
 
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   /*  Render: Playing                                                  */
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   if (phase === "playing") {
     const level = motriciteLevels[currentLevel];
+    const renderW = ARENA_W * scale;
+    const renderH = ARENA_H * scale;
+
     return (
       <div className="min-h-[calc(100vh-80px)] flex flex-col items-center px-4 py-6">
         {/* HUD */}
-        <div className="w-full max-w-[640px] flex items-center justify-between mb-4">
-          <div className="text-sm font-bold text-black">
-            Niveau {level.id} — {level.name}
+        <div className="w-full flex items-center justify-between mb-4" style={{ maxWidth: renderW }}>
+          <div className="text-xs sm:text-sm font-bold text-black truncate mr-2">
+            Niv. {level.id} — {level.name}
           </div>
-          <div className="flex gap-4 items-center">
-            <div className="text-sm font-semibold text-blue">
+          <div className="flex gap-2 sm:gap-4 items-center shrink-0">
+            <div className="text-xs sm:text-sm font-semibold text-blue">
               {hits}/{level.targetCount}
             </div>
             {misses > 0 && (
-              <div className="text-sm font-semibold text-red">
+              <div className="text-xs sm:text-sm font-semibold text-red">
                 {misses} raté{misses > 1 ? "s" : ""}
               </div>
             )}
             <div
-              className={`text-lg font-black px-3 py-1 rounded-full ${
+              className={`text-sm sm:text-lg font-black px-2 sm:px-3 py-1 rounded-full ${
                 timeLeft <= 5
                   ? "text-red animate-pulse"
                   : "text-blue"
@@ -393,66 +405,94 @@ export default function MotriciteQuizPage() {
           </div>
         </div>
 
-        {/* Arena */}
-        <div
-          data-arena="true"
-          onClick={handleArenaMiss}
-          className="relative border border-blue rounded-2xl overflow-hidden cursor-crosshair select-none"
-          style={{
-            width: ARENA_W,
-            maxWidth: "100%",
-            height: ARENA_H,
-          }}
-        >
-          {targets.map((t) => {
-            if (t.hit) return null;
-            const displaySize = t.size * t.shrinkRatio;
-            return (
-              <button
-                key={t.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleTargetClick(t.id);
-                }}
-                className="absolute rounded-full focus:outline-none"
-                style={{
-                  width: displaySize * 2,
-                  height: displaySize * 2,
-                  left: t.x + t.jitterX - displaySize,
-                  top: t.y + t.jitterY - displaySize,
-                  backgroundColor: "var(--color-blue)",
-                }}
-              >
-                <span
-                  className="absolute rounded-full"
+        {/* Arena container — measures available width */}
+        <div ref={arenaContainerRef} className="w-full" style={{ maxWidth: ARENA_W }}>
+          <div
+            data-arena="true"
+            onClick={handleArenaMiss}
+            onTouchEnd={handleArenaMiss}
+            className="relative border border-black overflow-hidden select-none"
+            style={{
+              width: renderW,
+              height: renderH,
+              touchAction: "none",
+            }}
+          >
+            {targets.map((t) => {
+              if (t.hit) return null;
+              const displaySize = t.size * t.shrinkRatio;
+              // Ensure minimum tap target on touch devices
+              const tapRadius = Math.max(displaySize, MIN_TAP_SIZE);
+
+              return (
+                <button
+                  key={t.id}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleTargetClick(t.id);
+                  }}
+                  onTouchEnd={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    handleTargetClick(t.id);
+                  }}
+                  className="absolute rounded-full focus:outline-none"
                   style={{
-                    width: displaySize * 0.6,
-                    height: displaySize * 0.6,
-                    top: displaySize * 0.3,
-                    left: displaySize * 0.3,
+                    /* Tap area: invisible larger zone */
+                    width: tapRadius * 2 * scale,
+                    height: tapRadius * 2 * scale,
+                    left: (t.x + t.jitterX - tapRadius) * scale,
+                    top: (t.y + t.jitterY - tapRadius) * scale,
+                    /* Transparent — the visible circle is the inner span */
+                    background: "transparent",
+                  }}
+                >
+                  {/* Visible target circle */}
+                  <span
+                    className="absolute rounded-full"
+                    style={{
+                      width: displaySize * 2 * scale,
+                      height: displaySize * 2 * scale,
+                      left: (tapRadius - displaySize) * scale,
+                      top: (tapRadius - displaySize) * scale,
+                      backgroundColor: "var(--color-blue)",
+                    }}
+                  >
+                    {/* Inner dot */}
+                    <span
+                      className="absolute rounded-full"
+                      style={{
+                        width: displaySize * 0.6 * 2 * scale,
+                        height: displaySize * 0.6 * 2 * scale,
+                        top: displaySize * 0.4 * scale,
+                        left: displaySize * 0.4 * scale,
+                        backgroundColor: "var(--color-blue)",
+                        opacity: 0.5,
+                      }}
+                    />
+                  </span>
+                </button>
+              );
+            })}
+
+            {/* Hit effects */}
+            {targets
+              .filter((t) => t.hit)
+              .map((t) => (
+                <div
+                  key={`hit-${t.id}`}
+                  className="absolute pointer-events-none animate-ping"
+                  style={{
+                    width: 20 * scale,
+                    height: 20 * scale,
+                    left: (t.x - 10) * scale,
+                    top: (t.y - 10) * scale,
+                    borderRadius: "50%",
+                    backgroundColor: "var(--color-blue)",
                   }}
                 />
-              </button>
-            );
-          })}
-
-          {/* Hit effects */}
-          {targets
-            .filter((t) => t.hit)
-            .map((t) => (
-              <div
-                key={`hit-${t.id}`}
-                className="absolute pointer-events-none animate-ping"
-                style={{
-                  width: 20,
-                  height: 20,
-                  left: t.x - 10,
-                  top: t.y - 10,
-                  borderRadius: "50%",
-                  backgroundColor: "var(--color-blue)",
-                }}
-              />
-            ))}
+              ))}
+          </div>
         </div>
 
         {/* Miss counter */}
@@ -465,9 +505,9 @@ export default function MotriciteQuizPage() {
     );
   }
 
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   /*  Render: Level Result                                             */
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   if (phase === "level-result") {
     const lastResult = levelResults[levelResults.length - 1];
     if (!lastResult) return null;
@@ -511,7 +551,7 @@ export default function MotriciteQuizPage() {
           </div>
 
           {/* Diagnosis card */}
-          <div className="card border border-blue text-left mb-6">
+          <div className="card border border-black text-left mb-6">
             <div className="flex items-center gap-2 mb-2">
               <span
                 className={`text-xs font-black px-2 py-0.5 rounded-full uppercase ${
@@ -544,9 +584,9 @@ export default function MotriciteQuizPage() {
     );
   }
 
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   /*  Render: Done (redirect)                                          */
-  /* ---------------------------------------------------------------- */
+  /* ================================================================ */
   return (
     <div className="min-h-[calc(100vh-80px)] flex items-center justify-center">
       <div className="text-xl text-blue animate-pulse">

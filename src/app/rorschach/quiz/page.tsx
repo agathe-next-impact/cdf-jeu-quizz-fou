@@ -183,19 +183,18 @@ export default function RorschachQuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Tache {currentQuestion + 1}/{rorschachQuestions.length}
             </span>
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Sujet {pseudo} &mdash; {score} pts
             </span>
           </div>
           <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-yellow"
               style={{
                 width: `${progress}%`,
-                backgroundColor: "var(--color-blue)",
               }}
             />
           </div>
@@ -204,7 +203,7 @@ export default function RorschachQuizPage() {
         {/* Inkblot display */}
         <div
           key={question.id}
-          className="card mb-6 text-center animate-slide-up border border-blue bg-white"
+          className="card mb-6 text-center animate-slide-up border border-black bg-white"
         >
           <div className="mb-4">
             <InkBlot seed={question.blotSeed} colors={question.blotColors} />
@@ -220,7 +219,7 @@ export default function RorschachQuizPage() {
             const isSelected = selectedAnswer === index;
 
             let bgClass =
-              "bg-white border border-blue hover:border-blue";
+              "bg-white border border-black hover:border-black";
             if (showFeedback && isSelected) {
               if (answeredPoints >= 25)
                 bgClass =
@@ -264,7 +263,7 @@ export default function RorschachQuizPage() {
 
         {/* Interpretation feedback */}
         {showFeedback && interpretation && (
-          <div className="mt-4 card border border-blue animate-slide-up">
+          <div className="mt-4 card border border-black animate-slide-up">
             <p className="text-sm text-black italic font-medium text-center">
               <span className="text-blue font-bold">Analyse :</span>{" "}
               {interpretation}

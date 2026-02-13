@@ -140,14 +140,14 @@ export default function CognitifQuizPage() {
         {/* Progress bar */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-bold text-black">
+            <span className="text-xs font-bold text-yellow">
               Question {currentIndex + 1}/{cognitifQuestions.length}
             </span>
             <span
               className={`text-sm font-black ${
                 timeLeft <= 10
                   ? "text-red animate-pulse"
-                  : "text-black"
+                  : "text-yellow"
               }`}
             >
               {timeLeft}s
@@ -155,7 +155,7 @@ export default function CognitifQuizPage() {
           </div>
           <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out bg-red"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-yellow"
               style={{
                 width: `${progress}%`,
               }}

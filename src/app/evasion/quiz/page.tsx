@@ -96,16 +96,16 @@ export default function EvasionQuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Scène {currentQuestion + 1}/{evasionQuestions.length}
             </span>
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Patient {pseudo}
             </span>
           </div>
           <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out bg-blue"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-yellow"
               style={{
                 width: `${progress}%`,
               }}
@@ -148,12 +148,12 @@ export default function EvasionQuizPage() {
         {/* Story narrative */}
         <div
           key={question.id}
-          className="card mb-6 animate-slide-up border border-blue bg-white"
+          className="card mb-6 animate-slide-up border border-black bg-white"
         >
           <p className="text-sm text-black leading-relaxed italic mb-4">
             {question.story}
           </p>
-          <div className="border-t border-blue pt-4">
+          <div className="border-t border-black pt-4">
             <p className="text-base font-bold text-blue">
               <span className="text-blue">Dr. Moreau :</span>{" "}
               &laquo; {question.question} &raquo;
@@ -167,7 +167,7 @@ export default function EvasionQuizPage() {
             const isSelected = selectedAnswer === index;
 
             let bgClass =
-              "bg-white border border-blue hover:border-blue";
+              "bg-white border border-black hover:border-black";
             if (showFeedback && isSelected) {
               bgClass =
                 lastPoints < 0

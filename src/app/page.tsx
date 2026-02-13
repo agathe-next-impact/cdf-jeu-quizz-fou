@@ -76,10 +76,10 @@ export default function HomePage() {
         {/* Hero */}
         <div className="text-center mb-14 animate-slide-up">
           <h1 className="text-5xl md:text-6xl font-black text-black leading-tight mb-4">
-            Comme des Fous
+            
           </h1>
-          <p className="text-lg text-black font-medium max-w-md mx-auto">
-            Choisis ton jeu, montre que tu es le plus fou et grimpe dans les classements !
+          <p className="text-2xl text-black font-medium max-w-md mx-auto">
+            Qui veut gagner des médocs ?
           </p>
         </div>
 
@@ -87,7 +87,7 @@ export default function HomePage() {
         <div className="text-center mb-8 animate-slide-up" style={{ animationDelay: "0.05s" }}>
           <Link
             href="/hall-of-fame"
-            className="inline-flex items-center gap-2 bg-blue text-white font-bold px-6 py-3 rounded-full hover:scale-105 transition-transform"
+            className="inline-flex items-center gap-2 bg-yellow text-[#000000] font-bold px-6 py-3 rounded-full hover:scale-105 transition-transform"
           >
             <Trophy size={20} />
             Hall of Fame — Top 10 des plus fous

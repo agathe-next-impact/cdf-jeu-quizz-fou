@@ -121,16 +121,16 @@ export default function EvaluationQuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Question {currentQuestion + 1}/{evaluationQuestions.length}
             </span>
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Patient {pseudo} &mdash; {score} pts
             </span>
           </div>
           <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out bg-blue"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-yellow"
               style={{
                 width: `${progress}%`,
               }}
@@ -141,7 +141,7 @@ export default function EvaluationQuizPage() {
         {/* Emoji display */}
         <div
           key={question.id}
-          className="card mb-6 text-center animate-slide-up border border-blue bg-white"
+          className="card mb-6 text-center animate-slide-up border border-black bg-white"
         >
           <div className="flex justify-center my-6 animate-float">
             <GameIcon name={question.emoji} size={120} />
@@ -157,7 +157,7 @@ export default function EvaluationQuizPage() {
             const isSelected = selectedAnswer === index;
 
             let bgClass =
-              "bg-white border border-blue hover:border-blue";
+              "bg-white border border-black hover:border-black";
             if (showFeedback && isSelected) {
               bgClass =
                 "border border-red scale-[1.02]";

@@ -101,7 +101,7 @@ h1 {
 
 .btn-secondary {
   background: oklch(82.8% 0.189 84.429);
-  color: var(--color-black);
+  color: #000000;
   padding: 14px 32px;
   font-weight: 700;
   font-size: 1.1rem;
@@ -117,13 +117,44 @@ h1 {
 }
 
 .card {
+  position: relative;
   background: var(--card-bg);
-  padding: 2rem;
+  padding: 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
   transition: all 0.3s ease, background-color 0.3s ease;
 }
 
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  width: 0.75rem;
+  height: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--color-yellow);
+  border-left: 2px solid var(--color-yellow);
+}
+
+.card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--color-red);
+  border-right: 2px solid var(--color-red);
+}
+
+.card:hover::before,
+.card:hover::after {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
 .card:hover {
-  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--foreground) 3%, var(--card-bg));
 }
 
 .gradient-bg {

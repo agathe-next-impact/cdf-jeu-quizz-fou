@@ -83,16 +83,16 @@ export default function DSM6QuizPage() {
         {/* Progress bar */}
         <div className="mb-6 animate-slide-up">
           <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Question {currentQuestion + 1}/{dsm6Questions.length}
             </span>
-            <span className="text-sm font-bold text-blue">
+            <span className="text-sm font-bold text-yellow">
               Patient {pseudo} — {score} pts
             </span>
           </div>
           <div className="w-full rounded-full h-3 overflow-hidden">
             <div
-              className="h-full rounded-full transition-all duration-500 ease-out bg-blue"
+              className="h-full rounded-full transition-all duration-500 ease-out bg-yellow"
               style={{
                 width: `${progress}%`,
               }}
@@ -108,7 +108,7 @@ export default function DSM6QuizPage() {
         </div>
 
         {/* Question card */}
-        <div key={question.id} className="card mb-6 text-center animate-slide-up border border-blue">
+        <div key={question.id} className="card mb-6 text-center animate-slide-up border border-black">
           <h2 className="text-xl md:text-2xl font-black text-black leading-snug">
             {question.question}
           </h2>
@@ -122,7 +122,7 @@ export default function DSM6QuizPage() {
             const isMedPoints = showFeedback && isSelected && answeredPoints >= 10 && answeredPoints < 25;
             const isLowPoints = showFeedback && isSelected && answeredPoints < 10;
 
-            let bgClass = "bg-white border border-blue hover:border-blue";
+            let bgClass = "bg-white border border-black hover:border-black";
             if (isHighPoints) bgClass = "border border-red scale-[1.02]";
             if (isMedPoints) bgClass = "border border-yellow scale-[1.02]";
             if (isLowPoints) bgClass = "border border-blue scale-[1.02]";
