@@ -2,13 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { addEvasionScore, getEvasionScores } from "@/data/evasion-scores";
 import type { EvasionPlayerAnswer } from "@/data/evasion-scores";
 import { getEvasionOutcome } from "@/data/evasion-questions";
+import { findPlayerByPseudo } from "@/data/players";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = await getEvasionScores();
-    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    const { getRegisteredPseudos } = await import("@/data/players");
+    const [scores, registered] = await Promise.all([getEvasionScores(), getRegisteredPseudos()]);
+    const publicScores = scores
+      .filter((s) => registered.has(s.pseudo.toLowerCase()))
+      .map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
     console.error("GET /api/evasion-scores error:", err);
@@ -32,6 +36,11 @@ export async function POST(request: NextRequest) {
 
   if (typeof score !== "number" || score < 0) {
     return NextResponse.json({ error: "Score invalide" }, { status: 400 });
+  }
+
+  const player = await findPlayerByPseudo(pseudo.trim());
+  if (!player) {
+    return NextResponse.json({ error: "Inscription requise pour enregistrer un score" }, { status: 403 });
   }
 
   const outcome = getEvasionOutcome(score);

@@ -2,13 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { addDSM6Score, getDSM6Scores } from "@/data/dsm6-scores";
 import type { DSM6PlayerAnswer } from "@/data/dsm6-scores";
 import { dsm6Questions, getDSM6Profile } from "@/data/dsm6-questions";
+import { findPlayerByPseudo } from "@/data/players";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = await getDSM6Scores();
-    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    const { getRegisteredPseudos } = await import("@/data/players");
+    const [scores, registered] = await Promise.all([getDSM6Scores(), getRegisteredPseudos()]);
+    const publicScores = scores
+      .filter((s) => registered.has(s.pseudo.toLowerCase()))
+      .map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
     console.error("GET /api/dsm6-scores error:", err);
@@ -32,6 +36,11 @@ export async function POST(request: NextRequest) {
 
   if (typeof score !== "number" || score < 0) {
     return NextResponse.json({ error: "Score invalide" }, { status: 400 });
+  }
+
+  const player = await findPlayerByPseudo(pseudo.trim());
+  if (!player) {
+    return NextResponse.json({ error: "Inscription requise pour enregistrer un score" }, { status: 403 });
   }
 
   const maxScore = dsm6Questions.length * 30;

@@ -2,13 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { addCognitifScore, getCognitifScores } from "@/data/cognitif-scores";
 import type { CognitifPlayerAnswer } from "@/data/cognitif-scores";
 import { calculateIQ, getCognitifProfile } from "@/data/cognitif-questions";
+import { findPlayerByPseudo } from "@/data/players";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = await getCognitifScores();
-    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    const { getRegisteredPseudos } = await import("@/data/players");
+    const [scores, registered] = await Promise.all([getCognitifScores(), getRegisteredPseudos()]);
+    const publicScores = scores
+      .filter((s) => registered.has(s.pseudo.toLowerCase()))
+      .map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
     console.error("GET /api/cognitif-scores error:", err);
@@ -32,6 +36,11 @@ export async function POST(request: NextRequest) {
 
   if (typeof score !== "number" || score < 0) {
     return NextResponse.json({ error: "Score invalide" }, { status: 400 });
+  }
+
+  const player = await findPlayerByPseudo(pseudo.trim());
+  if (!player) {
+    return NextResponse.json({ error: "Inscription requise pour enregistrer un score" }, { status: 403 });
   }
 
   const iq = calculateIQ(score);
