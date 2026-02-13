@@ -321,15 +321,14 @@ async function wpUpdatePlayerProfile(
 /*  Password reset                                                      */
 /* ------------------------------------------------------------------ */
 export async function updatePlayerPassword(
-  pseudo: string,
-  email: string,
+  identifier: string,
   newPassword: string
 ): Promise<boolean> {
   if (isWordPressConfigured()) {
-    return wpUpdatePlayerPassword(pseudo, email, newPassword);
+    return wpUpdatePlayerPassword(identifier, newPassword);
   }
   const player = memoryPlayers.find(
-    (p) => p.pseudo.toLowerCase() === pseudo.toLowerCase() && p.email === email.toLowerCase().trim()
+    (p) => p.pseudo.toLowerCase() === identifier.toLowerCase() || p.email.toLowerCase() === identifier.toLowerCase().trim()
   );
   if (!player) return false;
   player.passwordHash = hashPassword(newPassword);
@@ -337,13 +336,14 @@ export async function updatePlayerPassword(
 }
 
 async function wpUpdatePlayerPassword(
-  pseudo: string,
-  email: string,
+  identifier: string,
   newPassword: string
 ): Promise<boolean> {
-  const player = await wpFindPlayerByPseudo(pseudo);
+  let player = await wpFindPlayerByPseudo(identifier);
+  if (!player) {
+    player = await wpFindPlayerByEmail(identifier);
+  }
   if (!player) return false;
-  if (player.email.toLowerCase() !== email.toLowerCase().trim()) return false;
 
   const updateRes = await fetch(`${WP_URL}/wp-json/wp/v2/cdf-players/${player.id}`, {
     method: "POST",

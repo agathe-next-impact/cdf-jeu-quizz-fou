@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updatePlayerPassword } from "@/data/players";
+import { consumeResetToken } from "@/lib/reset-tokens";
 
 export const dynamic = "force-dynamic";
 
@@ -11,14 +12,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "JSON invalide" }, { status: 400 });
   }
 
-  const { pseudo, email, newPassword } = body;
+  const { token, newPassword } = body;
 
-  if (!pseudo || typeof pseudo !== "string" || pseudo.trim().length < 2) {
-    return NextResponse.json({ error: "Pseudo requis" }, { status: 400 });
-  }
-
-  if (!email || typeof email !== "string" || !email.includes("@")) {
-    return NextResponse.json({ error: "Email invalide" }, { status: 400 });
+  if (!token || typeof token !== "string") {
+    return NextResponse.json(
+      { error: "Token de réinitialisation manquant" },
+      { status: 400 }
+    );
   }
 
   if (!newPassword || typeof newPassword !== "string" || newPassword.length < 4) {
@@ -28,12 +28,20 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  const tokenData = consumeResetToken(token);
+  if (!tokenData) {
+    return NextResponse.json(
+      { error: "Lien expiré ou déjà utilisé. Fais une nouvelle demande." },
+      { status: 400 }
+    );
+  }
+
   try {
-    const updated = await updatePlayerPassword(pseudo.trim(), email.trim(), newPassword);
+    const updated = await updatePlayerPassword(tokenData.pseudo, newPassword);
     if (!updated) {
       return NextResponse.json(
-        { error: "Pseudo et email ne correspondent à aucun compte" },
-        { status: 404 }
+        { error: "Erreur lors de la mise à jour du mot de passe" },
+        { status: 500 }
       );
     }
 

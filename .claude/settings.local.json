@@ -13,7 +13,8 @@
       "Bash(powershell -Command:*)",
       "Bash(node -e:*)",
       "Bash(node:*)",
-      "Bash(del:*)"
+      "Bash(del:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }
