@@ -124,7 +124,7 @@ export default function HallOfFamePage() {
                       </div>
 
                       {/* Avatar */}
-                      <div className="hidden sm:flex w-10 h-10 rounded-full bg-black items-center justify-center shrink-0">
+                      <div className="hidden sm:flex w-10 h-10 rounded-full bg-transparent items-center justify-center shrink-0">
                         <GameIcon name={entry.avatar} size={22} />
                       </div>
 
