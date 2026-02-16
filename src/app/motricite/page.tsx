@@ -58,7 +58,7 @@ export default function MotriciteHome() {
           <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
             Test neuromoteur officiel
           </div>
-          <h1 className="text-4xl md:text-5xl font-black mb-3 leading-tight text-blue">
+          <h1 className="text-4xl md:text-5xl font-black mb-3 leading-tight text-foreground">
             Test de Motricité Fine
           </h1>
           <p className="text-base text-black font-medium leading-relaxed">
@@ -71,7 +71,7 @@ export default function MotriciteHome() {
           <div className="flex justify-center mb-4"><Target size={36} className="text-black" /></div>
           <p className="text-sm text-black leading-relaxed mb-4">
             Ce test scientifique mesure la précision de vos mouvements à travers
-            <span className="font-bold text-blue"> 5 niveaux</span> de
+            <span className="font-bold text-red"> 5 niveaux</span> de
             difficulté croissante. Cliquez sur les cibles le plus rapidement et
             précisément possible.
           </p>
@@ -79,7 +79,7 @@ export default function MotriciteHome() {
             Les cibles changent de comportement à chaque niveau : statiques,
             rétrécissantes, mobiles, tremblantes, puis tout à la fois.
           </p>
-          <p className="text-sm font-bold text-blue text-center">
+          <p className="text-lg font-medium text-red text-center">
             Chaque clic raté sera analysé. Votre système nerveux sera jugé.
           </p>
         </div>
@@ -143,7 +143,7 @@ export default function MotriciteHome() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Avertissement : ce test n&apos;est pas reconnu par la communauté
           médicale. Les diagnostics sont aussi fiables qu&apos;un horoscope.
         </p>

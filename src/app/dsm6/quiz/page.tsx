@@ -154,9 +154,9 @@ export default function DSM6QuizPage() {
         {/* Score bar */}
         <div className="mt-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
-            <span className="text-sm font-medium text-blue">Indice de folie</span>
-            <span className="text-lg font-black text-blue">{score}</span>
-            <span className="text-sm text-blue">/ {maxScore}</span>
+            <span className="text-sm font-medium text-yellow">Indice de folie</span>
+            <span className="text-lg font-black text-yellow">{score}</span>
+            <span className="text-sm text-yellow">/ {maxScore}</span>
           </div>
         </div>
       </div>

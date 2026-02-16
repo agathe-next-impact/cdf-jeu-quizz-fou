@@ -42,7 +42,7 @@ export default function DSM6ClassementPage() {
         {/* Header */}
         <div className="text-center mb-10 animate-slide-up">
           <div className="flex justify-center mb-4"><Hospital size={48} className="text-black" /></div>
-          <h1 className="text-4xl md:text-5xl font-black mb-2 text-black">
+          <h1 className="text-4xl md:text-5xl font-black mb-2 text-foreground">
             Classement DSM-6
           </h1>
           <p className="text-black font-medium">

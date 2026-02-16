@@ -58,7 +58,7 @@ export default function EvaluationHome() {
             Certifié par l&apos;Institut Imaginaire de Pseudo-Psychologie
           </div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-3 leading-tight text-blue"
+            className="text-4xl md:text-5xl font-black mb-3 leading-tight text-foreground"
           >
             Évaluation Émotionnelle
           </h1>
@@ -127,7 +127,7 @@ export default function EvaluationHome() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Ce test scientifique ultra-précis déterminera avec exactitude vos
           troubles psychologiques cachés. Toute ressemblance avec de vraies
           pathologies est purement intentionnelle.

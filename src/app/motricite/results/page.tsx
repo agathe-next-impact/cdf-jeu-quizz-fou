@@ -132,10 +132,10 @@ export default function MotriciteResultsPage() {
             Rapport Neuromoteur
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-black mb-1 leading-tight text-blue">
+          <h1 className="text-3xl md:text-4xl font-medium mb-1 leading-tight text-foreground">
             {profile.title}
           </h1>
-          <p className="text-sm font-semibold text-blue mb-2">
+          <p className="text-sm font-medium text-foreground mb-2">
             {profile.subtitle}
           </p>
           <p className="text-lg text-black font-medium">
@@ -158,7 +158,7 @@ export default function MotriciteResultsPage() {
           >
             {result.score}%
           </div>
-          <div className="text-sm text-blue font-medium mb-4">
+          <div className="text-sm text-foreground font-medium mb-4">
             Précision globale
           </div>
 
@@ -183,11 +183,11 @@ export default function MotriciteResultsPage() {
 
         {/* Profile description */}
         <div className="card mb-6 border border-blue">
-          <p className="text-sm text-black leading-relaxed italic mb-4">
+          <p className="text-sm text-foreground leading-relaxed italic mb-4">
             &laquo; {profile.description} &raquo;
           </p>
-          <div className="border-t border-blue pt-3">
-            <p className="text-xs font-bold text-blue uppercase mb-1">
+          <div className="border-t border-red pt-3">
+            <p className="text-xs font-bold text-red uppercase mb-1">
               Recommandation
             </p>
             <p className="text-sm text-black leading-relaxed">
@@ -199,7 +199,7 @@ export default function MotriciteResultsPage() {
         {/* Per-level breakdown */}
         {levelResults.length > 0 && (
           <>
-            <h2 className="text-xl font-black mb-4 text-blue">
+            <h2 className="text-xl font-black mb-4 text-foreground">
               Détail par niveau
             </h2>
 
@@ -309,7 +309,7 @@ export default function MotriciteResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic text-center">
+        <p className="mt-8 text-xs text-foreground italic text-center">
           Ce rapport a été rédigé par un algorithme qui n&apos;a aucune formation
           médicale. Toute ressemblance avec un vrai diagnostic est purement
           fortuite.

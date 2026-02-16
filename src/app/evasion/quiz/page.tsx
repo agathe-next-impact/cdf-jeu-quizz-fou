@@ -154,8 +154,8 @@ export default function EvasionQuizPage() {
             {question.story}
           </p>
           <div className="border-t border-black pt-4">
-            <p className="text-base font-bold text-blue">
-              <span className="text-blue">Dr. Moreau :</span>{" "}
+            <p className="text-lg font-bold text-foreground">
+              <span className="text-yellow">Dr. Moreau :</span>{" "}
               &laquo; {question.question} &raquo;
             </p>
           </div>

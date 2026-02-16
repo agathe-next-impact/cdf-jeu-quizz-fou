@@ -228,13 +228,13 @@ export default function CognitifQuizPage() {
             {!showHint ? (
               <button
                 onClick={() => setShowHint(true)}
-                className="text-xs text-blue hover:text-blue font-semibold mb-4 transition-colors inline-flex items-center gap-1"
+                className="text-xs text-foreground hover:text-foreground font-semibold mb-4 transition-colors inline-flex items-center gap-1"
               >
                 <Lightbulb size={14} /> Afficher l&apos;indice
               </button>
             ) : (
               <div className="rounded-xl p-3 mb-4 animate-slide-up">
-                <p className="text-xs text-blue italic inline-flex items-center gap-1">
+                <p className="text-xs text-fore italic inline-flex items-center gap-1">
                   <Lightbulb size={14} /> {q.hint}
                 </p>
               </div>

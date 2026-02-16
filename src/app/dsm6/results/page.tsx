@@ -104,10 +104,10 @@ export default function DSM6ResultsPage() {
         <div className="inline-block text-red text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-3">
           Diagnostic DSM-6
         </div>
-        <h1 className="text-3xl md:text-4xl font-black mb-1 leading-tight text-black">
+        <h1 className="text-3xl md:text-4xl font-regular mb-1 leading-tight text-black">
           {profile.title}
         </h1>
-        <p className="text-sm font-semibold text-blue mb-2">{profile.subtitle}</p>
+        <p className="text-sm font-semibold text-yellow mb-2">{profile.subtitle}</p>
 
         {/* Pseudo */}
         <p className="text-lg text-black font-medium mb-6">
@@ -124,10 +124,10 @@ export default function DSM6ResultsPage() {
         {/* Score card */}
         <div className="card mb-8">
           <div className="mb-6">
-            <div className="text-5xl font-black text-blue mb-1">
+            <div className="text-5xl font-black text-foreground mb-1">
               {result.score}
             </div>
-            <div className="text-sm text-blue font-medium">
+            <div className="text-sm text-foreground font-medium">
               points sur {maxScore}
             </div>
           </div>
@@ -135,13 +135,13 @@ export default function DSM6ResultsPage() {
           {/* Score bar */}
           <div className="w-full rounded-full h-4 overflow-hidden mb-4">
             <div
-              className="h-full rounded-full transition-all duration-1000 ease-out bg-blue"
+              className="h-full rounded-full transition-all duration-1000 ease-out bg-yellow"
               style={{
                 width: `${percentage}%`,
               }}
             />
           </div>
-          <div className="text-sm font-bold text-blue">
+          <div className="text-sm font-bold text-foreground">
             Indice de pathologie : {percentage}%
           </div>
         </div>
@@ -166,7 +166,7 @@ export default function DSM6ResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Ce diagnostic est garanti sans aucune valeur médicale. Envoyez-le à vos proches pour confirmation.
         </p>
       </div>

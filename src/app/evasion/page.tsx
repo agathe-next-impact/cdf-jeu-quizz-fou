@@ -59,7 +59,7 @@ export default function EvasionHome() {
             Un jeu dont vous êtes le héros
           </div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-3 leading-tight text-blue"
+            className="text-4xl md:text-5xl font-black mb-3 leading-tight text-foreground"
           >
             Évasion Psychiatrique
           </h1>
@@ -78,11 +78,11 @@ export default function EvasionHome() {
           </p>
           <p className="text-sm text-black leading-relaxed mb-4">
             Une infirmière vous informe que le{" "}
-            <span className="font-bold text-blue">Dr. Moreau</span>,
+            <span className="font-bold text-red">Dr. Moreau</span>,
             psychiatre en chef, va vous évaluer pour déterminer votre date de
             sortie.
           </p>
-          <p className="text-sm font-bold text-blue text-center">
+          <p className="text-base font-medium text-red text-center">
             Chaque réponse compte. Saurez-vous convaincre le docteur de votre
             stabilité mentale ?
           </p>
@@ -147,7 +147,7 @@ export default function EvasionHome() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Avertissement : le Dr. Moreau n&apos;est pas un vrai psychiatre.
           Aucun patient n&apos;a été maltraité durant la conception de ce jeu.
         </p>

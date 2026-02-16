@@ -327,7 +327,7 @@ export default function MotriciteQuizPage() {
             Niveau {level.id} / {motriciteLevels.length}
           </div>
 
-          <h1 className="text-3xl font-black mb-2 text-blue">
+          <h1 className="text-3xl font-black mb-2 text-foreground">
             {level.name}
           </h1>
 
@@ -338,19 +338,19 @@ export default function MotriciteQuizPage() {
           <div className="card mb-6 border border-black">
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
-                <div className="text-2xl font-black text-blue">
+                <div className="text-2xl font-black text-foreground">
                   {level.targetCount}
                 </div>
                 <div className="text-xs text-black">cibles</div>
               </div>
               <div>
-                <div className="text-2xl font-black text-blue">
+                <div className="text-2xl font-black text-foreground">
                   {level.targetSize}px
                 </div>
                 <div className="text-xs text-black">taille</div>
               </div>
               <div>
-                <div className="text-2xl font-black text-blue">
+                <div className="text-2xl font-black text-foreground">
                   {level.duration}s
                 </div>
                 <div className="text-xs text-black">temps</div>

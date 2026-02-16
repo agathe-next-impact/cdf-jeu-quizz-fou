@@ -54,7 +54,7 @@ export default function RorschachHome() {
       <div className="animate-slide-up max-w-lg w-full text-center relative z-10">
         {/* Title */}
         <div className="mb-8">
-          <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
+          <div className="inline-block text-red text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
             Évaluation Psychologique Officieuse&trade;
           </div>
           <h1
@@ -124,7 +124,7 @@ export default function RorschachHome() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Avertissement : toute réponse sera utilisée contre votre
           santé mentale. Il n&apos;y a pas de bonne réponse.
         </p>

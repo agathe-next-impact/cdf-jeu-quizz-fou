@@ -115,11 +115,11 @@ export default function RorschachResultsPage() {
           Rapport Rorschach
         </div>
         <h1
-          className="text-3xl md:text-4xl font-black mb-1 leading-tight text-black"
+          className="text-3xl md:text-4xl font-regular mb-1 leading-tight text-black"
         >
           {profile.title}
         </h1>
-        <p className="text-sm font-semibold text-blue mb-2">
+        <p className="text-sm font-semibold text-yellow mb-2">
           {profile.subtitle}
         </p>
 
@@ -129,7 +129,7 @@ export default function RorschachResultsPage() {
         </p>
 
         {/* Description */}
-        <div className="card mb-6 border border-blue">
+        <div className="card mb-6 border border-yellow">
           <p className="text-sm text-black leading-relaxed italic">
             &laquo; {profile.description} &raquo;
           </p>
@@ -138,10 +138,10 @@ export default function RorschachResultsPage() {
         {/* Score card */}
         <div className="card mb-8">
           <div className="mb-6">
-            <div className="text-5xl font-black text-blue mb-1">
+            <div className="text-5xl font-black text-foreground mb-1">
               {result.score}
             </div>
-            <div className="text-sm text-blue font-medium">
+            <div className="text-sm text-foreground font-medium">
               points sur {maxScore}
             </div>
           </div>
@@ -152,11 +152,11 @@ export default function RorschachResultsPage() {
               className="h-full rounded-full transition-all duration-1000 ease-out"
               style={{
                 width: `${percentage}%`,
-                backgroundColor: "var(--color-blue)",
+                backgroundColor: "var(--color-yellow)",
               }}
             />
           </div>
-          <div className="text-sm font-bold text-blue">
+          <div className="text-sm font-bold text-foreground">
             Indice de pathologie : {percentage}%
           </div>
         </div>
@@ -184,7 +184,7 @@ export default function RorschachResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Ce rapport est garanti sans aucune valeur scientifique. Partagez-le
           pour alarmer vos proches.
         </p>

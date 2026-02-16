@@ -63,13 +63,13 @@ export default function HomePage() {
     <div className="min-h-[calc(100vh-80px)] px-4 py-12 relative overflow-hidden">
       {/* Decorative floaters */}
       <div className="absolute top-24 left-8 animate-float select-none">
-        <Tent size={56} className="text-black/20" />
+        <Tent size={56} className="text-red/20" />
       </div>
       <div className="absolute top-40 right-12 animate-float select-none" style={{ animationDelay: "1.2s" }}>
-        <Drama size={48} className="text-black/20" />
+        <Drama size={48} className="text-red/20" />
       </div>
       <div className="absolute bottom-16 left-16 animate-float select-none" style={{ animationDelay: "2.4s" }}>
-        <PartyPopper size={48} className="text-black/20" />
+        <PartyPopper size={48} className="text-red/20" />
       </div>
 
       <div className="max-w-4xl mx-auto relative z-10">
@@ -104,7 +104,7 @@ export default function HomePage() {
               style={{ animationDelay: `${i * 0.1}s` }}
             >
               <div className="mb-4">
-                <game.icon size={48} className="text-black" />
+                <game.icon size={48} className="text-red" />
               </div>
 
               <h2 className="text-xl font-black text-black mb-2 group-hover:text-red transition-colors">

@@ -42,7 +42,7 @@ export default function MotriciteClassementPage() {
         {/* Header */}
         <div className="text-center mb-10 animate-slide-up">
           <div className="flex justify-center mb-4"><Target size={48} className="text-black" /></div>
-          <h1 className="text-4xl md:text-5xl font-black mb-2 text-blue">
+          <h1 className="text-4xl md:text-5xl font-black mb-2 text-foreground">
             Classement Motricité
           </h1>
           <p className="text-black font-medium">

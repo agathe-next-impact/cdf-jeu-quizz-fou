@@ -142,7 +142,7 @@ export default function CognitifResultsPage() {
           </div>
 
           <h1
-            className="text-3xl md:text-4xl font-black mb-1 leading-tight text-red"
+            className="text-3xl md:text-4xl font-medium mb-1 leading-tight text-yellow"
           >
             {profile.title}
           </h1>
@@ -228,7 +228,7 @@ export default function CognitifResultsPage() {
         {questionResults.length > 0 && (
           <>
             <h2
-              className="text-xl font-black mb-4 text-red"
+              className="text-xl font-black mb-4 text-foreground"
             >
               Détail des réponses
             </h2>
@@ -302,7 +302,7 @@ export default function CognitifResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic text-center">
+        <p className="mt-8 text-xs text-foreground italic text-center">
           Ce rapport a été généré par un algorithme qui confond encore corrélation
           et causalité. Aucune valeur scientifique ne peut lui être attribuée.
         </p>

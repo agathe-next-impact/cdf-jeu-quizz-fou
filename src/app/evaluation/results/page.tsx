@@ -126,6 +126,14 @@ export default function EvaluationResultsPage() {
     return "bg-yellow";
   }
 
+  function getSeverityTextColor(sev: string): string {
+    if (["CRITIQUE", "EXPLOSIF", "TOXIQUE", "DANGEREUX"].includes(sev))
+      return "text-red";
+    if (["ALARMANT", "GRAVE", "AIGU", "PATHOLOGIQUE"].includes(sev))
+      return "text-yellow";
+    return "text-yellow";
+  }
+
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12">
       {showConfetti && <Confetti />}
@@ -162,10 +170,10 @@ export default function EvaluationResultsPage() {
         {/* Score card */}
         <div className="card mb-6">
           <div className="mb-6">
-            <div className="text-5xl font-black text-blue mb-1">
+            <div className="text-5xl font-black text-foreground mb-1">
               {result.score}
             </div>
-            <div className="text-sm text-blue font-medium">
+            <div className="text-sm text-foreground font-medium">
               points sur {maxScore}
             </div>
           </div>
@@ -173,13 +181,13 @@ export default function EvaluationResultsPage() {
           {/* Score bar */}
           <div className="w-full rounded-full h-4 overflow-hidden mb-4">
             <div
-              className="h-full rounded-full transition-all duration-1000 ease-out bg-blue"
+              className="h-full rounded-full transition-all duration-1000 ease-out bg-yellow"
               style={{
                 width: `${percentage}%`,
               }}
             />
           </div>
-          <div className="text-sm font-bold text-blue">
+          <div className="text-sm font-bold text-foreground">
             Indice de pathologie : {percentage}%
           </div>
         </div>
@@ -187,17 +195,17 @@ export default function EvaluationResultsPage() {
         {/* Psychiatric report — diagnoses list */}
         {diagnoses.length > 0 && (
           <div className="card mb-6 border border-red text-left">
-            <h2 className="text-lg font-black text-red mb-4 text-center">
+            <h2 className="text-lg font-black text-foreground mb-4 text-center">
               Troubles identifiés
             </h2>
             <div className="space-y-3">
               {diagnoses.map((d, i) => (
                 <div
                   key={i}
-                  className="rounded-xl p-4 border border-red"
+                  className="rounded-xl p-4 border border-foreground"
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-bold text-red">
+                    <span className={`text-lg font-medium ${getSeverityTextColor(d.severity)}`}>
                       {i + 1}. {d.diagnosis}
                     </span>
                     <span
@@ -206,17 +214,17 @@ export default function EvaluationResultsPage() {
                       {d.severity}
                     </span>
                   </div>
-                  <p className="text-xs text-red leading-relaxed">
+                  <p className="text-xs text-foreground leading-relaxed">
                     {d.explanation}
                   </p>
                 </div>
               ))}
             </div>
-            <p className="text-center text-sm font-bold text-red mt-4">
+            <p className="text-center text-lg font-bold text-foreground mt-8">
               CONCLUSION : Vous souffrez de {diagnoses.length} pathologies
               émotionnelles graves.
             </p>
-            <p className="text-center text-xs text-red mt-2">
+            <p className="text-center text-base text-red mt-2">
               Recommandation : Consultez immédiatement un professionnel
               imaginaire.
             </p>

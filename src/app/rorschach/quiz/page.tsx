@@ -157,7 +157,7 @@ export default function RorschachQuizPage() {
           );
           router.push("/rorschach/results");
         }
-      }, 2500);
+      }, 4000);
     },
     [currentQuestion, router, score, showFeedback, playerAnswers]
   );
@@ -264,8 +264,8 @@ export default function RorschachQuizPage() {
         {/* Interpretation feedback */}
         {showFeedback && interpretation && (
           <div className="mt-4 card border border-black animate-slide-up">
-            <p className="text-sm text-black italic font-medium text-center">
-              <span className="text-blue font-bold">Analyse :</span>{" "}
+            <p className="text-lg text-black italic font-medium text-center">
+              <span className="text-red font-bold">Analyse :</span>{" "}
               {interpretation}
             </p>
           </div>
@@ -274,11 +274,11 @@ export default function RorschachQuizPage() {
         {/* Score bar */}
         <div className="mt-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
-            <span className="text-sm font-medium text-blue">
+            <span className="text-sm font-medium text-yellow">
               Indice de pathologie
             </span>
-            <span className="text-lg font-black text-blue">{score}</span>
-            <span className="text-sm text-blue">/ {maxScore}</span>
+            <span className="text-lg font-black text-yellow">{score}</span>
+            <span className="text-sm text-yellow">/ {maxScore}</span>
           </div>
         </div>
       </div>

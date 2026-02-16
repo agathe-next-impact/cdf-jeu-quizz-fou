@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { usePlayer } from "@/context/PlayerContext";
 import { ThemeToggle } from "./ThemeToggle";
 import { Laugh, Trophy } from "lucide-react";
+import Image from "next/image";
 import GameIcon from "./GameIcon";
 import { DecodeFr } from "./decode-fr";
 
@@ -152,7 +153,13 @@ export default function Header() {
       {/* Hero title area */}
       <Link href="/" className={`flex items-start md:items-center px-4 md:px-6 pb-4 md:pb-6 pt-4 ${heroBg}`}>
         <div className="mr-4 md:mr-8 shrink-0">
-          <Laugh className={`w-12 h-12 md:w-28 md:h-28 ${heroText}`} />
+          <Image 
+            src="/logo-cdf.png"
+            alt="Logo Comme des Fous"
+            width={84}
+            height={84}
+            className="w-20 h-20 md:w-24 md:h-24"
+          />
         </div>
         <div className="flex flex-col">
           <h1 className={`w-full max-w-[100vw] font-heading font-semibold ${textSize} tracking-tight leading-none uppercase ${heroText}`}>

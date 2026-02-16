@@ -43,7 +43,7 @@ export default function CognitifClassementPage() {
         <div className="text-center mb-10 animate-slide-up">
           <div className="flex justify-center mb-4"><Brain size={48} className="text-black" /></div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-2 text-red"
+            className="text-4xl md:text-5xl font-black mb-2 text-foreground"
           >
             Classement des QI
           </h1>

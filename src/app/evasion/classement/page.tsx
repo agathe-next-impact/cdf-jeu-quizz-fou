@@ -43,7 +43,7 @@ export default function EvasionClassementPage() {
         <div className="text-center mb-10 animate-slide-up">
           <div className="flex justify-center mb-4"><Hospital size={48} className="text-black" /></div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-2 text-blue"
+            className="text-4xl md:text-5xl font-black mb-2 text-foreground"
           >
             Classement des Patients
           </h1>

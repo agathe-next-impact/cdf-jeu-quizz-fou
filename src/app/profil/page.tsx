@@ -193,7 +193,7 @@ export default function ProfilPage() {
           <div className="relative inline-block mx-auto mb-4">
             <button
               onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-              className="w-20 h-20 rounded-full bg-black flex items-center justify-center text-4xl mx-auto hover:scale-105 transition-transform"
+              className="w-20 h-20 rounded-full flex items-center justify-center text-4xl mx-auto hover:scale-105 transition-transform"
               title="Changer d'avatar"
             >
               <GameIcon name={profile.player.avatar || profile.player.pseudo.charAt(0).toUpperCase()} size={36} />
@@ -278,7 +278,7 @@ export default function ProfilPage() {
           {/* Bio / Citation */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-blue uppercase tracking-wide">
+              <label className="text-xs font-bold text-red uppercase tracking-wide">
                 Citation / Mini-bio
               </label>
               {!editingBio && (
@@ -287,7 +287,7 @@ export default function ProfilPage() {
                     setBioValue(profile.player.bio || "");
                     setEditingBio(true);
                   }}
-                  className="text-xs text-blue hover:text-blue transition-colors"
+                  className="text-xs text-red hover:text-red transition-colors"
                 >
                   Modifier
                 </button>
@@ -301,14 +301,14 @@ export default function ProfilPage() {
                   maxLength={160}
                   rows={2}
                   placeholder="Une citation, une idée folle, ta devise..."
-                  className="w-full px-3 py-2 rounded-xl border border-blue focus:border-blue focus:outline-none text-black text-sm resize-none transition-colors"
+                  className="w-full px-3 py-2 rounded-xl border border-red focus:border-red focus:outline-none text-black text-sm resize-none transition-colors"
                 />
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-xs text-blue">{bioValue.length}/160</span>
+                  <span className="text-xs text-red">{bioValue.length}/160</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setEditingBio(false)}
-                      className="text-xs font-semibold text-blue hover:text-blue px-3 py-1 transition-colors"
+                      className="text-xs font-semibold text-red hover:text-red px-3 py-1 transition-colors"
                       disabled={saving}
                     >
                       Annuler
@@ -316,7 +316,7 @@ export default function ProfilPage() {
                     <button
                       onClick={saveBio}
                       disabled={saving}
-                      className="text-xs font-bold text-white bg-blue hover:bg-black px-3 py-1 rounded-lg transition-colors"
+                      className="text-xs font-bold text-white bg-red hover:bg-black px-3 py-1 rounded-lg transition-colors"
                     >
                       {saving ? "..." : "Enregistrer"}
                     </button>
@@ -333,7 +333,7 @@ export default function ProfilPage() {
           {/* Autodiagnostic */}
           <div className="mb-5">
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-blue uppercase tracking-wide">
+              <label className="text-xs font-bold text-red uppercase tracking-wide">
                 Autodiagnostic
               </label>
               {!editingDiag && (
@@ -342,7 +342,7 @@ export default function ProfilPage() {
                     setDiagValue(profile.player.autodiagnostic || "");
                     setEditingDiag(true);
                   }}
-                  className="text-xs text-blue hover:text-blue transition-colors"
+                  className="text-xs text-red hover:text-red transition-colors"
                 >
                   Modifier
                 </button>
@@ -356,14 +356,14 @@ export default function ProfilPage() {
                   maxLength={200}
                   rows={2}
                   placeholder="Ton autodiagnostic totalement fiable..."
-                  className="w-full px-3 py-2 rounded-xl border border-blue focus:border-blue focus:outline-none text-black text-sm resize-none transition-colors"
+                  className="w-full px-3 py-2 rounded-xl border border-red focus:border-red focus:outline-none text-black text-sm resize-none transition-colors"
                 />
                 <div className="flex items-center justify-between mt-1.5">
-                  <span className="text-xs text-blue">{diagValue.length}/200</span>
+                  <span className="text-xs text-red">{diagValue.length}/200</span>
                   <div className="flex gap-2">
                     <button
                       onClick={() => setEditingDiag(false)}
-                      className="text-xs font-semibold text-blue hover:text-blue px-3 py-1 transition-colors"
+                      className="text-xs font-semibold text-red hover:text-red px-3 py-1 transition-colors"
                       disabled={saving}
                     >
                       Annuler
@@ -371,7 +371,7 @@ export default function ProfilPage() {
                     <button
                       onClick={saveDiag}
                       disabled={saving}
-                      className="text-xs font-bold text-white bg-blue hover:bg-black px-3 py-1 rounded-lg transition-colors"
+                      className="text-xs font-bold text-white bg-red hover:bg-black px-3 py-1 rounded-lg transition-colors"
                     >
                       {saving ? "..." : "Enregistrer"}
                     </button>
@@ -388,7 +388,7 @@ export default function ProfilPage() {
           {/* Date de début de folie */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-blue uppercase tracking-wide">
+              <label className="text-xs font-bold text-red uppercase tracking-wide">
                 Début de la folie
               </label>
               {!editingMadness && (
@@ -397,7 +397,7 @@ export default function ProfilPage() {
                     setMadnessValue(profile.player.madnessSince || "");
                     setEditingMadness(true);
                   }}
-                  className="text-xs text-blue hover:text-blue transition-colors"
+                  className="text-xs text-red hover:text-red transition-colors"
                 >
                   Modifier
                 </button>
@@ -410,11 +410,11 @@ export default function ProfilPage() {
                   value={madnessValue}
                   onChange={(e) => setMadnessValue(e.target.value)}
                   max={new Date().toISOString().split("T")[0]}
-                  className="flex-1 px-3 py-2 rounded-xl border border-blue focus:border-blue focus:outline-none text-black text-sm transition-colors"
+                  className="flex-1 px-3 py-2 rounded-xl border border-red focus:border-red focus:outline-none text-black text-sm transition-colors"
                 />
                 <button
                   onClick={() => setEditingMadness(false)}
-                  className="text-xs font-semibold text-blue hover:text-blue px-3 py-1 transition-colors"
+                  className="text-xs font-semibold text-red hover:text-red px-3 py-1 transition-colors"
                   disabled={saving}
                 >
                   Annuler
@@ -422,7 +422,7 @@ export default function ProfilPage() {
                 <button
                   onClick={saveMadness}
                   disabled={saving}
-                  className="text-xs font-bold text-white bg-blue hover:bg-black px-3 py-1 rounded-lg transition-colors"
+                  className="text-xs font-bold text-white bg-red hover:bg-black px-3 py-1 rounded-lg transition-colors"
                 >
                   {saving ? "..." : "OK"}
                 </button>
@@ -465,22 +465,22 @@ export default function ProfilPage() {
                 className="card border border-blue hover:border-blue flex items-center gap-4 animate-slide-up group"
                 style={{ animationDelay: `${(i + 1) * 0.1}s` }}
               >
-                <div className="text-4xl"><GameIcon name={GAME_EMOJIS[game.game] ?? "gamepad-2"} size={36} /></div>
+                <div className="text-4xl text-red"><GameIcon name={GAME_EMOJIS[game.game] ?? "gamepad-2"} size={36} /></div>
                 <div className="flex-1 min-w-0">
                   <div className="font-bold text-black group-hover:text-blue transition-colors">
                     {game.game}
                   </div>
-                  <div className="text-xs text-blue font-medium">
+                  <div className="text-xs text-foreground font-medium">
                     {game.bestTitle}
                   </div>
-                  <div className="text-xs text-blue mt-1">
+                  <div className="text-xs text-foreground mt-1">
                     {game.totalPlays} {game.totalPlays === 1 ? "partie" : "parties"} &middot; Dernière le{" "}
                     {new Date(game.lastPlayed).toLocaleDateString("fr-FR")}
                   </div>
                 </div>
                 <div className="text-right shrink-0">
-                  <div className="text-2xl font-black text-blue">{game.bestScore}</div>
-                  <div className="text-xs text-blue font-medium">meilleur score</div>
+                  <div className="text-2xl font-black text-yellow">{game.bestScore}</div>
+                  <div className="text-xs text-foreground font-medium">meilleur score</div>
                 </div>
               </Link>
             ))}

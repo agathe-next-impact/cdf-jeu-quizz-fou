@@ -109,11 +109,11 @@ export default function EvasionResultsPage() {
           Verdict du Dr. Moreau
         </div>
         <h1
-          className="text-3xl md:text-4xl font-black mb-1 leading-tight text-blue"
+          className="text-3xl md:text-4xl font-medium mb-1 leading-tight text-yellow"
         >
           {outcome.title}
         </h1>
-        <p className="text-sm font-semibold text-blue mb-2">
+        <p className="text-sm font-semibold text-yellow mb-2">
           {outcome.subtitle}
         </p>
 
@@ -138,7 +138,7 @@ export default function EvasionResultsPage() {
             >
               {result.score}
             </div>
-            <div className="text-sm text-blue font-medium">
+            <div className="text-sm text-foreground font-regular">
               jours avant la sortie
             </div>
           </div>
@@ -164,7 +164,7 @@ export default function EvasionResultsPage() {
 
         {/* Description */}
         <div className="card mb-6 border border-blue">
-          <p className="text-sm text-black leading-relaxed italic">
+          <p className="text-lg text-foreground leading-relaxed italic">
             &laquo; {outcome.description} &raquo;
           </p>
         </div>
@@ -192,7 +192,7 @@ export default function EvasionResultsPage() {
           </Link>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Le Dr. Moreau vous souhaite un prompt rétablissement. Ou pas.
         </p>
       </div>

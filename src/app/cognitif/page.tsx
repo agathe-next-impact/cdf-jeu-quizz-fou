@@ -55,11 +55,11 @@ export default function CognitifHome() {
       <div className="animate-slide-up max-w-lg w-full text-center relative z-10">
         {/* Title */}
         <div className="mb-8">
-          <div className="inline-block text-black text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
+          <div className="inline-block text-blue text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
             Évaluation cognitive non-homologuée
           </div>
           <h1
-            className="text-4xl md:text-5xl font-black mb-3 leading-tight text-red"
+            className="text-4xl md:text-5xl font-black mb-3 leading-tight text-foreground"
           >
             Test Cognitif Absurde
           </h1>
@@ -145,7 +145,7 @@ export default function CognitifHome() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-foreground italic">
           Avertissement : ce test n&apos;a aucune valeur scientifique. Votre vrai QI
           est probablement différent. Probablement.
         </p>

@@ -193,13 +193,13 @@ export default function EvaluationQuizPage() {
         {showFeedback && diagnosis && (
           <div className="mt-4 animate-shake">
             <div className="card border border-red">
-              <h3 className="text-lg font-black text-red mb-2">
+              <h3 className="text-lg font-black text-foreground mb-2">
                 Diagnostic instantané
               </h3>
-              <p className="text-sm font-bold text-red mb-2">
+              <p className="text-lg font-bold text-foreground mb-2">
                 {diagnosis}
               </p>
-              <p className="text-sm text-red leading-relaxed mb-3">
+              <p className="text-lg text-foreground leading-relaxed mb-3">
                 {explanation}
               </p>
               <div
@@ -214,11 +214,11 @@ export default function EvaluationQuizPage() {
         {/* Score bar */}
         <div className="mt-6 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full">
-            <span className="text-sm font-medium text-blue">
+            <span className="text-sm font-medium text-yellow">
               Indice de pathologie
             </span>
-            <span className="text-lg font-black text-blue">{score}</span>
-            <span className="text-sm text-blue">/ {maxScore}</span>
+            <span className="text-lg font-black text-yellow">{score}</span>
+            <span className="text-sm text-yellow">/ {maxScore}</span>
           </div>
         </div>
       </div>

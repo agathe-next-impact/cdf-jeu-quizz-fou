@@ -96,9 +96,6 @@ export default function HallOfFamePage() {
             <p className="text-black mb-6">
               Aucun patient n&apos;a encore joué. Sois le premier !
             </p>
-            <Link href="/" className="btn-primary inline-block">
-              Choisir un jeu
-            </Link>
           </div>
         ) : (
           <>

@@ -43,7 +43,7 @@ export default function DSM6Home() {
         {/* Title */}
         <div className="mb-8">
           <div className="inline-block text-red text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
-            Version Beta — Totalement Officiel&#8482;
+            Version Beta — Totalement Non-Officiel&#8482;
           </div>
           <h1 className="text-4xl md:text-5xl font-black mb-3 leading-tight text-black">
             DSM-6
@@ -109,7 +109,7 @@ export default function DSM6Home() {
           </div>
         </div>
 
-        <p className="mt-8 text-xs text-blue italic">
+        <p className="mt-8 text-xs text-yellow italic">
           Note du comité éditorial : toute ressemblance avec votre vie quotidienne est absolument diagnostique.
         </p>
       </div>
