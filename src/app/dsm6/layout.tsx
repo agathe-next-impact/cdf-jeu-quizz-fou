@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "Le manuel diagnostique qui n'existe pas encore. 15 questions pour obtenir votre profil clinique officieux.",
     images: [
       {
-        url: "/logo-cdf.png",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — DSM-6",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "DSM-6 Version Beta — Diagnostic Psychiatrique",
     description:
       "Le manuel diagnostique qui n'existe pas encore. 15 questions pour obtenir votre profil clinique officieux.",
-    images: ["/logo-cdf.png"],
+    images: ["/logo.png"],
   },
 };
 

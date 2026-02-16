@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "Connectez-vous à votre compte patient pour sauvegarder vos scores et grimper dans les classements.",
     images: [
       {
-        url: "/logo-cdf.png",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Connexion",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Connexion — Accès à l'asile",
     description:
       "Connectez-vous pour sauvegarder vos scores sur Comme des Fous.",
-    images: ["/logo-cdf.png"],
+    images: ["/logo.png"],
   },
 };
 

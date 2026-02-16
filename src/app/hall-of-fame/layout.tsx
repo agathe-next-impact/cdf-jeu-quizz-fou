@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "Le classement général des patients les plus dérangés. Découvrez qui domine le palmarès de la folie.",
     images: [
       {
-        url: "/logo-cdf.png",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Hall of Fame",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Hall of Fame — Top 10 des plus fous",
     description:
       "Le classement général des patients les plus dérangés sur Comme des Fous.",
-    images: ["/logo-cdf.png"],
+    images: ["/logo.png"],
   },
 };
 

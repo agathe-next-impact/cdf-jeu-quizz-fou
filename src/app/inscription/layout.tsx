@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "Créez votre dossier patient pour rejoindre l'asile. Sauvegardez vos scores et grimpez dans les classements.",
     images: [
       {
-        url: "/logo-cdf.png",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Inscription",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Inscription — Admission à l'asile",
     description:
       "Créez votre dossier patient pour rejoindre l'asile sur Comme des Fous.",
-    images: ["/logo-cdf.png"],
+    images: ["/logo.png"],
   },
 };
 

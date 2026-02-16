@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "Un jeu dont vous êtes le héros. Convainquez le Dr. Moreau de votre stabilité mentale pour réduire vos jours d'internement.",
     images: [
       {
-        url: "/logo-cdf.png",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Évasion Psychiatrique",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Évasion Psychiatrique — Jeu d'Aventure",
     description:
       "Convainquez le Dr. Moreau de votre stabilité mentale pour réduire vos jours d'internement.",
-    images: ["/logo-cdf.png"],
+    images: ["/logo.png"],
   },
 };
 

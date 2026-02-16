@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: "/logo-cdf.png",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Logo",
@@ -71,11 +71,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Comme des Fous | Les jeux les plus fous du web",
     description: siteDescription,
-    images: ["/logo-cdf.png"],
+    images: ["/logo.png"],
   },
   icons: {
-    icon: "/logo-cdf.png",
-    apple: "/logo-cdf.png",
+    icon: "/logo.png",
+    apple: "/logo.png",
   },
 };
 

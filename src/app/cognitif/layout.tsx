@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "8 questions de logique, 30 secondes chrono, un QI calculé avec une précision douteuse. Tapez vos réponses et découvrez votre diagnostic cérébral.",
     images: [
       {
-        url: "/logo-cdf.png",
+        url: "/logo.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Test Cognitif Absurde",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Test Cognitif Absurde — Calculez votre QI",
     description:
       "8 questions de logique, 30 secondes chrono, un QI calculé avec une précision douteuse.",
-    images: ["/logo-cdf.png"],
+    images: ["/logo.png"],
   },
 };
 
