@@ -12,10 +12,23 @@ export async function GET() {
       getDSM6Scores(),
       getAllRegisteredPseudos(),
     ]);
-    const publicScores = scores
+    const filtered = scores
       .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
       .map(({ answers: _answers, ...rest }) => rest);
-    return NextResponse.json(publicScores);
+
+    // Keep only the best score per player
+    const bestByPlayer = new Map<string, (typeof filtered)[number]>();
+    for (const entry of filtered) {
+      const key = entry.pseudo.toLowerCase();
+      const prev = bestByPlayer.get(key);
+      if (!prev || entry.score > prev.score) {
+        bestByPlayer.set(key, entry);
+      }
+    }
+
+    return NextResponse.json(
+      [...bestByPlayer.values()].sort((a, b) => b.score - a.score)
+    );
   } catch (err) {
     console.error("GET /api/dsm6-scores error:", err);
     return NextResponse.json([], { status: 200 });

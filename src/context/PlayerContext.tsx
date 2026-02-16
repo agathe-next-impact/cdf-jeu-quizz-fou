@@ -54,6 +54,18 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
     setLoading(false);
   }, []);
 
+  // After auth, update the sessionStorage pseudo for any pending game
+  // so the results page re-submits the score under the registered pseudo.
+  const applyPendingGamePseudo = useCallback((registeredPseudo: string) => {
+    try {
+      const pendingGame = localStorage.getItem("cdf-pending-game");
+      if (pendingGame) {
+        sessionStorage.setItem(`${pendingGame}-pseudo`, registeredPseudo);
+        localStorage.removeItem("cdf-pending-game");
+      }
+    } catch { /* ignore */ }
+  }, []);
+
   const login = useCallback(async (pseudo: string, password: string): Promise<string | null> => {
     try {
       const res = await fetch("/api/auth/login", {
@@ -65,11 +77,12 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
       if (!res.ok) return data.error || "Erreur de connexion";
       setPlayer(data);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      applyPendingGamePseudo(data.pseudo);
       return null; // no error
     } catch {
       return "Erreur réseau";
     }
-  }, []);
+  }, [applyPendingGamePseudo]);
 
   const register = useCallback(
     async (pseudo: string, email: string, password: string, avatar?: string): Promise<string | null> => {
@@ -83,12 +96,13 @@ export function PlayerProvider({ children }: { children: React.ReactNode }) {
         if (!res.ok) return data.error || "Erreur d'inscription";
         setPlayer(data);
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        applyPendingGamePseudo(data.pseudo);
         return null;
       } catch {
         return "Erreur réseau";
       }
     },
-    []
+    [applyPendingGamePseudo]
   );
 
   const updateAvatar = useCallback(async (avatar: string): Promise<string | null> => {

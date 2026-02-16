@@ -134,7 +134,7 @@ export default function HallOfFamePage() {
                           {entry.pseudo}
                         </div>
                         <div className={`flex items-center gap-1 text-xs font-semibold overflow-hidden ${entry.badge.color}`}>
-                          <span className="shrink-0"><GameIcon name={entry.badge.emoji} size={16} /></span>
+                          <span className="shrink-0 bg-transparent"><GameIcon name={entry.badge.emoji} size={16} /></span>
                           <span className="truncate">{entry.badge.name}</span>
                         </div>
                         <div className="text-xs text-black mt-0.5">

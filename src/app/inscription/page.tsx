@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
 import { Ticket } from "lucide-react";
@@ -12,9 +12,10 @@ const AVATARS = [
   "bot", "orbit", "sparkles", "bird", "palette", "flame", "bone", "droplets",
 ];
 
-export default function InscriptionPage() {
+function InscriptionForm() {
   const { register } = usePlayer();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [pseudo, setPseudo] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,8 +35,14 @@ export default function InscriptionPage() {
       return;
     }
 
-    router.push("/profil");
+    const redirect = searchParams.get("redirect");
+    router.push(redirect && redirect.startsWith("/") ? redirect : "/profil");
   }
+
+  const redirectParam = searchParams.get("redirect");
+  const connexionHref = redirectParam
+    ? `/connexion?redirect=${encodeURIComponent(redirectParam)}`
+    : "/connexion";
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12">
@@ -134,12 +141,20 @@ export default function InscriptionPage() {
 
           <p className="text-center text-sm text-black mt-4">
             Déjà inscrit ?{" "}
-            <Link href="/connexion" className="text-black font-semibold hover:underline">
+            <Link href={connexionHref} className="text-black font-semibold hover:underline">
               Se connecter
             </Link>
           </p>
         </div>
       </div>
     </div>
+  );
+}
+
+export default function InscriptionPage() {
+  return (
+    <Suspense>
+      <InscriptionForm />
+    </Suspense>
   );
 }

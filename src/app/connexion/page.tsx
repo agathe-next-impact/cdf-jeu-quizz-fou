@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
 import { Key, Brain } from "lucide-react";
 
-export default function ConnexionPage() {
+function ConnexionForm() {
   const { login } = usePlayer();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [pseudo, setPseudo] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -33,7 +34,8 @@ export default function ConnexionPage() {
       return;
     }
 
-    router.push("/profil");
+    const redirect = searchParams.get("redirect");
+    router.push(redirect && redirect.startsWith("/") ? redirect : "/profil");
   }
 
   async function handleForgot(e: React.FormEvent) {
@@ -62,6 +64,11 @@ export default function ConnexionPage() {
     }
     setResetSubmitting(false);
   }
+
+  const redirectParam = searchParams.get("redirect");
+  const inscriptionHref = redirectParam
+    ? `/inscription?redirect=${encodeURIComponent(redirectParam)}`
+    : "/inscription";
 
   return (
     <div className="min-h-[calc(100vh-80px)] flex flex-col items-center justify-center px-4 py-12">
@@ -133,7 +140,7 @@ export default function ConnexionPage() {
                 </button>
                 <p className="text-sm text-black">
                   Pas encore de compte ?{" "}
-                  <Link href="/inscription" className="text-black font-semibold hover:underline">
+                  <Link href={inscriptionHref} className="text-black font-semibold hover:underline">
                     S&apos;inscrire
                   </Link>
                 </p>
@@ -186,5 +193,13 @@ export default function ConnexionPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ConnexionPage() {
+  return (
+    <Suspense>
+      <ConnexionForm />
+    </Suspense>
   );
 }

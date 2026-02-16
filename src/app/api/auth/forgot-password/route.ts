@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { findPlayerByEmail } from "@/data/players";
 import { createResetToken } from "@/data/reset-tokens";
-import { wpSendEmail, isWordPressConfigured } from "@/lib/wordpress";
+import { sendEmail } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
@@ -38,8 +38,8 @@ export async function POST(request: NextRequest) {
     const token = createResetToken(player.email);
     const resetLink = `${APP_URL}/reset-password?token=${token}`;
 
-    if (isWordPressConfigured()) {
-      await wpSendEmail(
+    if (process.env.SMTP_USER) {
+      await sendEmail(
         player.email,
         "Réinitialisation de ton mot de passe — Le Quizz Fou",
         buildEmailHtml(player.pseudo, resetLink)
