@@ -49,7 +49,8 @@ interface LevelResult {
 const ARENA_W = 600;
 const ARENA_H = 400;
 const TICK_MS = 16; // ~60fps
-const MIN_TAP_SIZE = 22; // minimum touch target radius in logical px
+const MIN_TAP_SIZE = 28; // minimum touch target radius in logical px
+const MIN_TAP_PX = 24; // minimum touch target radius in CSS px on screen
 
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
@@ -274,9 +275,9 @@ export default function MotriciteQuizPage() {
   }
 
   /* ---------------------------------------------------------------- */
-  /*  Handle arena miss (mouse + touch)                                */
+  /*  Handle arena miss (unified pointer event)                        */
   /* ---------------------------------------------------------------- */
-  function handleArenaMiss(e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) {
+  function handleArenaMiss(e: React.PointerEvent<HTMLDivElement>) {
     if (phase !== "playing") return;
     if ((e.target as HTMLElement).dataset.arena === "true") {
       missesRef.current += 1;
@@ -378,7 +379,7 @@ export default function MotriciteQuizPage() {
     const renderH = ARENA_H * scale;
 
     return (
-      <div className="min-h-[calc(100vh-80px)] flex flex-col items-center px-4 py-6">
+      <div className="min-h-[calc(100vh-80px)] flex flex-col items-center px-4 py-6" style={{ touchAction: "none" }}>
         {/* HUD */}
         <div className="w-full flex items-center justify-between mb-4" style={{ maxWidth: renderW }}>
           <div className="text-xs sm:text-sm font-bold text-black truncate mr-2">
@@ -409,9 +410,8 @@ export default function MotriciteQuizPage() {
         <div ref={arenaContainerRef} className="w-full" style={{ maxWidth: ARENA_W }}>
           <div
             data-arena="true"
-            onClick={handleArenaMiss}
-            onTouchEnd={handleArenaMiss}
-            className="relative border border-black overflow-hidden select-none"
+            onPointerDown={handleArenaMiss}
+            className="relative border border-black overflow-hidden select-none cursor-crosshair"
             style={{
               width: renderW,
               height: renderH,
@@ -421,22 +421,18 @@ export default function MotriciteQuizPage() {
             {targets.map((t) => {
               if (t.hit) return null;
               const displaySize = t.size * t.shrinkRatio;
-              // Ensure minimum tap target on touch devices
-              const tapRadius = Math.max(displaySize, MIN_TAP_SIZE);
+              // Ensure minimum tap target: largest of visual size, logical min, and screen-px min
+              const tapRadius = Math.max(displaySize, MIN_TAP_SIZE, MIN_TAP_PX / scale);
 
               return (
                 <button
                   key={t.id}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleTargetClick(t.id);
-                  }}
-                  onTouchEnd={(e) => {
+                  onPointerDown={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
                     handleTargetClick(t.id);
                   }}
-                  className="absolute rounded-full focus:outline-none"
+                  className="absolute rounded-full focus:outline-none cursor-pointer"
                   style={{
                     /* Tap area: invisible larger zone */
                     width: tapRadius * 2 * scale,
@@ -445,6 +441,7 @@ export default function MotriciteQuizPage() {
                     top: (t.y + t.jitterY - tapRadius) * scale,
                     /* Transparent — the visible circle is the inner span */
                     background: "transparent",
+                    touchAction: "none",
                   }}
                 >
                   {/* Visible target circle */}
@@ -456,6 +453,7 @@ export default function MotriciteQuizPage() {
                       left: (tapRadius - displaySize) * scale,
                       top: (tapRadius - displaySize) * scale,
                       backgroundColor: "var(--color-blue)",
+                      boxShadow: `0 0 ${Math.max(6, displaySize * 0.5) * scale}px var(--color-blue)`,
                     }}
                   >
                     {/* Inner dot */}

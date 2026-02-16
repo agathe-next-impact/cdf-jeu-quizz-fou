@@ -77,15 +77,15 @@ export default function MotriciteClassementPage() {
             {scores.map((player, index) => (
               <div
                 key={`${player.pseudo}-${player.date}`}
-                className={`flex items-center gap-4 p-4 rounded-2xl border transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
+                className={`flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-2xl border transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
                 style={{ animationDelay: `${index * 0.05}s` }}
               >
                 {/* Rank */}
-                <div className="w-12 text-center shrink-0">
+                <div className="w-8 sm:w-12 text-center shrink-0">
                   {index < 3 ? (
                     <Medal size={24} className={MEDAL_COLORS[index]} />
                   ) : (
-                    <span className="text-lg font-black text-black">
+                    <span className="text-base sm:text-lg font-black text-black">
                       #{index + 1}
                     </span>
                   )}
@@ -96,7 +96,7 @@ export default function MotriciteClassementPage() {
                   <div className="font-bold text-black truncate">
                     {player.pseudo}
                   </div>
-                  <div className="text-xs text-black font-medium">
+                  <div className="text-xs text-black font-medium truncate">
                     {player.title}
                   </div>
                 </div>
@@ -104,7 +104,7 @@ export default function MotriciteClassementPage() {
                 {/* Score */}
                 <div className="text-right shrink-0">
                   <div
-                    className={`text-2xl font-black ${
+                    className={`text-xl sm:text-2xl font-black ${
                       player.score >= 90
                         ? "text-blue"
                         : player.score >= 70

@@ -109,22 +109,22 @@ export default function HallOfFamePage() {
                   {entries.map((entry, index) => (
                     <div
                       key={entry.pseudo}
-                      className={`flex items-center gap-4 p-4 rounded-2xl border transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
+                      className={`flex items-center gap-2 sm:gap-4 p-3 sm:p-4 rounded-2xl border transition-all hover:scale-[1.01] ${getRowBg(index)} animate-slide-up`}
                       style={{ animationDelay: `${index * 0.05}s` }}
                     >
                       {/* Rank */}
-                      <div className="w-12 text-center shrink-0">
+                      <div className="w-8 sm:w-12 text-center shrink-0">
                         {index < 3 ? (
                           <Medal size={24} className={MEDAL_COLORS[index]} />
                         ) : (
-                          <span className="text-lg font-black text-black">
+                          <span className="text-base sm:text-lg font-black text-black">
                             #{index + 1}
                           </span>
                         )}
                       </div>
 
                       {/* Avatar */}
-                      <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center shrink-0">
+                      <div className="hidden sm:flex w-10 h-10 rounded-full bg-black items-center justify-center shrink-0">
                         <GameIcon name={entry.avatar} size={22} />
                       </div>
 
@@ -133,9 +133,9 @@ export default function HallOfFamePage() {
                         <div className="font-bold text-black truncate">
                           {entry.pseudo}
                         </div>
-                        <div className={`inline-flex items-center gap-1 text-xs font-semibold ${entry.badge.color}`}>
-                          <span><GameIcon name={entry.badge.emoji} size={16} /></span>
-                          <span>{entry.badge.name}</span>
+                        <div className={`flex items-center gap-1 text-xs font-semibold overflow-hidden ${entry.badge.color}`}>
+                          <span className="shrink-0"><GameIcon name={entry.badge.emoji} size={16} /></span>
+                          <span className="truncate">{entry.badge.name}</span>
                         </div>
                         <div className="text-xs text-black mt-0.5">
                           {entry.gamesPlayed} {entry.gamesPlayed === 1 ? "jeu" : "jeux"}
@@ -144,8 +144,8 @@ export default function HallOfFamePage() {
 
                       {/* Score */}
                       <div className="text-right shrink-0">
-                        <div className="text-2xl font-black text-black">
-                          {entry.globalScore}<span className="text-sm font-bold text-black">/100</span>
+                        <div className="text-xl sm:text-2xl font-black text-black">
+                          {entry.globalScore}<span className="text-xs sm:text-sm font-bold text-black">/100</span>
                         </div>
                       </div>
                     </div>
@@ -183,10 +183,10 @@ export default function HallOfFamePage() {
                         {game.entries.map((entry, index) => (
                           <div
                             key={entry.pseudo}
-                            className={`flex items-center gap-3 p-2.5 rounded-xl border transition-all ${getGameRowBg(index)}`}
+                            className={`flex items-center gap-2 sm:gap-3 p-2 sm:p-2.5 rounded-xl border transition-all ${getGameRowBg(index)}`}
                           >
                             {/* Rank */}
-                            <div className="w-8 text-center shrink-0">
+                            <div className="w-7 sm:w-8 text-center shrink-0">
                               {index < 3 ? (
                                 <Medal size={20} className={MEDAL_COLORS[index]} />
                               ) : (
@@ -208,7 +208,7 @@ export default function HallOfFamePage() {
 
                             {/* Score */}
                             <div className="text-right shrink-0">
-                              <div className="text-lg font-black text-black">
+                              <div className="text-base sm:text-lg font-black text-black">
                                 {entry.score}
                               </div>
                               <div className="text-[10px] text-black font-medium">pts</div>
