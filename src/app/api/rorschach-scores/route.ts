@@ -2,13 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { addRorschachScore, getRorschachScores } from "@/data/rorschach-scores";
 import type { RorschachPlayerAnswer } from "@/data/rorschach-scores";
 import { rorschachQuestions, getRorschachProfile } from "@/data/rorschach-questions";
+import { getAllRegisteredPseudos } from "@/data/players";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = await getRorschachScores();
-    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    const [scores, registeredPseudos] = await Promise.all([
+      getRorschachScores(),
+      getAllRegisteredPseudos(),
+    ]);
+    const publicScores = scores
+      .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
+      .map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
     console.error("GET /api/rorschach-scores error:", err);

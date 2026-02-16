@@ -28,21 +28,21 @@ export default function RegisterInvite() {
         Envie de sauvegarder tes scores ?
       </h3>
       <p className="text-sm text-black mb-4">
-        Inscris-toi pour apparaitre dans les classements et suivre ta progression.
+        Tes scores ne sont pas enregistrés ! Connecte-toi ou crée un compte pour sauvegarder tes résultats et apparaitre dans les classements.
       </p>
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+      <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
         <Link
           href="/inscription"
           className="btn-primary text-center"
         >
           Créer mon profil
         </Link>
-        <button
-          onClick={() => setDismissed(true)}
-          className="text-sm font-semibold text-blue hover:text-blue transition-colors"
+        <Link
+          href="/connexion"
+          className="text-sm font-semibold text-blue hover:underline transition-colors"
         >
-          Non merci
-        </button>
+          Déjà inscrit ? Se connecter
+        </Link>
       </div>
     </div>
   );

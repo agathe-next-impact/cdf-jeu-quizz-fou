@@ -163,6 +163,41 @@ export async function wpDeleteScoresByPseudo(
 }
 
 /* ------------------------------------------------------------------ */
+/*  Email sending via custom WP plugin (cdf/v1/send-email)             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Send an email via the WordPress wp_mail() function.
+ * Requires the "CDF Send Email" plugin activated on the WP instance.
+ */
+export async function wpSendEmail(
+  to: string,
+  subject: string,
+  body: string
+): Promise<boolean> {
+  if (!WP_URL) return false;
+
+  try {
+    const res = await fetch(`${WP_URL}/wp-json/cdf/v1/send-email`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: authHeader(),
+      },
+      body: JSON.stringify({ to, subject, body }),
+    });
+    if (!res.ok) {
+      console.error("wpSendEmail failed:", res.status, await res.text());
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("wpSendEmail error:", err);
+    return false;
+  }
+}
+
+/* ------------------------------------------------------------------ */
 /*  Internals                                                          */
 /* ------------------------------------------------------------------ */
 function parseAnswers(raw: string | undefined): WPPlayerAnswer[] {

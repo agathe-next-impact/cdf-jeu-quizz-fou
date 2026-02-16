@@ -6,6 +6,9 @@ export interface MotriciteLevel {
   targetCount: number;
   duration: number;
   behavior: "static" | "shrinking" | "moving" | "jittery" | "all";
+  speed: number;
+  jitterAmplitude: number;
+  shrinkMin: number;
 }
 
 export interface MotriciteDiagnosis {
@@ -18,51 +21,66 @@ export const motriciteLevels: MotriciteLevel[] = [
   {
     id: 1,
     name: "Cibles Standard",
-    description: "Cliquez sur 5 cibles. Facile, n'est-ce pas ?",
-    targetSize: 40,
-    targetCount: 5,
-    duration: 9,
+    description: "Cliquez sur 6 cibles. Facile, n'est-ce pas ?",
+    targetSize: 30,
+    targetCount: 6,
+    duration: 8,
     behavior: "static",
+    speed: 0,
+    jitterAmplitude: 0,
+    shrinkMin: 1,
   },
   {
     id: 2,
     name: "Cibles Microscopiques",
     description:
-      "Les cibles rétrécissent. Un vrai professionnel n'aura aucun mal.",
-    targetSize: 15,
-    targetCount: 5,
-    duration: 9,
+      "Les cibles rétrécissent vite. Un vrai professionnel n'aura aucun mal.",
+    targetSize: 12,
+    targetCount: 6,
+    duration: 8,
     behavior: "shrinking",
+    speed: 0,
+    jitterAmplitude: 0,
+    shrinkMin: 0.2,
   },
   {
     id: 3,
     name: "Cibles Mobiles",
     description:
-      "Elles bougent maintenant. Votre coordination va être testée.",
-    targetSize: 30,
-    targetCount: 5,
-    duration: 9,
+      "Elles bougent vite. Votre coordination va être sérieusement testée.",
+    targetSize: 22,
+    targetCount: 6,
+    duration: 8,
     behavior: "moving",
+    speed: 4.5,
+    jitterAmplitude: 0,
+    shrinkMin: 1,
   },
   {
     id: 4,
     name: "Cibles Tremblantes",
     description:
-      "Des micro-tremblements. Seule une main parfaitement stable réussira.",
-    targetSize: 20,
-    targetCount: 5,
-    duration: 9,
+      "Des tremblements violents. Seule une main chirurgicale réussira.",
+    targetSize: 15,
+    targetCount: 6,
+    duration: 8,
     behavior: "jittery",
+    speed: 0,
+    jitterAmplitude: 10,
+    shrinkMin: 1,
   },
   {
     id: 5,
     name: "L'Épreuve Ultime",
     description:
-      "Cibles minuscules, mobiles ET tremblantes. Impossible pour un cerveau défaillant.",
-    targetSize: 10,
-    targetCount: 7,
-    duration: 9,
+      "Cibles invisibles, ultra-rapides ET épileptiques. Aucun être humain n'a jamais réussi ce niveau.",
+    targetSize: 4,
+    targetCount: 12,
+    duration: 7,
     behavior: "all",
+    speed: 7,
+    jitterAmplitude: 16,
+    shrinkMin: 0.1,
   },
 ];
 

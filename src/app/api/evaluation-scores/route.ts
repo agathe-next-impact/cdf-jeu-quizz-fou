@@ -2,13 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { addEvaluationScore, getEvaluationScores } from "@/data/evaluation-scores";
 import type { EvaluationPlayerAnswer } from "@/data/evaluation-scores";
 import { evaluationQuestions, getEvaluationProfile } from "@/data/evaluation-questions";
+import { getAllRegisteredPseudos } from "@/data/players";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = await getEvaluationScores();
-    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    const [scores, registeredPseudos] = await Promise.all([
+      getEvaluationScores(),
+      getAllRegisteredPseudos(),
+    ]);
+    const publicScores = scores
+      .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
+      .map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
     console.error("GET /api/evaluation-scores error:", err);

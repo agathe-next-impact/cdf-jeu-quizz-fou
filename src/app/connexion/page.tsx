@@ -14,11 +14,9 @@ export default function ConnexionPage() {
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Reset password state
+  // Forgot password state
   const [showReset, setShowReset] = useState(false);
-  const [resetPseudo, setResetPseudo] = useState("");
   const [resetEmail, setResetEmail] = useState("");
-  const [resetNewPassword, setResetNewPassword] = useState("");
   const [resetError, setResetError] = useState("");
   const [resetSuccess, setResetSuccess] = useState("");
   const [resetSubmitting, setResetSubmitting] = useState(false);
@@ -38,28 +36,26 @@ export default function ConnexionPage() {
     router.push("/profil");
   }
 
-  async function handleReset(e: React.FormEvent) {
+  async function handleForgot(e: React.FormEvent) {
     e.preventDefault();
     setResetError("");
     setResetSuccess("");
     setResetSubmitting(true);
 
     try {
-      const res = await fetch("/api/auth/reset-password", {
+      const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          pseudo: resetPseudo.trim(),
-          email: resetEmail.trim(),
-          newPassword: resetNewPassword,
-        }),
+        body: JSON.stringify({ email: resetEmail.trim() }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setResetError(data.error || "Erreur lors de la réinitialisation");
+        setResetError(data.error || "Erreur");
       } else {
-        setResetSuccess("Mot de passe mis à jour ! Tu peux te connecter.");
-        setResetNewPassword("");
+        setResetSuccess(
+          data.message ||
+            "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé."
+        );
       }
     } catch {
       setResetError("Erreur réseau");
@@ -79,7 +75,7 @@ export default function ConnexionPage() {
           </h1>
           <p className="text-sm text-black">
             {showReset
-              ? "Renseigne ton pseudo et ton email pour réinitialiser"
+              ? "Renseigne ton email pour recevoir un lien de réinitialisation"
               : "Retrouve ton profil et tes classements"}
           </p>
         </div>
@@ -89,13 +85,14 @@ export default function ConnexionPage() {
             <>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-sm font-semibold text-black mb-1">Pseudo</label>
+                  <label className="block text-sm font-semibold text-black mb-1">Pseudo ou email</label>
                   <input
                     type="text"
                     value={pseudo}
                     onChange={(e) => setPseudo(e.target.value)}
-                    placeholder="Ton pseudo..."
-                    maxLength={20}
+                    placeholder="Ton pseudo ou email..."
+                    maxLength={100}
+                    autoComplete="username"
                     className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
@@ -127,7 +124,6 @@ export default function ConnexionPage() {
                 <button
                   onClick={() => {
                     setShowReset(true);
-                    setResetPseudo(pseudo);
                     setResetError("");
                     setResetSuccess("");
                   }}
@@ -145,18 +141,7 @@ export default function ConnexionPage() {
             </>
           ) : (
             <>
-              <form onSubmit={handleReset} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-black mb-1">Pseudo</label>
-                  <input
-                    type="text"
-                    value={resetPseudo}
-                    onChange={(e) => setResetPseudo(e.target.value)}
-                    placeholder="Ton pseudo..."
-                    maxLength={20}
-                    className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
-                  />
-                </div>
+              <form onSubmit={handleForgot} className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold text-black mb-1">Email du compte</label>
                   <input
@@ -164,16 +149,6 @@ export default function ConnexionPage() {
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                     placeholder="ton@email.com"
-                    className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-black mb-1">Nouveau mot de passe</label>
-                  <input
-                    type="password"
-                    value={resetNewPassword}
-                    onChange={(e) => setResetNewPassword(e.target.value)}
-                    placeholder="Nouveau mot de passe (4 car. min)"
                     className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
                   />
                 </div>
@@ -190,7 +165,7 @@ export default function ConnexionPage() {
                   disabled={resetSubmitting}
                   className="btn-primary w-full"
                 >
-                  {resetSubmitting ? "Réinitialisation..." : "Réinitialiser le mot de passe"}
+                  {resetSubmitting ? "Envoi en cours..." : "Envoyer le lien de réinitialisation"}
                 </button>
               </form>
 

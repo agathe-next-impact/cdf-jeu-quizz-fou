@@ -132,11 +132,11 @@ export default function MotriciteQuizPage() {
         hit: false,
         vx:
           level.behavior === "moving" || level.behavior === "all"
-            ? (Math.random() - 0.5) * 3
+            ? (Math.random() - 0.5) * level.speed
             : 0,
         vy:
           level.behavior === "moving" || level.behavior === "all"
-            ? (Math.random() - 0.5) * 3
+            ? (Math.random() - 0.5) * level.speed
             : 0,
         jitterX: 0,
         jitterY: 0,
@@ -199,13 +199,13 @@ export default function MotriciteQuizPage() {
 
           // Jittery
           if (level.behavior === "jittery" || level.behavior === "all") {
-            next.jitterX = (Math.random() - 0.5) * 6;
-            next.jitterY = (Math.random() - 0.5) * 6;
+            next.jitterX = (Math.random() - 0.5) * level.jitterAmplitude;
+            next.jitterY = (Math.random() - 0.5) * level.jitterAmplitude;
           }
 
           // Shrinking
           if (level.behavior === "shrinking" || level.behavior === "all") {
-            next.shrinkRatio = Math.max(0.3, 1 - elapsed / level.duration * 0.7);
+            next.shrinkRatio = Math.max(level.shrinkMin, 1 - elapsed / level.duration * (1 - level.shrinkMin));
           }
 
           return next;

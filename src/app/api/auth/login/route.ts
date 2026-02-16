@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   findPlayerByPseudo,
+  findPlayerByEmail,
   verifyPassword,
   toPublicPlayer,
 } from "@/data/players";
@@ -18,24 +19,29 @@ export async function POST(request: NextRequest) {
   const { pseudo, password } = body;
 
   if (!pseudo || typeof pseudo !== "string") {
-    return NextResponse.json({ error: "Pseudo requis" }, { status: 400 });
+    return NextResponse.json({ error: "Pseudo ou email requis" }, { status: 400 });
   }
   if (!password || typeof password !== "string") {
     return NextResponse.json({ error: "Mot de passe requis" }, { status: 400 });
   }
 
   try {
-    const player = await findPlayerByPseudo(pseudo.trim());
+    const identifier = pseudo.trim();
+    const isEmail = identifier.includes("@");
+    const player = isEmail
+      ? await findPlayerByEmail(identifier)
+      : await findPlayerByPseudo(identifier);
+
     if (!player) {
       return NextResponse.json(
-        { error: "Pseudo ou mot de passe incorrect" },
+        { error: "Identifiant ou mot de passe incorrect" },
         { status: 401 }
       );
     }
 
     if (!verifyPassword(password, player.passwordHash)) {
       return NextResponse.json(
-        { error: "Pseudo ou mot de passe incorrect" },
+        { error: "Identifiant ou mot de passe incorrect" },
         { status: 401 }
       );
     }

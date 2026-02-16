@@ -98,9 +98,25 @@ export default function InscriptionPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="4 caractères minimum"
+                placeholder="8 caractères minimum"
                 className="w-full px-4 py-3 rounded-xl border border-white focus:border-white focus:outline-none font-semibold transition-colors bg-white placeholder:text-black"
               />
+              {password.length > 0 && (
+                <ul className="mt-2 space-y-0.5 text-xs">
+                  <li className={password.length >= 8 ? "text-green" : "text-red"}>
+                    {password.length >= 8 ? "\u2713" : "\u2717"} 8 caractères minimum
+                  </li>
+                  <li className={/[a-zA-Z]/.test(password) ? "text-green" : "text-red"}>
+                    {/[a-zA-Z]/.test(password) ? "\u2713" : "\u2717"} Au moins une lettre
+                  </li>
+                  <li className={/[0-9]/.test(password) ? "text-green" : "text-red"}>
+                    {/[0-9]/.test(password) ? "\u2713" : "\u2717"} Au moins un chiffre
+                  </li>
+                  <li className={/[^a-zA-Z0-9]/.test(password) ? "text-green" : "text-red"}>
+                    {/[^a-zA-Z0-9]/.test(password) ? "\u2713" : "\u2717"} Au moins un caractère spécial (!@#$...)
+                  </li>
+                </ul>
+              )}
             </div>
 
             {error && (

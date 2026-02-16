@@ -2,13 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { addEvasionScore, getEvasionScores } from "@/data/evasion-scores";
 import type { EvasionPlayerAnswer } from "@/data/evasion-scores";
 import { getEvasionOutcome } from "@/data/evasion-questions";
+import { getAllRegisteredPseudos } from "@/data/players";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = await getEvasionScores();
-    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    const [scores, registeredPseudos] = await Promise.all([
+      getEvasionScores(),
+      getAllRegisteredPseudos(),
+    ]);
+    const publicScores = scores
+      .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
+      .map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
     console.error("GET /api/evasion-scores error:", err);

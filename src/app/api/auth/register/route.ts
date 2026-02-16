@@ -37,9 +37,27 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  if (!password || typeof password !== "string" || password.length < 4) {
+  if (!password || typeof password !== "string" || password.length < 8) {
     return NextResponse.json(
-      { error: "Mot de passe requis (4 caractères min)" },
+      { error: "Mot de passe requis (8 caractères min)" },
+      { status: 400 }
+    );
+  }
+  if (!/[a-zA-Z]/.test(password)) {
+    return NextResponse.json(
+      { error: "Le mot de passe doit contenir au moins une lettre" },
+      { status: 400 }
+    );
+  }
+  if (!/[0-9]/.test(password)) {
+    return NextResponse.json(
+      { error: "Le mot de passe doit contenir au moins un chiffre" },
+      { status: 400 }
+    );
+  }
+  if (!/[^a-zA-Z0-9]/.test(password)) {
+    return NextResponse.json(
+      { error: "Le mot de passe doit contenir au moins un caractère spécial" },
       { status: 400 }
     );
   }

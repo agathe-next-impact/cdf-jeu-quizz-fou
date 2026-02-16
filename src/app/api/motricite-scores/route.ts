@@ -2,13 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { addMotriciteScore, getMotriciteScores } from "@/data/motricite-scores";
 import type { MotricitePlayerAnswer } from "@/data/motricite-scores";
 import { getMotriciteProfile } from "@/data/motricite-questions";
+import { getAllRegisteredPseudos } from "@/data/players";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
-    const scores = await getMotriciteScores();
-    const publicScores = scores.map(({ answers: _answers, ...rest }) => rest);
+    const [scores, registeredPseudos] = await Promise.all([
+      getMotriciteScores(),
+      getAllRegisteredPseudos(),
+    ]);
+    const publicScores = scores
+      .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
+      .map(({ answers: _answers, ...rest }) => rest);
     return NextResponse.json(publicScores);
   } catch (err) {
     console.error("GET /api/motricite-scores error:", err);
