@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "5 émojis, 4 choix, un rapport psychiatrique complet. Chaque réponse révèle un trouble que vous ignoriez avoir.",
     images: [
       {
-        url: "/logo.png",
+        url: "/logo-cdf.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Évaluation Émotionnelle",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Évaluation Émotionnelle — Rapport Psychiatrique",
     description:
       "5 émojis, 4 choix, un rapport psychiatrique complet. Chaque réponse révèle un trouble que vous ignoriez avoir.",
-    images: ["/logo.png"],
+    images: ["/logo-cdf.png"],
   },
 };
 

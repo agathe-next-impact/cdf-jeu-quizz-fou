@@ -16,7 +16,8 @@ const openSans = Open_Sans({
   variable: "--font-open-sans",
 });
 
-const siteUrl = "https://commedesfous.fr";
+const siteUrl =
+  process.env.APP_URL?.replace(/\/+$/, "") ?? "https://commedesfous.fr";
 const siteName = "Comme des Fous";
 const siteDescription =
   "Quizz, défis, jeux multijoueur... Joue comme un fou, grimpe dans les classements et montre qui est le plus dingue !";
@@ -60,7 +61,7 @@ export const metadata: Metadata = {
     description: siteDescription,
     images: [
       {
-        url: "/logo.png",
+        url: "/logo-cdf.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Logo",
@@ -71,11 +72,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Comme des Fous | Les jeux les plus fous du web",
     description: siteDescription,
-    images: ["/logo.png"],
+    images: ["/logo-cdf.png"],
   },
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/logo-cdf.png",
+    apple: "/logo-cdf.png",
   },
 };
 

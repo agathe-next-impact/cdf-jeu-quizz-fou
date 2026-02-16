@@ -154,7 +154,7 @@ export default function Header() {
       <Link href="/" className={`flex items-start md:items-center px-4 md:px-6 pb-4 md:pb-6 pt-4 ${heroBg}`}>
         <div className="mr-4 md:mr-8 shrink-0">
           <Image 
-            src="/logo.png"
+            src="/logo-cdf.png"
             alt="Logo Comme des Fous"
             width={84}
             height={84}

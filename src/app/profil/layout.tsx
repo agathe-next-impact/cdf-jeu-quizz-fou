@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "Consultez votre dossier patient, vos scores, vos diagnostics et votre progression.",
     images: [
       {
-        url: "/logo.png",
+        url: "/logo-cdf.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Profil",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Mon Profil — Dossier Patient",
     description:
       "Consultez votre dossier patient, vos scores et vos diagnostics.",
-    images: ["/logo.png"],
+    images: ["/logo-cdf.png"],
   },
 };
 

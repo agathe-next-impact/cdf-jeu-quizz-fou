@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "10 taches d'encre, 3 choix, zéro chance d'être diagnostiqué(e) sain(e) d'esprit. Chaque réponse sera retenue contre vous.",
     images: [
       {
-        url: "/logo.png",
+        url: "/logo-cdf.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Test de Rorschach",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Test de Rorschach — Analyse Psychologique",
     description:
       "10 taches d'encre, 3 choix, zéro chance d'être diagnostiqué(e) sain(e) d'esprit.",
-    images: ["/logo.png"],
+    images: ["/logo-cdf.png"],
   },
 };
 

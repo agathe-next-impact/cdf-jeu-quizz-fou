@@ -10,7 +10,7 @@ export const metadata: Metadata = {
       "5 niveaux, des cibles qui bougent, rétrécissent et tremblent. Chaque clic raté est un neurone de moins.",
     images: [
       {
-        url: "/logo.png",
+        url: "/logo-cdf.png",
         width: 800,
         height: 800,
         alt: "Comme des Fous — Test de Motricité Fine",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     title: "Test de Motricité Fine — Précision Neurologique",
     description:
       "5 niveaux, des cibles qui bougent, rétrécissent et tremblent. Chaque clic raté est un neurone de moins.",
-    images: ["/logo.png"],
+    images: ["/logo-cdf.png"],
   },
 };
 
