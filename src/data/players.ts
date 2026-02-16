@@ -101,7 +101,7 @@ function wpPostToPlayer(post: WPPlayerPost): Player | null {
 
 async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
   // Try slug-based lookup first (exact match, no indexing delay)
-  const slugUrl = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&slug=${encodeURIComponent(pseudo.toLowerCase())}&_fields=id,acf`;
+  const slugUrl = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&status=any&slug=${encodeURIComponent(pseudo.toLowerCase())}&_fields=id,acf`;
   const slugRes = await fetch(slugUrl, {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
@@ -117,7 +117,7 @@ async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
   }
 
   // Fallback: search-based lookup
-  const searchUrl = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=10&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
+  const searchUrl = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=10&status=any&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
   const res = await fetch(searchUrl, {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
@@ -133,7 +133,7 @@ async function wpFindPlayerByPseudo(pseudo: string): Promise<Player | null> {
 }
 
 async function wpFindPlayerByEmail(email: string): Promise<Player | null> {
-  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=100&_fields=id,acf`;
+  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=100&status=any&_fields=id,acf`;
   const res = await fetch(url, {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
@@ -246,7 +246,7 @@ export async function updatePlayerAvatar(pseudo: string, avatar: string): Promis
 }
 
 async function wpUpdatePlayerAvatar(pseudo: string, avatar: string): Promise<boolean> {
-  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
+  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&status=any&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
   const res = await fetch(url, {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
@@ -291,7 +291,7 @@ async function wpUpdatePlayerProfile(
   pseudo: string,
   fields: { madnessSince?: string; bio?: string; autodiagnostic?: string }
 ): Promise<boolean> {
-  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
+  const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=1&status=any&search=${encodeURIComponent(pseudo)}&_fields=id,acf`;
   const res = await fetch(url, {
     headers: { Accept: "application/json", Authorization: wpAuth() },
     next: { revalidate: 0 },
@@ -463,25 +463,55 @@ export async function getAllRegisteredPseudos(): Promise<Set<string>> {
 }
 
 async function wpGetAllRegisteredPseudos(): Promise<Set<string>> {
-  const pseudos = new Set<string>();
+  const map = await wpGetAllRegisteredPlayersMap();
+  return new Set(map.keys());
+}
+
+interface RegisteredPlayerInfo {
+  pseudo: string;
+  avatar: string;
+}
+
+/**
+ * Returns a Map of lowercase pseudo → { pseudo (original casing), avatar }
+ * for all registered players. Paginates through all player posts.
+ */
+export async function getAllRegisteredPlayersMap(): Promise<Map<string, RegisteredPlayerInfo>> {
+  if (isWordPressConfigured()) {
+    return wpGetAllRegisteredPlayersMap();
+  }
+  const map = new Map<string, RegisteredPlayerInfo>();
+  for (const p of memoryPlayers) {
+    map.set(p.pseudo.toLowerCase(), { pseudo: p.pseudo, avatar: p.avatar || "laugh" });
+  }
+  return map;
+}
+
+async function wpGetAllRegisteredPlayersMap(): Promise<Map<string, RegisteredPlayerInfo>> {
+  const players = new Map<string, RegisteredPlayerInfo>();
   let page = 1;
   const perPage = 100;
 
-  // Paginate through all player posts
   while (true) {
-    const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=${perPage}&page=${page}&_fields=acf`;
+    const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=${perPage}&page=${page}&status=any&_fields=acf`;
     const res = await fetch(url, {
       headers: { Accept: "application/json", Authorization: wpAuth() },
       next: { revalidate: 0 },
     });
-    if (!res.ok) break;
+    if (!res.ok) {
+      console.error(`wpGetAllRegisteredPlayersMap page ${page} failed:`, res.status, await res.text().catch(() => ""));
+      break;
+    }
 
     const posts: WPPlayerPost[] = await res.json();
     if (posts.length === 0) break;
 
     for (const post of posts) {
       if (post.acf?.player_pseudo) {
-        pseudos.add(post.acf.player_pseudo.toLowerCase());
+        players.set(post.acf.player_pseudo.toLowerCase(), {
+          pseudo: post.acf.player_pseudo,
+          avatar: post.acf.player_avatar || "laugh",
+        });
       }
     }
 
@@ -489,7 +519,7 @@ async function wpGetAllRegisteredPseudos(): Promise<Set<string>> {
     page++;
   }
 
-  return pseudos;
+  return players;
 }
 
 /* ------------------------------------------------------------------ */
@@ -617,8 +647,8 @@ export interface GlobalPlayerScore {
 }
 
 export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> {
-  // Collect all scores from every game + registered pseudos in parallel
-  const [allGameScores, registeredPseudos] = await Promise.all([
+  // Collect all scores from every game + registered players (with avatars) in parallel
+  const [allGameScores, playersMap] = await Promise.all([
     Promise.all(
       GAME_LIST.map((game) =>
         isWordPressConfigured()
@@ -626,7 +656,7 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
           : getScoresForGame(game.restBase)
       )
     ),
-    getAllRegisteredPseudos(),
+    getAllRegisteredPlayersMap(),
   ]);
 
   // Map pseudo -> { bestScorePerGame, gamesPlayed }
@@ -636,7 +666,7 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
     for (const entry of allGameScores[gi]) {
       const key = entry.pseudo.toLowerCase();
       // Only include registered players
-      if (!registeredPseudos.has(key)) continue;
+      if (!playersMap.has(key)) continue;
       if (!playerMap.has(key)) {
         playerMap.set(key, { bestScores: new Map(), totalGames: new Set() });
       }
@@ -649,10 +679,10 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
     }
   }
 
-  // Build results with normalized scoring and avatar lookup
+  // Build results with normalized scoring — avatar comes from playersMap (no extra HTTP calls)
   const results: GlobalPlayerScore[] = [];
 
-  for (const [, data] of playerMap) {
+  for (const [key, data] of playerMap) {
     // Normalize each game's best score to 0-100, then average
     let totalPct = 0;
     for (const [gi, score] of data.bestScores.entries()) {
@@ -664,19 +694,10 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
       ? Math.round(totalPct / data.bestScores.size)
       : 0;
 
-    results.push({
-      pseudo: "",    // filled below
-      avatar: "laugh",
-      globalScore,
-      gamesPlayed: data.totalGames.size,
-    });
-  }
+    const playerInfo = playersMap.get(key);
 
-  // Fill pseudos with original casing from first score encounter
-  let idx = 0;
-  for (const [key] of playerMap) {
-    // Find original casing
-    let originalPseudo = key;
+    // Use original casing from player profile, fallback to score entry
+    let originalPseudo = playerInfo?.pseudo ?? key;
     for (const scores of allGameScores) {
       const match = scores.find((s) => s.pseudo.toLowerCase() === key);
       if (match) {
@@ -684,14 +705,13 @@ export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> 
         break;
       }
     }
-    results[idx].pseudo = originalPseudo;
 
-    // Try to get avatar from player record
-    const player = await findPlayerByPseudo(originalPseudo);
-    if (player) {
-      results[idx].avatar = player.avatar || "laugh";
-    }
-    idx++;
+    results.push({
+      pseudo: originalPseudo,
+      avatar: playerInfo?.avatar ?? "laugh",
+      globalScore,
+      gamesPlayed: data.totalGames.size,
+    });
   }
 
   // Sort by global score descending
@@ -726,7 +746,7 @@ const GAME_EMOJIS: Record<string, string> = {
 };
 
 export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard[]> {
-  const [allGameScores, registeredPseudos] = await Promise.all([
+  const [allGameScores, playersMap] = await Promise.all([
     Promise.all(
       GAME_LIST.map((game) =>
         isWordPressConfigured()
@@ -734,7 +754,7 @@ export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard
           : getScoresForGame(game.restBase)
       )
     ),
-    getAllRegisteredPseudos(),
+    getAllRegisteredPlayersMap(),
   ]);
 
   return GAME_LIST.map((game, gi) => {
@@ -744,7 +764,7 @@ export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard
     const bestByPseudo = new Map<string, ScoreEntry>();
     for (const entry of scores) {
       const key = entry.pseudo.toLowerCase();
-      if (!registeredPseudos.has(key)) continue;
+      if (!playersMap.has(key)) continue;
       const prev = bestByPseudo.get(key);
       if (!prev || entry.score > prev.score) {
         bestByPseudo.set(key, entry);

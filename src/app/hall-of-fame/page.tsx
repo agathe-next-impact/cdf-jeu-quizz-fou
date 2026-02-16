@@ -56,10 +56,13 @@ export default function HallOfFamePage() {
 
   useEffect(() => {
     fetch("/api/hall-of-fame")
-      .then((res) => res.json())
-      .then((data: { global: HallEntry[]; perGame: GameLeaderboard[] }) => {
-        setEntries(data.global);
-        setPerGame(data.perGame);
+      .then((res) => {
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        return res.json();
+      })
+      .then((data: { global?: HallEntry[]; perGame?: GameLeaderboard[] }) => {
+        setEntries(data.global ?? []);
+        setPerGame(data.perGame ?? []);
         setLoading(false);
       })
       .catch(() => setLoading(false));

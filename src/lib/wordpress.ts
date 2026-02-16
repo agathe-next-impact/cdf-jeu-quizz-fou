@@ -54,35 +54,48 @@ export interface WPPlayerScore {
 
 /**
  * Fetch scores from a given WP REST base (e.g. "quiz-scores", "dsm6-scores").
+ * Paginates through all entries automatically.
  */
 export async function wpGetScores(
   restBase: string,
-  limit = 100
 ): Promise<WPPlayerScore[]> {
-  const url = `${WP_URL}/wp-json/wp/v2/${restBase}?per_page=${limit}&orderby=date&order=desc&_fields=id,acf`;
+  const allScores: WPPlayerScore[] = [];
+  let page = 1;
+  const perPage = 100;
 
-  const res = await fetch(url, {
-    headers: { Accept: "application/json", Authorization: authHeader() },
-    next: { revalidate: 0 },
-  });
+  while (true) {
+    const url = `${WP_URL}/wp-json/wp/v2/${restBase}?per_page=${perPage}&page=${page}&orderby=date&order=desc&_fields=id,acf`;
 
-  if (!res.ok) {
-    console.error(`WP GET ${restBase} failed:`, res.status, await res.text());
-    return [];
+    const res = await fetch(url, {
+      headers: { Accept: "application/json", Authorization: authHeader() },
+      next: { revalidate: 0 },
+    });
+
+    if (!res.ok) {
+      console.error(`WP GET ${restBase} page ${page} failed:`, res.status, await res.text());
+      break;
+    }
+
+    const posts: WPScorePost[] = await res.json();
+    if (posts.length === 0) break;
+
+    for (const p of posts) {
+      if (!p.acf) continue;
+      allScores.push({
+        pseudo: p.acf.player_pseudo ?? "",
+        score: Number(p.acf.player_score) || 0,
+        title: p.acf.player_title ?? "",
+        date: p.acf.score_date ?? "",
+        answers: parseAnswers(p.acf.player_answers),
+      });
+    }
+
+    if (posts.length < perPage) break;
+    page++;
   }
 
-  const posts: WPScorePost[] = await res.json();
-
-  return posts
-    .filter((p) => p.acf)
-    .map((p) => ({
-      pseudo: p.acf.player_pseudo ?? "",
-      score: Number(p.acf.player_score) || 0,
-      title: p.acf.player_title ?? "",
-      date: p.acf.score_date ?? "",
-      answers: parseAnswers(p.acf.player_answers),
-    }))
-    .sort((a, b) => b.score - a.score);
+  allScores.sort((a, b) => b.score - a.score);
+  return allScores;
 }
 
 /**
