@@ -198,6 +198,125 @@ export async function wpSendEmail(
 }
 
 /* ------------------------------------------------------------------ */
+/*  Reset tokens (CPT: cdf-reset-tokens)                               */
+/* ------------------------------------------------------------------ */
+
+interface WPResetTokenPost {
+  id: number;
+  acf: {
+    reset_token: string;
+    reset_email: string;
+    reset_expires_at: string; // ISO timestamp
+  };
+}
+
+/**
+ * Create a reset token stored as a WP post.
+ * Deletes any previous token for the same email first.
+ */
+export async function wpCreateResetToken(
+  email: string,
+  ttlMs: number
+): Promise<string> {
+  // Delete existing tokens for this email
+  await wpDeleteResetTokensByEmail(email);
+
+  const token = (await import("node:crypto")).randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + ttlMs).toISOString();
+
+  const res = await fetch(`${WP_URL}/wp-json/wp/v2/cdf-reset-tokens`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: authHeader(),
+    },
+    body: JSON.stringify({
+      title: token,
+      status: "publish",
+      acf: {
+        reset_token: token,
+        reset_email: email,
+        reset_expires_at: expiresAt,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("wpCreateResetToken failed:", res.status, text);
+    throw new Error(`WP create reset token failed: ${res.status}`);
+  }
+
+  return token;
+}
+
+/** Verify a token without consuming it. Returns the email or null. */
+export async function wpVerifyResetToken(token: string): Promise<string | null> {
+  const post = await wpFindResetTokenPost(token);
+  if (!post) return null;
+
+  if (new Date(post.acf.reset_expires_at).getTime() < Date.now()) {
+    // Expired — clean up
+    await wpDeletePost("cdf-reset-tokens", post.id);
+    return null;
+  }
+
+  return post.acf.reset_email;
+}
+
+/** Verify and consume (delete) a token. Returns the email or null. */
+export async function wpConsumeResetToken(token: string): Promise<string | null> {
+  const post = await wpFindResetTokenPost(token);
+  if (!post) return null;
+
+  if (new Date(post.acf.reset_expires_at).getTime() < Date.now()) {
+    await wpDeletePost("cdf-reset-tokens", post.id);
+    return null;
+  }
+
+  const email = post.acf.reset_email;
+  await wpDeletePost("cdf-reset-tokens", post.id);
+  return email;
+}
+
+async function wpFindResetTokenPost(token: string): Promise<WPResetTokenPost | null> {
+  // Search by slug (title = token, WP auto-generates slug from title)
+  const url = `${WP_URL}/wp-json/wp/v2/cdf-reset-tokens?per_page=1&search=${encodeURIComponent(token)}&_fields=id,acf`;
+  const res = await fetch(url, {
+    headers: { Accept: "application/json", Authorization: authHeader() },
+    next: { revalidate: 0 },
+  });
+  if (!res.ok) return null;
+
+  const posts: WPResetTokenPost[] = await res.json();
+  const match = posts.find((p) => p.acf?.reset_token === token);
+  return match ?? null;
+}
+
+async function wpDeleteResetTokensByEmail(email: string): Promise<void> {
+  const url = `${WP_URL}/wp-json/wp/v2/cdf-reset-tokens?per_page=100&_fields=id,acf`;
+  const res = await fetch(url, {
+    headers: { Accept: "application/json", Authorization: authHeader() },
+    next: { revalidate: 0 },
+  });
+  if (!res.ok) return;
+
+  const posts: WPResetTokenPost[] = await res.json();
+  for (const post of posts) {
+    if (post.acf?.reset_email === email) {
+      await wpDeletePost("cdf-reset-tokens", post.id);
+    }
+  }
+}
+
+async function wpDeletePost(restBase: string, id: number): Promise<void> {
+  await fetch(`${WP_URL}/wp-json/wp/v2/${restBase}/${id}?force=true`, {
+    method: "DELETE",
+    headers: { Authorization: authHeader() },
+  });
+}
+
+/* ------------------------------------------------------------------ */
 /*  Internals                                                          */
 /* ------------------------------------------------------------------ */
 function parseAnswers(raw: string | undefined): WPPlayerAnswer[] {

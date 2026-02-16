@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(genericResponse);
     }
 
-    const token = createResetToken(player.email);
+    const token = await createResetToken(player.email);
     const resetLink = `${APP_URL}/reset-password?token=${token}`;
 
     if (process.env.SMTP_USER) {

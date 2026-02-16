@@ -254,6 +254,21 @@ add_action( 'init', function () {
 		'supports'              => [ 'title' ],
 	] );
 
+	// Reset tokens (password reset, temporary)
+	register_post_type( 'cdf_reset_token', [
+		'labels'       => [
+			'name'          => 'Reset Tokens',
+			'singular_name' => 'Reset Token',
+		],
+		'public'       => false,
+		'show_ui'      => true,
+		'show_in_menu' => true,
+		'show_in_rest' => true,
+		'rest_base'    => 'cdf-reset-tokens',
+		'menu_icon'    => 'dashicons-privacy',
+		'supports'     => [ 'title' ],
+	] );
+
 	// Player profiles
 	register_post_type( 'cdf_player', [
 		'labels'                => [
@@ -373,13 +388,42 @@ add_action( 'acf/init', function () {
 		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'cdf_player' ] ] ],
 		'show_in_rest' => true,
 	] );
+
+	// Reset tokens
+	acf_add_local_field_group( [
+		'key'          => 'group_cdf_reset_token',
+		'title'        => 'Données du Token',
+		'fields'       => [
+			[
+				'key'   => 'field_rt_token',
+				'label' => 'Token',
+				'name'  => 'reset_token',
+				'type'  => 'text',
+			],
+			[
+				'key'   => 'field_rt_email',
+				'label' => 'Email',
+				'name'  => 'reset_email',
+				'type'  => 'email',
+			],
+			[
+				'key'          => 'field_rt_expires_at',
+				'label'        => 'Expiration',
+				'name'         => 'reset_expires_at',
+				'type'         => 'text',
+				'instructions' => 'ISO 8601 timestamp.',
+			],
+		],
+		'location'     => [ [ [ 'param' => 'post_type', 'operator' => '==', 'value' => 'cdf_reset_token' ] ] ],
+		'show_in_rest' => true,
+	] );
 } );
 
 /* ================================================================== */
 /*  3. Exposer les champs ACF dans la REST API                         */
 /* ================================================================== */
 add_action( 'rest_api_init', function () {
-	foreach ( [ 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score', 'cdf_player' ] as $cpt ) {
+	foreach ( [ 'dsm6_score', 'rorschach_score', 'evaluation_score', 'evasion_score', 'motricite_score', 'cognitif_score', 'cdf_player', 'cdf_reset_token' ] as $cpt ) {
 		register_rest_field( $cpt, 'acf', [
 			'get_callback' => function ( $post ) {
 				return get_fields( $post['id'] ) ?: [];
@@ -416,6 +460,8 @@ add_filter( 'map_meta_cap', function ( $caps, $cap ) {
 		'delete_cognitif_scores', 'delete_published_cognitif_scores',
 		'edit_cdf_players', 'publish_cdf_players', 'edit_published_cdf_players',
 		'delete_cdf_players', 'delete_published_cdf_players',
+		'edit_cdf_reset_tokens', 'publish_cdf_reset_tokens', 'edit_published_cdf_reset_tokens',
+		'delete_cdf_reset_tokens', 'delete_published_cdf_reset_tokens',
 	];
 	if ( in_array( $cap, $allowed, true ) ) {
 		return [ 'read' ];

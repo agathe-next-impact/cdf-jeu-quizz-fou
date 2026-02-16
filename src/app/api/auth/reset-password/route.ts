@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const email = consumeResetToken(token);
+  const email = await consumeResetToken(token);
   if (!email) {
     return NextResponse.json(
       { error: "Lien invalide ou expiré. Fais une nouvelle demande." },
