@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
 }
 
 function buildEmailHtml(pseudo: string, resetLink: string): string {
-  const logoUrl = `${APP_URL}/logo.png`;
+  const logoUrl = `${APP_URL}/logo-cdf.png`;
 
   return `
 <!DOCTYPE html>
