@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
-import { getAllPlayersGlobalScores, getPerGameLeaderboards } from "@/data/players";
+import { getHallOfFameData } from "@/data/players";
 import { getBadgeForScore } from "@/data/badges";
 
-export const dynamic = "force-dynamic";
+// Cached via the underlying fetches' tags (scores:<restBase>, players).
+// POSTs to /api/<game>-scores call revalidateTag to invalidate.
+export const revalidate = 60;
 
 export async function GET() {
   try {
-    const [players, perGame] = await Promise.all([
-      getAllPlayersGlobalScores(),
-      getPerGameLeaderboards(5),
-    ]);
+    const { global: players, perGame } = await getHallOfFameData(5);
 
     const global = players.slice(0, 10).map((p) => ({
       ...p,

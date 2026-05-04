@@ -1,20 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { addCognitifScore, getCognitifScores } from "@/data/cognitif-scores";
 import type { CognitifPlayerAnswer } from "@/data/cognitif-scores";
 import { calculateIQ, getCognitifProfile } from "@/data/cognitif-questions";
 import { getAllRegisteredPseudos } from "@/data/players";
+import {
+  isWordPressConfigured,
+  scoresTag,
+  wpGetScoresLight,
+} from "@/lib/wordpress";
 
-export const dynamic = "force-dynamic";
+const REST_BASE = "cognitif-scores";
+
+export const revalidate = 60;
 
 export async function GET() {
   try {
     const [scores, registeredPseudos] = await Promise.all([
-      getCognitifScores(),
+      isWordPressConfigured() ? wpGetScoresLight(REST_BASE) : getCognitifScores(),
       getAllRegisteredPseudos(),
     ]);
+
     const filtered = scores
       .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
-      .map(({ answers: _answers, ...rest }) => rest);
+      .map((s) => ({ pseudo: s.pseudo, score: s.score, title: s.title, date: s.date }));
 
     // Keep only the best score per player
     const bestByPlayer = new Map<string, (typeof filtered)[number]>();
@@ -86,6 +95,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await addCognitifScore(entry);
+    revalidateTag(scoresTag(REST_BASE), "max");
   } catch (err) {
     console.error("POST /api/cognitif-scores write error:", err);
     return NextResponse.json({ error: "Erreur sauvegarde" }, { status: 500 });

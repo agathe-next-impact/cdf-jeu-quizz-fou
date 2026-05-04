@@ -1,20 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { addEvasionScore, getEvasionScores } from "@/data/evasion-scores";
 import type { EvasionPlayerAnswer } from "@/data/evasion-scores";
 import { getEvasionOutcome } from "@/data/evasion-questions";
 import { getAllRegisteredPseudos } from "@/data/players";
+import { isWordPressConfigured, scoresTag, wpGetScoresLight } from "@/lib/wordpress";
 
-export const dynamic = "force-dynamic";
+const REST_BASE = "evasion-scores";
+
+export const revalidate = 60;
 
 export async function GET() {
   try {
     const [scores, registeredPseudos] = await Promise.all([
-      getEvasionScores(),
+      isWordPressConfigured() ? wpGetScoresLight(REST_BASE) : getEvasionScores(),
       getAllRegisteredPseudos(),
     ]);
     const filtered = scores
       .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
-      .map(({ answers: _answers, ...rest }) => rest);
+      .map((s) => ({ pseudo: s.pseudo, score: s.score, title: s.title, date: s.date }));
 
     // Keep only the best score per player
     const bestByPlayer = new Map<string, (typeof filtered)[number]>();
@@ -85,6 +89,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await addEvasionScore(entry);
+    revalidateTag(scoresTag(REST_BASE), "max");
   } catch (err) {
     console.error("POST /api/evasion-scores write error:", err);
     return NextResponse.json({ error: "Erreur sauvegarde" }, { status: 500 });

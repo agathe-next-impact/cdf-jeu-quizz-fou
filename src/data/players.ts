@@ -2,7 +2,9 @@ import crypto from "node:crypto";
 import {
   isWordPressConfigured,
   wpGetScores,
+  wpGetScoresLight,
   wpDeleteScoresByPseudo,
+  type WPLeaderboardEntry,
 } from "@/lib/wordpress";
 
 /* ------------------------------------------------------------------ */
@@ -487,16 +489,18 @@ export async function getAllRegisteredPlayersMap(): Promise<Map<string, Register
   return map;
 }
 
+export const PLAYERS_TAG = "players";
+
 async function wpGetAllRegisteredPlayersMap(): Promise<Map<string, RegisteredPlayerInfo>> {
   const players = new Map<string, RegisteredPlayerInfo>();
   let page = 1;
   const perPage = 100;
 
   while (true) {
-    const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=${perPage}&page=${page}&status=any&_fields=acf`;
+    const url = `${WP_URL}/wp-json/wp/v2/cdf-players?per_page=${perPage}&page=${page}&status=any&_fields=acf.player_pseudo,acf.player_avatar`;
     const res = await fetch(url, {
       headers: { Accept: "application/json", Authorization: wpAuth() },
-      next: { revalidate: 0 },
+      next: { revalidate: 60, tags: [PLAYERS_TAG] },
     });
     if (!res.ok) {
       console.error(`wpGetAllRegisteredPlayersMap page ${page} failed:`, res.status, await res.text().catch(() => ""));
@@ -646,20 +650,36 @@ export interface GlobalPlayerScore {
   gamesPlayed: number;
 }
 
-export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> {
-  // Collect all scores from every game + registered players (with avatars) in parallel
+/**
+ * Single shared loader: pulls every game's scores (light, no `answers`) and
+ * the registered players map in one parallel batch. Used by both
+ * `getAllPlayersGlobalScores` and `getPerGameLeaderboards` so the hall-of-fame
+ * route never duplicates WP traffic.
+ */
+type LeaderboardScoreEntry = WPLeaderboardEntry | ScoreEntry;
+type LeaderboardData = {
+  allGameScores: LeaderboardScoreEntry[][];
+  playersMap: Map<string, RegisteredPlayerInfo>;
+};
+
+async function loadLeaderboardData(): Promise<LeaderboardData> {
   const [allGameScores, playersMap] = await Promise.all([
     Promise.all(
       GAME_LIST.map((game) =>
         isWordPressConfigured()
-          ? wpGetScores(game.restBase)
+          ? wpGetScoresLight(game.restBase)
           : getScoresForGame(game.restBase)
       )
     ),
     getAllRegisteredPlayersMap(),
   ]);
+  return { allGameScores, playersMap };
+}
 
-  // Map pseudo -> { bestScorePerGame, gamesPlayed }
+function buildGlobalLeaderboard(
+  allGameScores: LeaderboardScoreEntry[][],
+  playersMap: Map<string, RegisteredPlayerInfo>
+): GlobalPlayerScore[] {
   const playerMap = new Map<string, { bestScores: Map<number, number>; totalGames: Set<number> }>();
 
   for (let gi = 0; gi < allGameScores.length; gi++) {
@@ -745,23 +765,16 @@ const GAME_EMOJIS: Record<string, string> = {
   "Test Cognitif Absurde": "brain",
 };
 
-export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard[]> {
-  const [allGameScores, playersMap] = await Promise.all([
-    Promise.all(
-      GAME_LIST.map((game) =>
-        isWordPressConfigured()
-          ? wpGetScores(game.restBase)
-          : getScoresForGame(game.restBase)
-      )
-    ),
-    getAllRegisteredPlayersMap(),
-  ]);
-
+function buildPerGameLeaderboards(
+  allGameScores: LeaderboardScoreEntry[][],
+  playersMap: Map<string, RegisteredPlayerInfo>,
+  limit: number
+): GameLeaderboard[] {
   return GAME_LIST.map((game, gi) => {
     const scores = allGameScores[gi];
 
     // Keep only the best score per pseudo (registered players only)
-    const bestByPseudo = new Map<string, ScoreEntry>();
+    const bestByPseudo = new Map<string, LeaderboardScoreEntry>();
     for (const entry of scores) {
       const key = entry.pseudo.toLowerCase();
       if (!playersMap.has(key)) continue;
@@ -783,4 +796,29 @@ export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard
       entries,
     };
   });
+}
+
+export async function getAllPlayersGlobalScores(): Promise<GlobalPlayerScore[]> {
+  const { allGameScores, playersMap } = await loadLeaderboardData();
+  return buildGlobalLeaderboard(allGameScores, playersMap);
+}
+
+export async function getPerGameLeaderboards(limit = 5): Promise<GameLeaderboard[]> {
+  const { allGameScores, playersMap } = await loadLeaderboardData();
+  return buildPerGameLeaderboards(allGameScores, playersMap, limit);
+}
+
+/**
+ * Unified hall-of-fame loader: one batch of WP fetches, two outputs.
+ * Halves WP traffic compared to calling getAllPlayersGlobalScores +
+ * getPerGameLeaderboards separately.
+ */
+export async function getHallOfFameData(
+  perGameLimit = 5
+): Promise<{ global: GlobalPlayerScore[]; perGame: GameLeaderboard[] }> {
+  const { allGameScores, playersMap } = await loadLeaderboardData();
+  return {
+    global: buildGlobalLeaderboard(allGameScores, playersMap),
+    perGame: buildPerGameLeaderboards(allGameScores, playersMap, perGameLimit),
+  };
 }

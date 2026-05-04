@@ -52,6 +52,11 @@ export interface WPPlayerScore {
 /*  Generic helpers — support multiple CPTs (rest bases)               */
 /* ------------------------------------------------------------------ */
 
+/** Cache tag for a given REST base. Used by leaderboard fetches. */
+export function scoresTag(restBase: string): string {
+  return `scores:${restBase}`;
+}
+
 /**
  * Fetch scores from a given WP REST base (e.g. "quiz-scores", "dsm6-scores").
  * Paginates through all entries automatically.
@@ -87,6 +92,57 @@ export async function wpGetScores(
         title: p.acf.player_title ?? "",
         date: p.acf.score_date ?? "",
         answers: parseAnswers(p.acf.player_answers),
+      });
+    }
+
+    if (posts.length < perPage) break;
+    page++;
+  }
+
+  allScores.sort((a, b) => b.score - a.score);
+  return allScores;
+}
+
+/**
+ * Lightweight variant for leaderboards: omits `player_answers` blob to cut
+ * payload size and JSON parsing cost. Cached via the Next.js Data Cache and
+ * tagged with `scoresTag(restBase)` so POSTs can invalidate precisely.
+ */
+export type WPLeaderboardEntry = Omit<WPPlayerScore, "answers">;
+
+export async function wpGetScoresLight(
+  restBase: string,
+): Promise<WPLeaderboardEntry[]> {
+  const allScores: WPLeaderboardEntry[] = [];
+  let page = 1;
+  const perPage = 100;
+  // Nested field selection trims the payload at the WP layer (WP 5+).
+  const fields =
+    "id,acf.player_pseudo,acf.player_score,acf.player_title,acf.score_date";
+
+  while (true) {
+    const url = `${WP_URL}/wp-json/wp/v2/${restBase}?per_page=${perPage}&page=${page}&orderby=date&order=desc&_fields=${fields}`;
+
+    const res = await fetch(url, {
+      headers: { Accept: "application/json", Authorization: authHeader() },
+      next: { revalidate: 60, tags: [scoresTag(restBase)] },
+    });
+
+    if (!res.ok) {
+      console.error(`WP GET ${restBase} (light) page ${page} failed:`, res.status, await res.text());
+      break;
+    }
+
+    const posts: Array<{ id: number; acf?: Partial<WPScorePost["acf"]> }> = await res.json();
+    if (posts.length === 0) break;
+
+    for (const p of posts) {
+      if (!p.acf) continue;
+      allScores.push({
+        pseudo: p.acf.player_pseudo ?? "",
+        score: Number(p.acf.player_score) || 0,
+        title: p.acf.player_title ?? "",
+        date: p.acf.score_date ?? "",
       });
     }
 

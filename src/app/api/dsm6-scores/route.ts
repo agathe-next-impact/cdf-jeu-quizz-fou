@@ -1,20 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { addDSM6Score, getDSM6Scores } from "@/data/dsm6-scores";
 import type { DSM6PlayerAnswer } from "@/data/dsm6-scores";
 import { dsm6Questions, getDSM6Profile } from "@/data/dsm6-questions";
 import { getAllRegisteredPseudos } from "@/data/players";
+import { isWordPressConfigured, scoresTag, wpGetScoresLight } from "@/lib/wordpress";
 
-export const dynamic = "force-dynamic";
+const REST_BASE = "dsm6-scores";
+
+export const revalidate = 60;
 
 export async function GET() {
   try {
     const [scores, registeredPseudos] = await Promise.all([
-      getDSM6Scores(),
+      isWordPressConfigured() ? wpGetScoresLight(REST_BASE) : getDSM6Scores(),
       getAllRegisteredPseudos(),
     ]);
     const filtered = scores
       .filter((s) => registeredPseudos.has(s.pseudo.toLowerCase()))
-      .map(({ answers: _answers, ...rest }) => rest);
+      .map((s) => ({ pseudo: s.pseudo, score: s.score, title: s.title, date: s.date }));
 
     // Keep only the best score per player
     const bestByPlayer = new Map<string, (typeof filtered)[number]>();
@@ -86,6 +90,7 @@ export async function POST(request: NextRequest) {
 
   try {
     await addDSM6Score(entry);
+    revalidateTag(scoresTag(REST_BASE), "max");
   } catch (err) {
     console.error("POST /api/dsm6-scores write error:", err);
     return NextResponse.json({ error: "Erreur sauvegarde" }, { status: 500 });
